@@ -2,7 +2,6 @@
 
 const e = React.createElement;
 
-
 const formStyle = {
     margin: 'auto',
     padding: '10px',
@@ -40,6 +39,12 @@ const submitStyle = {
     display: 'block'
 };
 
+const headerStyle = {
+  textAlign: 'center',
+  fontSize: '2rem',
+  fontFamily: 'Source Sans Pro, sans-serif'
+}
+
 
 
 const Field = React.forwardRef(({label, type}, ref) => {
@@ -72,13 +77,16 @@ const Form = (props) => {
 
     };
     return (
-      <form style={formStyle} onSubmit={handleSubmit}  >
-        <Field ref={usernameRef} label="Username:" type="text" />
-        <Field ref={passwordRef} label="Password:" type="password" />
-        <div>
-          <button style={submitStyle} type="submit" >Submit</button>
-        </div>
-      </form>
+      <div>
+        <h2 style={headerStyle}>Log In </h2>
+        <form style={formStyle} onSubmit={handleSubmit}  >
+          <Field ref={usernameRef} label="Username:" type="text" />
+          <Field ref={passwordRef} label="Password:" type="password" />
+          <div>
+            <button style={submitStyle} type="submit" >Submit</button>
+          </div>
+        </form>
+      </div>
     );
 };
 
