@@ -45,6 +45,12 @@ const headerStyle = {
   fontFamily: 'Source Sans Pro, sans-serif'
 }
 
+const registerLinkStyle = {
+  textAlign: 'center',
+  fontSize: '1rem',
+  fontFamily: 'Source Sans Pro, sans-serif'
+}
+
 
 
 const Field = React.forwardRef(({label, type}, ref) => {
@@ -56,16 +62,17 @@ const Field = React.forwardRef(({label, type}, ref) => {
     );
 });
 
-
-const printData = data => {
-    const json = JSON.stringify(data, null, 4);
-    alert(json);
-
-};
-
 const Form = (props) => {
     const usernameRef = React.useRef();
     const passwordRef = React.useRef();
+
+    const printData = data => {
+      //const json = JSON.stringify(data, null, 4);
+      //alert(json);
+  
+      
+  
+  };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -73,7 +80,7 @@ const Form = (props) => {
             username: usernameRef.current.value,
             password: passwordRef.current.value
         };
-        sendEncrypted('/login', usernameRef.current.value + '\n' + passwordRef.current.value, printData(data));
+        sendEncrypted('/login', usernameRef.current.value + '\n' + passwordRef.current.value, (res) => printData(res));
 
     };
     return (
@@ -82,6 +89,9 @@ const Form = (props) => {
         <form style={formStyle} onSubmit={handleSubmit}  >
           <Field ref={usernameRef} label="Username:" type="text" />
           <Field ref={passwordRef} label="Password:" type="password" />
+          <div>
+            <span style={registerLinkStyle}><a href="http://localhost:8080/register.jsp">Create Account</a></span>
+          </div>
           <div>
             <button style={submitStyle} type="submit" >Submit</button>
           </div>
