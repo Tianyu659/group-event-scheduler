@@ -10,5 +10,6 @@
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
         <script type="text/babel" src="loginBox.js"></script>
+        <script src="encryptionUtil.js"></script>
     </body>
 </html>
