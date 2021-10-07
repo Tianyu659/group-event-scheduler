@@ -5,14 +5,6 @@
 <web-app>
     <display-name>Project2</display-name>
     <servlet>
-        <servlet-name>GreetingServlet</servlet-name>
-        <servlet-class>csci310.servlets.GreetingServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>GreetingServlet</servlet-name>
-        <url-pattern>/greeting</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>csci310.servlets.LoginServlet</servlet-class>
     </servlet>
