@@ -27,6 +27,15 @@ public class LoginServlet extends HttpServlet {
         Operations(final Operator op) {this.op = op;}
         boolean isOperation(final int cb) {return op.apply(cb);}
     }
+    private static final byte[] TEST_USERNAME,TEST_PASSWORD,TEST_SALT;
+    static {
+        TEST_USERNAME = "test_username".getBytes(StandardCharsets.UTF_8);
+        TEST_SALT = new byte[]{(byte)0x32,(byte)0x1E,(byte)0x6E,(byte)0xBD,
+                               (byte)0x5A,(byte)0x53,(byte)0xB1,(byte)0xBD,
+                               (byte)0x88,(byte)0x71,(byte)0x09,(byte)0x76,
+                               (byte)0xB1,(byte)0x51,(byte)0x04,(byte)0x6E};
+        TEST_PASSWORD = EncryptionUtil.hash("test_password".getBytes(StandardCharsets.UTF_8),TEST_SALT);
+    }
     /**
      * @param username Database key.
      *
@@ -34,7 +43,12 @@ public class LoginServlet extends HttpServlet {
      */
     private byte[][] saltAndPwdHash(final byte[] username) {
         //TODO database stuff
-        return new byte[2][16];
+        if(
+            new String(TEST_USERNAME,StandardCharsets.UTF_8).contentEquals(
+                new String(username,StandardCharsets.UTF_8)
+            )
+        ) return new byte[][] {TEST_SALT,TEST_PASSWORD};
+        return new byte[2][0];
     }
     /**@return {@code true} iff the username and password pair are in the database.*/
     private boolean auth(final byte[] username,final byte[] password) {
