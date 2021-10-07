@@ -41,7 +41,11 @@ const Form = ({ handleClose }) => {
         handleClose();
     };
 
-
+    const handleCancel = e => {
+        e.preventDefault();
+        window.location.replace("/");
+        handleClose();
+    }
 
     return (
         <div>
@@ -78,7 +82,7 @@ const Form = ({ handleClose }) => {
                     onChange={e => setPassword(e.target.value)}
                 />
                 <div>
-                    <Button variant="contained" onClick={handleClose}>
+                    <Button variant="contained" onClick={handleCancel}>
                         Cancel
                     </Button>
                     <Button type="submit" variant="contained" color="primary">
