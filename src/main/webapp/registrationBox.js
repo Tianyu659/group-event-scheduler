@@ -37,7 +37,7 @@ const Form = ({ handleClose }) => {
     const handleSubmit = e => {
         e.preventDefault();
         console.log(firstName, lastName, email, password);
-
+        window.location.replace("http://localhost:8080/calendar.jsp");
         handleClose();
     };
 
