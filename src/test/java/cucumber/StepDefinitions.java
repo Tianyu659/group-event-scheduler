@@ -78,15 +78,27 @@ public class StepDefinitions {
     
     @Then("I should see header {string}")
     public void i_should_see_header(String header) {
+        try {
+            Thread.sleep(3000);
+        }
+        catch(Exception e) {}
         assertTrue(driver.findElement(By.cssSelector("h2")).getText().contains(header));
     }
     @Then("I should see text {string}")
     public void i_should_see_text(String text) {
+        try {
+            Thread.sleep(5000);
+        }
+        catch(Exception e) {}
         assertTrue(driver.getPageSource().contains(text));
     }
     @Then("I am redirected to the {string} page")
     public void i_am_redirected_to_the_page(String page) {
-        assertTrue(driver.getCurrentUrl().matches(ROOT_URL + page + "/?"));
+        try {
+            Thread.sleep(5000);
+        }
+        catch(Exception e) {}
+        assertTrue(driver.getCurrentUrl().matches(ROOT_URL + page + ".jsp"));
     }
     
     @SuppressWarnings("unused") // 'success' and 'failure' are used implicitly.
