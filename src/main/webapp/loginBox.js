@@ -69,8 +69,16 @@ const Form = (props) => {
     const printData = data => {
       //const json = JSON.stringify(data, null, 4);
       //alert(json);
-  
-      
+
+    // make login page verify username and password
+    const trimmed = data.trim();
+    if(trimmed == "failure") {
+        alert("Username or password incorrect, try again.");
+        usernameRef.current.value = "";
+        passwordRef.current.value = "";
+    } else {
+        window.location.replace("http://localhost:8080/calendar.jsp");
+    }
   
   };
 
