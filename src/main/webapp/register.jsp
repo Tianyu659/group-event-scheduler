@@ -7,12 +7,13 @@
         
     </head>
     <body>
-        <div id="login_box_container"></div>
+
+        <div id="registration_box_container"></div>
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js" crossorigin="anonymous"></script>
 
-        <script type="text/babel" src="loginBox.js"></script>
-        <script src="encryptionUtil.js"></script>
+        <script type="text/babel" src="registrationBox.js"></script>
     </body>
 </html>
