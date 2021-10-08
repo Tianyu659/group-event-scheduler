@@ -66,6 +66,33 @@ public class StepDefinitions {
         driver.findElement(By.id("password_field"))
               .sendKeys(password);
     }
+
+    @When("I enter the first name {string}")
+    public void i_enter_the_first_name(String firstname) {
+        driver.findElement(By.id("r_firstname_field"))
+                .sendKeys(firstname);
+    }
+
+    @And("I enter the last name {string}")
+    public void i_enter_the_last_name(String lastname) {
+        driver.findElement(By.id("r_lastname_field"))
+                .sendKeys(lastname);
+    }
+
+    @And("I enter the valid email {string}")
+    public void i_enter_the_valid_email_name(String valid_email) {
+        driver.findElement(By.id("r_email_field"))
+                .sendKeys(valid_email);
+    }
+
+    @And("I enter the r_password {string}")
+    public void i_enter_the_r_email_name(String password) {
+        driver.findElement(By.id("r_password_field"))
+                .sendKeys(password);
+    }
+
+
+
     @And("I click the {string} button")
     public void i_click_the_button(String button) {
         final List<WebElement> l = driver.findElements(By.tagName("button"));
@@ -95,7 +122,7 @@ public class StepDefinitions {
     @Then("I am redirected to the {string} page")
     public void i_am_redirected_to_the_page(String page) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(8000);
         }
         catch(Exception e) {}
         assertTrue(driver.getCurrentUrl().matches(ROOT_URL + page + ".jsp"));

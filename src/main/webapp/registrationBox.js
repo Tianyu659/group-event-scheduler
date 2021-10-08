@@ -52,6 +52,7 @@ const Form = ({ handleClose }) => {
             <h2 style={headerStyle}>Sign Up</h2>
             <form className={classes.root} onSubmit={handleSubmit}>
                 <TextField
+                    id = "r_firstname_field"
                     label="First Name"
                     variant="filled"
                     required
@@ -59,6 +60,7 @@ const Form = ({ handleClose }) => {
                     onChange={e => setFirstName(e.target.value)}
                 />
                 <TextField
+                    id = "r_lastname_field"
                     label="Last Name"
                     variant="filled"
                     required
@@ -66,6 +68,7 @@ const Form = ({ handleClose }) => {
                     onChange={e => setLastName(e.target.value)}
                 />
                 <TextField
+                    id = "r_email_field"
                     label="Email"
                     variant="filled"
                     type="email"
@@ -74,6 +77,7 @@ const Form = ({ handleClose }) => {
                     onChange={e => setEmail(e.target.value)}
                 />
                 <TextField
+                    id = "r_password_field"
                     label="Password"
                     variant="filled"
                     type="password"
