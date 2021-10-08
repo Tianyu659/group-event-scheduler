@@ -57,13 +57,13 @@ public class StepDefinitions {
     }
     @When("I enter the username {string}")
     public void i_enter_the_username(String username) {
-        driver.findElement(By.cssSelector("#login_box_container>div>form>div>input[type='text']"))
+        driver.findElement(By.id("username_field"))
               .sendKeys(username);
     }
     
     @And("I enter the password {string}")
     public void i_enter_the_password(String password) {
-        driver.findElement(By.cssSelector("#login_box_container>div>form>div>input[type='password']"))
+        driver.findElement(By.id("password_field"))
               .sendKeys(password);
     }
     @And("I click the {string} button")

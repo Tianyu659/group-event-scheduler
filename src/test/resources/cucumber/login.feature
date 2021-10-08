@@ -19,4 +19,3 @@ Feature: Login
     And I enter the password 'bad_password'
     And I click the 'submit' button
     Then The login is a 'failure'
-

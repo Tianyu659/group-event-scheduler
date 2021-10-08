@@ -53,11 +53,11 @@ const registerLinkStyle = {
 
 
 
-const Field = React.forwardRef(({label, type}, ref) => {
+const Field = React.forwardRef(({label, type, id}, ref) => {
     return (
       <div>
         <label style={labelStyle} >{label}</label>
-        <input ref={ref} type={type} style={inputStyle} />
+        <input id={id} ref={ref} type={type} style={inputStyle} />
       </div>
     );
 });
@@ -87,8 +87,8 @@ const Form = (props) => {
       <div>
         <h2 style={headerStyle}>Log In </h2>
         <form style={formStyle} onSubmit={handleSubmit}  >
-          <Field ref={usernameRef} label="Username:" type="text" />
-          <Field ref={passwordRef} label="Password:" type="password" />
+          <Field id="username_field" ref={usernameRef} label="Username:" type="text" />
+          <Field id = "password_field" ref={passwordRef} label="Password:" type="password" />
           <div>
             <span style={registerLinkStyle}><a href="http://localhost:8080/register.jsp">Create Account</a></span>
           </div>
