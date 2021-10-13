@@ -9,7 +9,9 @@ public class EventTest {
     public void testaddAttendee() {
         Event event = new Event();
         int num_attendees = event.getAttendees().size();
-        event.addAttendee("Tommy Trojan");
+        User user1 = new User();
+        user1.setName("Tommy Trojan");
+        event.addAttendee(user1);
         int new_num_attendees = event.getAttendees().size();
         Assert.assertTrue(new_num_attendees>num_attendees);
     }
@@ -17,10 +19,14 @@ public class EventTest {
     @Test
     public void testremoveAttendee() {
         Event event = new Event();
-        event.addAttendee("Tommy Trojan");
-        event.addAttendee("Hecuba");
+        User user1 = new User();
+        user1.setName("Tommy Trojan");
+        User user2 = new User();
+        user2.setName("Hecuba");
+        event.addAttendee(user1);
+        event.addAttendee(user2);
         int num_attendees = event.getAttendees().size();
-        event.removeAttendee("Tommy Trojan");
+        event.removeAttendee(user1);
         int new_num_attendees = event.getAttendees().size();
         Assert.assertTrue(new_num_attendees<num_attendees);
     }
