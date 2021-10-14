@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
@@ -19,69 +20,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class EncryptionUtil {
-    /* ========== RSA Encryption ========== */
-    private static final String RSA = "RSA/ECB/OAEPPadding";
-    public static KeyPair generateRSAKeyPair() {
-        try {
-            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(4096);
-            return keyGen.generateKeyPair();
-        } catch(NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private static final String AES = "AES/CBC/PKCS5Padding";
-    public static byte[] decryptHybrid(final String iv,final String key,final String msg,final PrivateKey rsa) {
-        try {
-            final byte[] aes;
-            {
-                // Decrypt AES key with RSA
-                final Cipher c = Cipher.getInstance(RSA);
-                c.init(
-                    Cipher.DECRYPT_MODE,
-                    rsa,
-                    new OAEPParameterSpec(
-                        "SHA-256",
-                        "MGF1",
-                        new MGF1ParameterSpec("SHA-256"),
-                        PSource.PSpecified.DEFAULT
-                    )
-                );
-                aes = Base64.getDecoder().decode(c.doFinal(Base64.getDecoder().decode(key)));
-            }
-            // Decrypt message with AES
-            final Cipher c = Cipher.getInstance(AES);
-            c.init(
-                Cipher.DECRYPT_MODE,
-                new SecretKeySpec(aes,"AES"),
-                new IvParameterSpec(Base64.getDecoder().decode(iv))
-            );
-            return c.doFinal(Base64.getDecoder().decode(msg));
-        } catch(NoSuchAlgorithmException|NoSuchPaddingException|
-                IllegalBlockSizeException|BadPaddingException|
-                InvalidKeyException|InvalidAlgorithmParameterException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static byte[] decryptHybrid(final BufferedReader reader,final PrivateKey rsa) throws IOException {
-        final String[] split = reader.readLine().split(",",3);
-        /*
-        System.out.println("iv ="+split[0]+"\naes="+split[1]+"\nmsg="+split[2]);
-        System.out.println("rsa="+Base64.getEncoder().encodeToString(rsa.getEncoded()));
-        */
-        return decryptHybrid(split[0],split[1],split[2],rsa);
-    }
-    /**Initializes the RSA keys.*/
-    public static void initRSA(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
-        final KeyPair kp = EncryptionUtil.generateRSAKeyPair();
-        assert kp != null;
-        SessionAttributes.keys.setAttribute(req.getSession(),kp.getPrivate());
-        resp.setContentType("application/octet-stream");
-        final byte[] out = kp.getPublic().getEncoded();
-        resp.setContentLength(out.length);
-        resp.getOutputStream().write(out);
-    }
-    
     /* ========== Hashing Stuff ========== */
     private static final String HASH_ALGORITHM = "SHA-256";
     public static byte[] hash(final byte[] secret,final byte[] salt) {
@@ -91,6 +29,103 @@ public class EncryptionUtil {
             md.update(salt);
             return md.digest();
         } catch(NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /* ========== Utilities ========== */
+    private static final String RSA = "RSA/ECB/OAEPPadding";
+    private static final String AES = "AES/CBC/PKCS5Padding";
+    private static final Base64.Decoder B64D = Base64.getDecoder();
+    private static Cipher getRSACipher(final int mode,final Key key) {
+        try {
+            final Cipher c = Cipher.getInstance(RSA);
+            c.init(
+                mode,
+                key,
+                new OAEPParameterSpec(
+                    HASH_ALGORITHM,
+                    "MGF1",
+                    new MGF1ParameterSpec(HASH_ALGORITHM),
+                    PSource.PSpecified.DEFAULT
+                )
+            );
+            return c;
+        } catch(NoSuchAlgorithmException|NoSuchPaddingException|
+                InvalidAlgorithmParameterException|InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static Cipher getRSACipher(final PrivateKey key) {return getRSACipher(Cipher.DECRYPT_MODE,key);}
+    private static PublicKey getPublicKey(final byte[] key) {
+        try {return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(key));}
+        catch(NoSuchAlgorithmException|InvalidKeySpecException e) {throw new RuntimeException(e);}
+    }
+    private static Cipher getRSACipher(final PublicKey key) {return getRSACipher(Cipher.ENCRYPT_MODE,key);}
+    
+    private static Cipher getAESCipher(final byte[] key,final byte[] iv) {
+        try {
+            final Cipher c = Cipher.getInstance(AES);
+            c.init(
+                Cipher.DECRYPT_MODE,
+                new SecretKeySpec(key,"AES"),
+                new IvParameterSpec(iv)
+            );
+            return c;
+        } catch(InvalidAlgorithmParameterException|NoSuchPaddingException|
+                NoSuchAlgorithmException|InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /* ########## CLIENT -> SERVER ########## */
+    public static KeyPair generateRSAKeyPair() {
+        try {
+            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+            keyGen.initialize(4096);
+            return keyGen.generateKeyPair();
+        } catch(final NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static byte[] decryptHybrid(final String iv,final String key,
+                                       final String msg,final PrivateKey rsa) {
+        try {
+            final byte[] aes = B64D.decode(getRSACipher(rsa).doFinal(B64D.decode(key)));
+            // Decrypt message with AES
+            return getAESCipher(aes,B64D.decode(iv)).doFinal(B64D.decode(msg));
+        } catch(IllegalBlockSizeException|BadPaddingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static byte[] decryptHybrid(final BufferedReader reader,
+                                       final PrivateKey rsa) throws IOException {
+        final String[] split = reader.readLine().split(",",3);
+        return decryptHybrid(split[0],split[1],split[2],rsa);
+    }
+    /**Initializes the RSA keys.*/
+    public static void initRSA(final HttpServletRequest req,
+                               final HttpServletResponse resp) throws IOException {
+        final KeyPair kp = EncryptionUtil.generateRSAKeyPair();
+        SessionAttributes.keys.setAttribute(req.getSession(),kp.getPrivate());
+        final byte[] out = kp.getPublic().getEncoded();
+        resp.setContentType("application/octet-stream");
+        resp.setContentLength(out.length);
+        resp.getOutputStream().write(out);
+    }
+    
+    /* ########## SERVER -> CLIENT ########## */
+    /**Encrypts the message using a public RSA key from the client.*/
+    public static void encrypt(final HttpServletRequest req,
+                               final HttpServletResponse resp,
+                               final String msg) throws IOException {
+        try {
+            final byte[] o = getRSACipher(
+                getPublicKey(B64D.decode(req.getReader().readLine()))
+            ).doFinal(msg.getBytes(StandardCharsets.UTF_8));
+            resp.setContentType("application/octet-stream");
+            resp.setContentLength(o.length);
+            resp.getOutputStream().write(o);
+        } catch(IllegalBlockSizeException|BadPaddingException e) {
             throw new RuntimeException(e);
         }
     }
