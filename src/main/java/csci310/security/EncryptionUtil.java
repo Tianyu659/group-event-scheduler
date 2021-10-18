@@ -2,7 +2,10 @@ package csci310.security;
 
 import csci310.servlets.SessionAttributes;
 
-import javax.crypto.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
@@ -15,13 +18,21 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class EncryptionUtil {
     /* ========== Hashing Stuff ========== */
     private static final String HASH_ALGORITHM = "SHA-256";
+    public static byte[] hash(final byte[] secret) {
+        try {
+            final MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+            md.update(secret);
+            return md.digest();
+        } catch(NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static byte[] hash(final byte[] secret,final byte[] salt) {
         try {
             final MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -31,6 +42,12 @@ public class EncryptionUtil {
         } catch(NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+    public static byte[] nextSalt() {
+        final byte[] salt = new byte[16];
+        try {SecureRandom.getInstanceStrong().nextBytes(salt);}
+        catch(final NoSuchAlgorithmException e) {throw new RuntimeException(e);}
+        return salt;
     }
     
     /* ========== Utilities ========== */
