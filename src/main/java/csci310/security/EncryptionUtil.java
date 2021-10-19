@@ -22,6 +22,15 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class EncryptionUtil {
+    static void dbg(final String title,String str) {
+        System.out.println(title+':');
+        while(str.length() > 64) {
+            System.out.println('"'+str.substring(0,64)+"\"+");
+            str = str.substring(64);
+        }
+        System.out.println('"'+str+'"');
+        System.out.println();
+    }
     /* ========== Hashing Stuff ========== */
     private static final String HASH_ALGORITHM = "SHA-256";
     public static byte[] hash(final byte[] secret) {
@@ -107,6 +116,11 @@ public class EncryptionUtil {
     public static byte[] decryptHybrid(final String iv,final String key,
                                        final String msg,final PrivateKey rsa) {
         try {
+            //TODO debug
+            /*dbg("iv",iv);
+            dbg("key",key);
+            dbg("msg",msg);*/
+            
             final byte[] aes = B64D.decode(getRSACipher(rsa).doFinal(B64D.decode(key)));
             // Decrypt message with AES
             return getAESCipher(aes,B64D.decode(iv)).doFinal(B64D.decode(msg));
@@ -128,6 +142,9 @@ public class EncryptionUtil {
         resp.setContentType("application/octet-stream");
         resp.setContentLength(out.length);
         resp.getOutputStream().write(out);
+        
+        //TODO debug
+        //dbg("private",Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded()));
     }
     
     /* ########## SERVER -> CLIENT ########## */

@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class DBConnector {
-    private static final MongoClient CLIENT;
+    public static final MongoClient CLIENT;
     static {
         try(
             final BufferedReader br = new BufferedReader(
@@ -36,17 +36,18 @@ public class DBConnector {
                           .orElseThrow(() -> new RuntimeException("Missing connection string."))
             );
         } catch(final IOException e) {throw new RuntimeException(e);}
+        Runtime.getRuntime().addShutdownHook(new Thread() {@Override public void run() {CLIENT.close();}});
     }
-    private static final String DB_NAME = "groupie";
-    private static final String USERS_COLLECTION_NAME = "users";
-    private static MongoCollection<Document> getCollection() {
+    public static final String DB_NAME = "groupie";
+    public static final String USERS_COLLECTION_NAME = "users";
+    public static MongoCollection<Document> getCollection() {
         return CLIENT.getDatabase(DB_NAME).getCollection(USERS_COLLECTION_NAME);
     }
-    private static Bson usernameFilter(final byte[] username) {return Filters.eq("username",username);}
-    private static Document findUser(final byte[] username) {
+    public static Bson usernameFilter(final byte[] username) {return Filters.eq("username",username);}
+    public static Document findUser(final byte[] username) {
         return getCollection().find(usernameFilter(username)).first();
     }
-    private static boolean userExists(final byte[] username) {
+    public static boolean userExists(final byte[] username) {
         return getCollection().countDocuments(usernameFilter(username),new CountOptions().limit(1)) != 0;
     }
     
@@ -59,9 +60,9 @@ public class DBConnector {
                ? Arrays.equals(
                     EncryptionUtil.hash(
                         password,
-                        doc.get("salt",byte[].class)
+                        doc.get("salt",org.bson.types.Binary.class).getData()
                     ),
-                    doc.get("password",byte[].class)
+                    doc.get("password",org.bson.types.Binary.class).getData()
                 )
                      ? AuthResult.success
                      : AuthResult.incorrect_password

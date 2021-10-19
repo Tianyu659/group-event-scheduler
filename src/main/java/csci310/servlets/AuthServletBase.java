@@ -2,7 +2,6 @@ package csci310.servlets;
 
 import csci310.security.EncryptionUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +57,7 @@ public abstract class AuthServletBase<R extends Enum<R>> extends HttpServlet {
             // Use the credentials.
             final R result = doAuth(credentials);
             SessionAttributes.isAuthed.setAttribute(session,result == getSuccess());
-            resp.getWriter().println(result);
+            resp.getWriter().print(result);
         }
     }
 }

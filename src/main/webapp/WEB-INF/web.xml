@@ -7,6 +7,7 @@
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>csci310.servlets.LoginServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -15,6 +16,7 @@
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>csci310.servlets.RegisterServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
