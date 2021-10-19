@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import csci310.security.EncryptionUtil;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -43,7 +44,9 @@ public class DBConnector {
     public static MongoCollection<Document> getCollection() {
         return CLIENT.getDatabase(DB_NAME).getCollection(USERS_COLLECTION_NAME);
     }
-    public static Bson usernameFilter(final byte[] username) {return Filters.eq("username",username);}
+    public static Bson usernameFilter(final byte[] username) {
+        return Filters.eq("username",username);
+    }
     public static Document findUser(final byte[] username) {
         return getCollection().find(usernameFilter(username)).first();
     }
@@ -60,9 +63,9 @@ public class DBConnector {
                ? Arrays.equals(
                     EncryptionUtil.hash(
                         password,
-                        doc.get("salt",org.bson.types.Binary.class).getData()
+                        doc.get("salt",Binary.class).getData()
                     ),
-                    doc.get("password",org.bson.types.Binary.class).getData()
+                    doc.get("password",Binary.class).getData()
                 )
                      ? AuthResult.success
                      : AuthResult.incorrect_password
