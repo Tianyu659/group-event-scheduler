@@ -3,13 +3,9 @@ branches:
   only:
   - develop
 services:
-  - docker
-env:
-  - DOCKER_COMPOSE_VERSION=2
+  - mongodb
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-script:
-  - docker build - < Dockerfile
+  - sleep 15
+  - mongo groupie --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+#script:
+#  - docker build - < Dockerfile
