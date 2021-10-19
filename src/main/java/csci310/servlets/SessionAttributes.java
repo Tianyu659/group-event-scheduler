@@ -3,13 +3,18 @@ package csci310.servlets;
 import javax.servlet.http.HttpSession;
 
 public enum SessionAttributes {
-    keys;
+    keys,isAuthed(false);
     
-    public void setAttribute(HttpSession session,Object o) {
+    final Object defaultValue;
+    SessionAttributes(final Object defaultValue) {this.defaultValue = defaultValue;}
+    SessionAttributes() {this(null);}
+    
+    public void setAttribute(final HttpSession session,final Object o) {
         session.setAttribute(name(),o);
     }
     @SuppressWarnings("unchecked")
-    public <T> T getAttribute(HttpSession session) {
-        return (T)session.getAttribute(name());
+    public <T> T getAttribute(final HttpSession session) {
+        final Object o = session.getAttribute(name());
+        return (T)(o == null? defaultValue : o);
     }
 }
