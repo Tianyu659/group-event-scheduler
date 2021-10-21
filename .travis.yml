@@ -7,5 +7,3 @@ services:
 before_install:
   - sleep 15
   - mongo groupie --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
-#script:
-#  - docker build - < Dockerfile
