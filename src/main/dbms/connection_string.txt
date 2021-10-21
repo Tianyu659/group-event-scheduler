@@ -1,0 +1,4 @@
+# Change the below string to the desired connection string to the MongoDB server. See
+# https://mongodb.github.io/mongo-java-driver/4.3/apidocs/mongodb-driver-core/com/mongodb/ConnectionString.html
+# for more information.
+mongodb://localhost:27017
