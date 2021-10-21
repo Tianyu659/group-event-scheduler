@@ -23,11 +23,19 @@
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8080/register.jsp">Register</a>
+      <% String url = request.getRequestURL().toString();
+         if(url.equals("http://localhost:8080/")) {
+      %>
+          <a class="nav-link" href="http://localhost:8080/register.jsp">Register</a>
+      <% } else if (url.equals("http://localhost:8080/register.jsp")) {
+      %>
+          <a class="nav-link" href="http://localhost:8080/">Log In</a>
+      <% } else if (url.equals("http://localhost:8080/calendar.jsp")) {
+      %>
+          <a class="nav-link" href="http://localhost:8080/">Log Out</a>
+      <% } %>
+
       </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/">Log Out</a>
-    </li>
     </ul>
   </div>
 </nav>
