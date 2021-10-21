@@ -36,6 +36,13 @@
       <% } %>
 
       </li>
+      <% 
+        if(url.equals("http://localhost:8080/calendar.jsp")) {
+      %>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8080/eventform.jsp">Create Event</a>
+        </li>
+      <% } %>
     </ul>
   </div>
 </nav>
