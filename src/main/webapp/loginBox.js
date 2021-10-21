@@ -111,5 +111,4 @@ const Form = (props) => {
 
 
 const domContainer2 = document.querySelector('#login_box_container');
-//ReactDOM.render(React.createElement('div', null, 'Hello World'), domContainer2);
 ReactDOM.render(e(Form), domContainer2);
