@@ -1,6 +1,7 @@
 package csci310;
 import java.util.ArrayList;
 import java.util.Date;
+import com.google.gson.Gson;
 import java.util.List;
 
 public class Event {
@@ -43,6 +44,13 @@ public class Event {
     // remove a user from the list of attendees
     public void removeAttendee(User user_object) {
         this.attendees.remove(user_object);
+    }
+
+    // get a json string of this class information
+    public String getEventGsonString() {
+        Gson gson = new Gson();
+        String jsonEvent = gson.toJson(this);
+        return jsonEvent;
     }
 
 }
