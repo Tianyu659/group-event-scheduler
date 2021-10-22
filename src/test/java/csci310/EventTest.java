@@ -1,17 +1,24 @@
 package csci310;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
 
 public class EventTest {
-
+    Event event;
+    User user1;
+    
+    @Before
+    public void setUp() {
+        event = new Event();
+        user1 = new User();
+        user1.setName("Tommy Trojan");
+    }
+    
     @Test
     public void testaddAttendee() {
-        Event event = new Event();
         int num_attendees = event.getAttendees().size();
-        User user1 = new User();
-        user1.setName("Tommy Trojan");
         event.addAttendee(user1);
         int new_num_attendees = event.getAttendees().size();
         Assert.assertTrue(new_num_attendees>num_attendees);
@@ -19,9 +26,6 @@ public class EventTest {
 
     @Test
     public void testremoveAttendee() {
-        Event event = new Event();
-        User user1 = new User();
-        user1.setName("Tommy Trojan");
         User user2 = new User();
         user2.setName("Hecuba");
         event.addAttendee(user1);
