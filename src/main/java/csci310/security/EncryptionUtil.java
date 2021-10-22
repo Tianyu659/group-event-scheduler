@@ -142,9 +142,6 @@ public class EncryptionUtil {
         resp.setContentType("application/octet-stream");
         resp.setContentLength(out.length);
         resp.getOutputStream().write(out);
-        
-        //TODO debug
-        //dbg("private",Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded()));
     }
     
     /* ########## SERVER -> CLIENT ########## */
