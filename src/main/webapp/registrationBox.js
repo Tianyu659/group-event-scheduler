@@ -29,7 +29,7 @@ const headerStyle = {
 const Form = ({ handleClose }) => {
     const classes = useStyles();
     // create state variables for each input
-    const [username, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password_confirmed, confirmPassword] = useState('');
 
@@ -66,7 +66,7 @@ const Form = ({ handleClose }) => {
                     type="username"
                     required
                     value={username}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={e => setUsername(e.target.value)}
                 />
                 <TextField
                     id = "r_password_field"
