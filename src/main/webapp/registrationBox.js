@@ -29,17 +29,25 @@ const headerStyle = {
 const Form = ({ handleClose }) => {
     const classes = useStyles();
     // create state variables for each input
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
+    const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [password_confirmed, confirmPassword] = useState('');
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(firstName, lastName, email, password);
+        if(password != password_confirmed)
+        {
+            alert("password does not match");
+        }
+        else
+        {
+        console.log(username, password);
         window.location.replace("http://localhost:8080/calendar.jsp");
         handleClose();
+        }
     };
+
+
 
     const handleCancel = e => {
         e.preventDefault();
@@ -52,32 +60,17 @@ const Form = ({ handleClose }) => {
             <h2 style={headerStyle}>Sign Up</h2>
             <form className={classes.root} onSubmit={handleSubmit}>
                 <TextField
-                    id = "r_firstname_field"
-                    label="First Name"
+                    id = "r_username_field"
+                    label="Username"
                     variant="filled"
+                    type="username"
                     required
-                    value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
-                />
-                <TextField
-                    id = "r_lastname_field"
-                    label="Last Name"
-                    variant="filled"
-                    required
-                    value={lastName}
-                    onChange={e => setLastName(e.target.value)}
-                />
-                <TextField
-                    id = "r_email_field"
-                    label="Email"
-                    variant="filled"
-                    type="email"
-                    required
-                    value={email}
+                    value={username}
                     onChange={e => setEmail(e.target.value)}
                 />
                 <TextField
                     id = "r_password_field"
+                    name = "password"
                     label="Password"
                     variant="filled"
                     type="password"
@@ -85,12 +78,23 @@ const Form = ({ handleClose }) => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                 />
+                <TextField
+                    id = "r_password_reentered_field"
+                    name = "confirm_password"
+                    label = "Password Comfirm"
+                    variant= "filled"
+                    type= "password"
+                    required
+                    value={password_confirmed}
+                    onChange={e => confirmPassword(e.target.value)}
+                    />
+                <div>{}</div>
                 <div>
                     <Button variant="contained" onClick={handleCancel}>
                         Cancel
                     </Button>
                     <Button type="submit" variant="contained" color="primary">
-                        Signup
+                        Create User
                     </Button>
                 </div>
             </form>
