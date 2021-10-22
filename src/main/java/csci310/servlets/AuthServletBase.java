@@ -51,9 +51,6 @@ public abstract class AuthServletBase<R extends Enum<R>> extends HttpServlet {
                 StandardCharsets.UTF_8
             ).split("\n",2);
         
-            //TODO DEBUG
-            //System.out.println(credentials[0]+","+credentials[1]);
-        
             // Use the credentials.
             final R result = doAuth(credentials);
             SessionAttributes.isAuthed.setAttribute(session,result == getSuccess());
