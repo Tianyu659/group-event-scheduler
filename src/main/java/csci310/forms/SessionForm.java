@@ -2,7 +2,6 @@ package csci310.forms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import csci310.exception.NotImplementedError;
 
 public class SessionForm extends Form {
     private final String username;
@@ -13,14 +12,15 @@ public class SessionForm extends Form {
             @JsonProperty(value = "username", required = true) String username,
             @JsonProperty(value = "password", required = true) String password
     ) {
-        throw new NotImplementedError();
+        this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
-        throw new NotImplementedError();
+        return this.username;
     }
 
     public String getPassword() {
-        throw new NotImplementedError();
+        return this.password;
     }
 }

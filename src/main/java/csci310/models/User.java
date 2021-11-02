@@ -3,7 +3,6 @@ package csci310.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import csci310.exception.NotImplementedError;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
@@ -26,11 +25,11 @@ public class User {
     private String lastName;
 
     public int getId() {
-        throw new NotImplementedError();
+        return this.id;
     }
 
     public void setUsername(String username) {
-        throw new NotImplementedError();
+        this.username = username;
     }
 
     public String getUsername() {
@@ -38,26 +37,38 @@ public class User {
     }
 
     public boolean comparePassword(String password) {
-        throw new NotImplementedError();
+        Argon2 argon2 = Argon2Factory.create();
+        char[] buffer = password.toCharArray();
+        try {
+            return argon2.verify(this.password, buffer);
+        } finally {
+            argon2.wipeArray(buffer);
+        }
     }
 
     public void setPassword(String password) {
-        throw new NotImplementedError();
+        Argon2 argon2 = Argon2Factory.create();
+        char[] buffer = password.toCharArray();
+        try {
+            this.password = argon2.hash(10, 65535, 1, buffer);
+        } finally {
+            argon2.wipeArray(buffer);
+        }
     }
 
     public String getFirstName() {
-        throw new NotImplementedError();
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
-        throw new NotImplementedError();
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        throw new NotImplementedError();
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        throw new NotImplementedError();
+        this.lastName = lastName;
     }
 }

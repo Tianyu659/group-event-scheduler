@@ -1,7 +1,6 @@
 package csci310;
 
 import csci310.exception.ConfigurationException;
-import csci310.exception.NotImplementedError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,30 +19,72 @@ public class Configuration {
     private final Document document;
 
     private Configuration(Document document) {
-        throw new NotImplementedError();
+        this.document = document;
     }
 
     public Map<String, String> values(String... path) {
-        throw new NotImplementedError();
+        Node cursor = this.document.getDocumentElement();
+        for (String part : path) {
+            NodeList children = cursor.getChildNodes();
+
+            boolean found = false;
+            for (int i = 0; i < children.getLength(); ++i) {
+                Node child = children.item(i);
+                if (child.getNodeName().equals(part)) {
+                    cursor = child;
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                throw new ConfigurationException("Couldn't find values for path " + String.join("/", path) + "!");
+            }
+        }
+
+        HashMap<String, String> result = new HashMap<>();
+        NodeList children = cursor.getChildNodes();
+        for (int i = 0; i < children.getLength(); ++i) {
+            Node child = children.item(i);
+            if (child.getNodeName().equals("value")) {
+                String key = child.getAttributes().getNamedItem("key").getNodeValue();
+                String value = child.getTextContent();
+                result.put(key, value);
+            }
+        }
+
+        return result;
     }
 
     public static Configuration load() {
-        throw new NotImplementedError();
+        if (Configuration.instance == null) {
+            Configuration.instance = Configuration.read(new File("configuration.xml"));
+        }
+        return Configuration.instance;
     }
 
     public static Configuration read(File file) {
-        throw new NotImplementedError();
+        try {
+            return new Configuration(Configuration.createDocumentBuilder().parse(file));
+        } catch (SAXException exception) {
+            throw new ConfigurationException("Invalid XML in settings file!");
+        } catch (IOException exception) {
+            throw new ConfigurationException("Error reading settings file!");
+        }
     }
 
     public static DocumentBuilderFactory createDocumentBuilderFactory() {
-        throw new NotImplementedError();
+        return DocumentBuilderFactory.newInstance();
     }
 
     public static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory documentBuilderFactory) {
-        throw new NotImplementedError();
+        try {
+            return documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException exception) {
+            throw new ConfigurationException("Failed to initialize the settings parser!");
+        }
     }
 
     public static DocumentBuilder createDocumentBuilder() {
-        throw new NotImplementedError();
+        return Configuration.createDocumentBuilder(Configuration.createDocumentBuilderFactory());
     }
 }

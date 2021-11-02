@@ -9,11 +9,14 @@ public class RequestException extends Exception {
     private final String message;
 
     public RequestException(int status, String message) {
-        throw new NotImplementedError();
+        this.status = status;
+        this.message = message;
     }
 
     public void apply(HttpServletResponse response) throws IOException {
-        throw new NotImplementedError();
+        response.setStatus(this.status);
+        response.setContentType("application/json");
+        response.getWriter().println("{\"error\": \"" + this.message + "\"}");
     }
 
     public interface ThrowsSQLException<T> {
@@ -21,6 +24,10 @@ public class RequestException extends Exception {
     }
 
     public static <T> T wrap(ThrowsSQLException<T> lambda, String message) throws RequestException {
-        throw new NotImplementedError();
+        try {
+            return lambda.call();
+        } catch (SQLException exception) {
+            throw new RequestException(500, message);
+        }
     }
 }
