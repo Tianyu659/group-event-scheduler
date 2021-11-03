@@ -4,10 +4,8 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import csci310.exception.ConfigurationException;
-import csci310.exception.NotImplementedError;
 import csci310.models.User;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 public class Database {
@@ -18,7 +16,12 @@ public class Database {
     }
 
     public static JdbcConnectionSource setup(Configuration configuration) {
-        throw new NotImplementedError();
+        JdbcConnectionSource connectionSource = Database.createConnectionSource(configuration);
+        ConfigurationException.wrap(() -> {
+            TableUtils.createTableIfNotExists(connectionSource, User.class);
+            return null;
+        }, "Unable to set up database!");
+        return connectionSource;
     }
 
     public static JdbcConnectionSource createConnectionSource(Configuration configuration) {
