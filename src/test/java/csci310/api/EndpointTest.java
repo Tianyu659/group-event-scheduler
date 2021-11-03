@@ -23,6 +23,7 @@ public class EndpointTest {
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         EndpointTest.connectionSource = Database.connect();
+        TableUtils.dropTable(EndpointTest.connectionSource, User.class, true);
         TableUtils.createTable(EndpointTest.connectionSource, User.class);
         EndpointTest.userDao = DaoManager.createDao(EndpointTest.connectionSource, User.class);
     }

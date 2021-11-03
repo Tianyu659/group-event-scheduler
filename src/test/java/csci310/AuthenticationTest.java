@@ -21,6 +21,7 @@ public class AuthenticationTest {
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         AuthenticationTest.connectionSource = Database.connect();
+        TableUtils.dropTable(AuthenticationTest.connectionSource, User.class, true);
         TableUtils.createTable(AuthenticationTest.connectionSource, User.class);
         AuthenticationTest.userDao = DaoManager.createDao(AuthenticationTest.connectionSource, User.class);
         AuthenticationTest.user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");

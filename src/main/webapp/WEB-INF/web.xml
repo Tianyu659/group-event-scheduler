@@ -14,10 +14,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/users/*</url-pattern>
+        <url-pattern>/api/users/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SessionServlet</servlet-name>
-        <url-pattern>/session/*</url-pattern>
+        <url-pattern>/api/session/*</url-pattern>
     </servlet-mapping>
 </web-app>
