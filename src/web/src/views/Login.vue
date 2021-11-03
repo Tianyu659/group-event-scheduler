@@ -1,7 +1,7 @@
 <template>
   <div class="small">
     <h1>Login</h1>
-    <form>
+    <div class="form">
       <div class="group">
         <input
           id="username"
@@ -24,7 +24,7 @@
         <button @click="onClickSubmit">Submit</button>
         <router-link to="/register" class="button">Register</router-link>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
