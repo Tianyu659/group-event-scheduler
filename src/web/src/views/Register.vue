@@ -1,7 +1,7 @@
 <template>
   <div class="small">
     <h1>Register</h1>
-    <form>
+    <div class="form">
       <div class="group">
         <input
           id="username"
@@ -25,7 +25,7 @@
           id="password2"
           type="password"
           placeholder="password"
-          v-model="credentials.passwordConfirm"
+          v-model="passwordConfirm"
         />
         <label>Confirm password</label>
       </div>
@@ -43,7 +43,7 @@
           id="last-name"
           type="text"
           placeholder="username"
-          v-model="credentials.username"
+          v-model="credentials.lastName"
         />
         <label>Last name</label>
       </div>
@@ -51,25 +51,36 @@
         <button @click="onClickSubmit">Register</button>
         <router-link to="/login" class="button">Log in</router-link>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { url } from "@/url";
 
 @Options({})
 export default class Login extends Vue {
+  public passwordConfirm = "";
+
   public credentials = {
     username: "",
     password: "",
-    passwordConfirm: "",
     firstName: "",
     lastName: "",
   };
 
   public onClickSubmit(): void {
-    console.log("log in!");
+    console.log(JSON.stringify(this.credentials));
+    fetch(url("/users/"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.credentials),
+    })
+      .then((response: Response) => response.json())
+      .then((data: unknown) => {
+        console.log(data);
+      });
   }
 }
 </script>

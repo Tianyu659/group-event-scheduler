@@ -1,6 +1,7 @@
-form {
+form, .form {
   .group {
     display: block;
+    margin-bottom: 0.5em;
 
     input, label {
       width: 100%;
