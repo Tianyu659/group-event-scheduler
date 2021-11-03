@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <database>
+        <value key="type">sqlite</value>
+        <value key="url">jdbc:sqlite:test.sqlite3</value>
+    </database>
+    <authentication>
+        <value key="secret">hello, world! this is a development key :)</value>
+    </authentication>
+</configuration>
