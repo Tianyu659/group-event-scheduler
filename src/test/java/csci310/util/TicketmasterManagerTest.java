@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class TicketmasterManagerTest {
+public class TicketmasterManagerTest extends TicketmasterManager{
 
 	@Test
 	public void testsearchEventByKeyword() throws IOException {
