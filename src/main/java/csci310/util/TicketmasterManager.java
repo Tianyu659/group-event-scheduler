@@ -26,6 +26,10 @@ public class TicketmasterManager {
 	    return lineString;
 	}	
 	
+	//TODO: 
+	// - event model (optional -> output type change)
+	// - model of search request -> more comprehensive search function
+	
 	//Event Details
 	public static String getEventDetails(String eventID) throws IOException {
 		URL url = new URL(ROOT_URL + "events/" + eventID + ".json?apikey=" + API_KEY);
@@ -38,6 +42,5 @@ public class TicketmasterManager {
         String lineString = in.readLine();
         return lineString;
 	}
-	
-	//TODO Event Images
+
 }
