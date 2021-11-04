@@ -42,7 +42,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(201));
 
-        Assert.assertTrue(response.getBody().toString().trim().startsWith("{\"token\": \""));
+        Assert.assertTrue(response.getBody().toString().trim().contains("\"token\":"));
     }
 
     @Test
