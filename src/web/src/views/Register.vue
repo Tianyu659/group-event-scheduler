@@ -47,6 +47,7 @@
         />
         <label>Last name</label>
       </div>
+      <p class="error" v-show="error">{{ error }}</p>
       <div class="buttons">
         <button @click="onClickSubmit">Register</button>
         <router-link to="/login" class="button">Log in</router-link>
@@ -62,6 +63,7 @@ import { session } from "@/session";
 @Options({})
 export default class Login extends Vue {
   public passwordConfirm = "";
+  public error = "";
 
   public credentials = {
     username: "",
@@ -74,9 +76,15 @@ export default class Login extends Vue {
     session
       .register(this.credentials)
       .then(() => this.$router.push({ name: "login" }))
-      .catch(() => console.error("failed to register"));
+      .catch((data: Record<string, never>) => {
+        this.error = data.error;
+      });
   }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.error {
+  color: red;
+}
+</style>
