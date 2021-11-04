@@ -6,11 +6,7 @@
     <router-link to="/profile" v-if="session.user !== null">
       {{ session.user.firstName }}
     </router-link>
-    <a
-      v-if="session.user !== null"
-      class="cursor-pointer"
-      @click="session.logout()"
-    >
+    <a v-if="session.user !== null" class="cursor-pointer" @click="logout()">
       Logout
     </a>
     <router-link to="/login" v-if="session.user === null">Login</router-link>
@@ -26,8 +22,8 @@ import { session } from "@/session";
 export default class Home extends Vue {
   public readonly session = session;
 
-  public test(): void {
-    console.log(session);
+  public logout(): void {
+    this.$router.push({ name: "login" }).then(() => session.logout());
   }
 }
 </script>

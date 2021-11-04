@@ -23,9 +23,17 @@ export class Session {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
-    })
-      .then((response: Response) => response.json())
-      .then((data: Record<string, never>) => User.wrap(data));
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((data: Record<string, never>) => {
+          return User.wrap(data);
+        });
+      } else {
+        return response
+          .json()
+          .then((data: Record<string, never>) => Promise.reject(data));
+      }
+    });
   }
 
   public login(form: LoginForm): Promise<User> {
@@ -33,18 +41,25 @@ export class Session {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
-    })
-      .then((response: Response) => response.json())
-      .then((data: Record<string, never>) => {
-        this.token = data["token"];
-        this.user = User.wrap(data["user"]);
-        return this.user;
-      });
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((data: Record<string, never>) => {
+          this.token = data["token"];
+          this.user = User.wrap(data["user"]);
+          return this.user;
+        });
+      } else {
+        return response
+          .json()
+          .then((data: Record<string, never>) => Promise.reject(data));
+      }
+    });
   }
 
-  public logout(): void {
+  public logout(): Promise<void> {
     this.user = null;
     this.token = null;
+    return Promise.resolve();
   }
 }
 
