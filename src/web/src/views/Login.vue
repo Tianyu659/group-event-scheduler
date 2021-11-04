@@ -38,7 +38,7 @@ export default class Login extends Vue {
 
   public onClickSubmit(): void {
     session.login(this.credentials).then(() => {
-      this.$router.push({ name: "home" });
+      this.$router.push({ name: "dashboard" });
     });
   }
 }
