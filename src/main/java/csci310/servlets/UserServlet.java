@@ -43,7 +43,7 @@ public class UserServlet extends HttpServlet {
 			try {
 				userDao.create(user);
 			} catch (SQLException exception) {
-				throw new RequestException(400, "could not create user account as specified!");
+				throw new RequestException(400, "could not create user account as specified: " + exception);
 			}
 
 			response.setContentType("application/json");

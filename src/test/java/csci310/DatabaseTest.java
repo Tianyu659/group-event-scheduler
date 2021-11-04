@@ -66,4 +66,13 @@ public class DatabaseTest {
             Assert.assertNotNull(exception);
         }
     }
+
+    @Test
+    public void testDatabaseSetup() {
+        Configuration configuration = EasyMock.mock(Configuration.class);
+        Map<String, String> values = Map.of("type", "sqlite", "url", "jdbc:sqlite:test.sqlite3");
+        EasyMock.expect(configuration.values("database")).andReturn(values);
+        EasyMock.replay(configuration);
+        Database.setup(configuration);
+    }
 }

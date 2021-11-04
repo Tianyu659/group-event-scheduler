@@ -16,6 +16,7 @@ public class UserTest {
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         UserTest.connectionSource = Database.connect();
+        TableUtils.dropTable(UserTest.connectionSource, User.class, true);
         TableUtils.createTable(UserTest.connectionSource, User.class);
         UserTest.dao = DaoManager.createDao(UserTest.connectionSource, User.class);
     }

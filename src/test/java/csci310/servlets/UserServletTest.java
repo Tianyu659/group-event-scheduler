@@ -28,6 +28,7 @@ public class UserServletTest {
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         UserServletTest.connectionSource = Database.connect();
+        TableUtils.dropTable(UserServletTest.connectionSource, User.class, true);
         TableUtils.createTable(UserServletTest.connectionSource, User.class);
         UserServletTest.userDao = DaoManager.createDao(UserServletTest.connectionSource, User.class);
         UserServletTest.user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
