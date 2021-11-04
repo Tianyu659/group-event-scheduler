@@ -45,6 +45,7 @@ export default class Login extends Vue {
         this.$router.push({ name: "dashboard" });
       })
       .catch((data: Record<string, never>) => {
+        console.log("error", data);
         this.error = data["error"];
       });
   }

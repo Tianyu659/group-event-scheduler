@@ -6,7 +6,12 @@
     <router-link to="/profile" v-if="session.user !== null">
       {{ session.user.firstName }}
     </router-link>
-    <a v-if="session.user !== null" class="cursor-pointer" @click="logout()">
+    <a
+      id="logout"
+      v-if="session.user !== null"
+      class="cursor-pointer"
+      @click="logout()"
+    >
       Logout
     </a>
     <router-link to="/login" v-if="session.user === null">Login</router-link>
