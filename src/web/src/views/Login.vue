@@ -30,22 +30,16 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { url } from "@/url";
+import { session } from "@/session";
 
 @Options({})
 export default class Login extends Vue {
   public credentials = { username: "", password: "" };
 
   public onClickSubmit(): void {
-    fetch(url("/session/"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.credentials),
-    })
-      .then((response: Response) => response.json())
-      .then((data: unknown) => {
-        console.log(data);
-      });
+    session.login(this.credentials).then(() => {
+      this.$router.push({ name: "home" });
+    });
   }
 }
 </script>

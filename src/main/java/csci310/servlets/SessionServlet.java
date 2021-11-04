@@ -1,5 +1,6 @@
 package csci310.servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import csci310.Authentication;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,11 @@ public class SessionServlet extends HttpServlet {
             if (results.size() > 0 && results.get(0).comparePassword(form.getPassword())) {
                 response.setStatus(201);
                 response.setContentType("application/json");
-                response.getWriter().println("{\"token\": \"" + Authentication.get().key(results.get(0)) + "\"}");
+                Map<String, Object> data = Map.of(
+                        "token", Authentication.get().key(results.get(0)),
+                        "user", results.get(0));
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(response.getWriter(), data);
             } else {
                 throw new RequestException(400, "incorrect credentials!");
             }
