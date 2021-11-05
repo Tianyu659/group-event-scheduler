@@ -7,4 +7,7 @@
     <authentication>
         <value key="secret">hello, world! this is a development key :)</value>
     </authentication>
+    <ticketmaster>
+        <value key="key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
+    </ticketmaster>
 </configuration>
