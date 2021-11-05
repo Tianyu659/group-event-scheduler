@@ -1,5 +1,7 @@
 package csci310.util;
 
+import csci310.Configuration;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +11,7 @@ import java.net.URL;
 
 public class TicketmasterManager {
 
-	private static final String API_KEY = "7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D";
+	private static final String API_KEY = Configuration.load().values("ticketmaster").get("key");
 	
 	private static final String ROOT_URL = "https://app.ticketmaster.com/discovery/v2/";
 	
