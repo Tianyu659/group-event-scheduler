@@ -25,7 +25,7 @@ public class UserServlet extends HttpServlet {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.writeValue(response.getWriter(), user);
 			response.setContentType("application/json");
-			response.setStatus(200);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (RequestException exception) {
 			exception.apply(response);
 		}
@@ -43,7 +43,7 @@ public class UserServlet extends HttpServlet {
 			try {
 				userDao.create(user);
 			} catch (SQLException exception) {
-				throw new RequestException(400, "could not create user account as specified: " + exception);
+				throw new RequestException(HttpServletResponse.SC_BAD_REQUEST, "could not create user account as specified: " + exception);
 			}
 
 			response.setContentType("application/json");
