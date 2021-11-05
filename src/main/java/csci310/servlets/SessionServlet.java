@@ -31,7 +31,7 @@ public class SessionServlet extends HttpServlet {
                     "cannot query database!");
 
             if (results.size() > 0 && results.get(0).comparePassword(form.getPassword())) {
-                response.setStatus(201);
+                response.setStatus(HttpServletResponse.SC_CREATED);
                 response.setContentType("application/json");
                 Map<String, Object> data = Map.of(
                         "token", Authentication.get().key(results.get(0)),
@@ -39,7 +39,7 @@ public class SessionServlet extends HttpServlet {
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.writeValue(response.getWriter(), data);
             } else {
-                throw new RequestException(400, "incorrect credentials!");
+                throw new RequestException(HttpServletResponse.SC_BAD_REQUEST, "incorrect credentials!");
             }
         } catch (RequestException exception) {
             exception.apply(response);
