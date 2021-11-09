@@ -8,7 +8,6 @@ import csci310.Authentication;
 import csci310.Database;
 import csci310.models.User;
 import csci310.models.UserTest;
-import io.cucumber.java.hu.Ha;
 import org.junit.*;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -22,7 +21,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class TicketmasterServletTest {
@@ -83,7 +83,7 @@ public class TicketmasterServletTest {
     }
     
     private void testToken(final String token,final String result) {
-        assertEquals(result,exec(token));
+        assertEquals(result.trim(),exec(token).trim());
     }
     @Test
     public void testdoPostBadToken() {
@@ -96,10 +96,13 @@ public class TicketmasterServletTest {
                     "user"
                 )
             ),
-            "invalid authentication!"
+            "{\"error\": \"invalid authentication!\"}"
         );
     }
-    @Test public void testdoPostNoToken() {testToken(null,"user authentication is required!");}
+    @Test
+    public void testdoPostNoToken() {
+        testToken(null,"{\"error\": \"user authentication is required!\"}");
+    }
     
     @Test
     public void testdoPostQuery() {
@@ -107,27 +110,3 @@ public class TicketmasterServletTest {
         exec(userToken,eventKwd);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
