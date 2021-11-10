@@ -30,7 +30,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testCreateDocumentBuilderInvalid() throws ConfigurationException, ParserConfigurationException {
+    public void testCreateDocumentBuilderFactory() throws ConfigurationException, ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = EasyMock.mock(DocumentBuilderFactory.class);
         EasyMock.expect(documentBuilderFactory.newDocumentBuilder()).andThrow(new ParserConfigurationException());
         EasyMock.replay(documentBuilderFactory);
@@ -41,6 +41,11 @@ public class ConfigurationTest {
         } catch (ConfigurationException exception) {
             Assert.assertNotNull(exception);
         }
+    }
+
+    @Test
+    public void testLoad() {
+        Assert.assertNotNull(Configuration.load());
     }
 
     @Test
@@ -73,7 +78,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testConfigurationValues() throws IOException, ConfigurationException {
+    public void testValues() throws IOException, ConfigurationException {
         File file = createTemporaryFile("<configuration><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></configuration>");
         Configuration configuration = Configuration.read(file);
         Map<String, String> values = configuration.values("test");
@@ -81,7 +86,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testConfigurationValuesNested() throws IOException, ConfigurationException {
+    public void testValuesNested() throws IOException, ConfigurationException {
         File file = createTemporaryFile("<configuration><parent><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></parent></configuration>");
         Configuration configuration = Configuration.read(file);
         Map<String, String> values = configuration.values("parent", "test");
@@ -89,7 +94,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testConfigurationValuesNestedMissing() throws IOException, ConfigurationException {
+    public void testValuesNestedMissing() throws IOException, ConfigurationException {
         File file = createTemporaryFile("<configuration><parent><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></parent></configuration>");
         Configuration configuration = Configuration.read(file);
 

@@ -11,19 +11,19 @@ import java.util.Map;
 
 public class DatabaseTest {
     @Test
-    public void testDatabaseConstructor() {
+    public void testConstructor() {
         Database database = new Database();
         Assert.assertNotNull(database);
     }
 
     @Test
-    public void testDatabaseConnect() {
+    public void testConnect() {
         JdbcConnectionSource connectionSource = Database.connect();
         Assert.assertNotNull(connectionSource);
     }
 
     @Test
-    public void testDatabaseConnectSqlite() {
+    public void testConnectSqlite() {
         Configuration configuration = EasyMock.mock(Configuration.class);
         Map<String, String> values = Map.of("type", "sqlite", "url", "jdbc:sqlite:test.sqlite3");
         EasyMock.expect(configuration.values("database")).andReturn(values);
@@ -32,7 +32,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testDatabaseConnectSqliteInvalid() {
+    public void testConnectSqliteInvalid() {
         Configuration configuration = EasyMock.mock(Configuration.class);
         Map<String, String> values = new HashMap<>();
         values.put("type", "sqlite");
@@ -50,7 +50,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testDatabaseConnectInvalid() {
+    public void testConnectInvalid() {
         Configuration configuration = EasyMock.mock(Configuration.class);
         Map<String, String> values = new HashMap<>();
         values.put("type", "invalid");
@@ -68,7 +68,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testDatabaseSetup() {
+    public void testCreateConnectionSource() {
         Configuration configuration = EasyMock.mock(Configuration.class);
         Map<String, String> values = Map.of("type", "sqlite", "url", "jdbc:sqlite:test.sqlite3");
         EasyMock.expect(configuration.values("database")).andReturn(values);

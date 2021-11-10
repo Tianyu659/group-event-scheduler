@@ -34,7 +34,7 @@ public class SessionServletTest {
     }
 
     @Test
-    public void testLogin() throws IOException {
+    public void testDoPost() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\", \"password\": \"secret\"}")
@@ -46,7 +46,7 @@ public class SessionServletTest {
     }
 
     @Test
-    public void testLoginIncorrect() throws IOException {
+    public void testDoPostIncorrect() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\", \"password\": \"invalid\"}")
@@ -58,7 +58,7 @@ public class SessionServletTest {
     }
 
     @Test
-    public void testLoginInvalidUsername() throws IOException {
+    public void testDoPostInvalidUsername() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\"}")
@@ -70,7 +70,7 @@ public class SessionServletTest {
     }
 
     @Test
-    public void testLoginInvalidPassword() throws IOException {
+    public void testDoPostInvalidPassword() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"password\": \"secret\"}")
@@ -82,7 +82,7 @@ public class SessionServletTest {
     }
 
     @Test
-    public void testLoginUnknown() throws IOException {
+    public void testDoPostUnknown() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"nkim\", \"password\": \"secret\"}")
