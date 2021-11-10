@@ -32,7 +32,7 @@ public class EventTest {
         );
         assertNotNull(split);
         assertEquals(2,split.size());
-        assertEquals("\"a.b\"",split.get(0));
+        assertEquals("\"a,b\"",split.get(0));
         assertEquals("c",split.get(1));
     
         split = Event.split(
@@ -138,7 +138,7 @@ public class EventTest {
             assertNotNull(y);
             assertEquals(1,y.size());
             {
-                Double c = (Double)x.get(0);
+                Double c = (Double)y.get(0);
                 assertNotNull(c);
                 assertEquals(3,c.intValue());
             }
@@ -172,7 +172,7 @@ public class EventTest {
             assertNotNull(y);
             assertEquals(1,y.size());
             {
-                Double c = (Double)x.get("c");
+                Double c = (Double)y.get("c");
                 assertNotNull(c);
                 assertEquals(3,c.intValue());
             }
@@ -245,7 +245,7 @@ public class EventTest {
             assertNotNull(y);
             assertEquals(1,y.size());
             {
-                Double c = (Double)x.get("c");
+                Double c = (Double)y.get("c");
                 assertNotNull(c);
                 assertEquals(3,c.intValue());
             }
@@ -279,7 +279,7 @@ public class EventTest {
             assertNotNull(y);
             assertEquals(1,y.size());
             {
-                Double c = (Double)x.get(0);
+                Double c = (Double)y.get(0);
                 assertNotNull(c);
                 assertEquals(3,c.intValue());
             }
