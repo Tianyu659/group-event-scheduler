@@ -6,11 +6,9 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
-import java.util.Arrays;
-
 @DatabaseTable(tableName = "users")
 public class User {
-    @DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true, unique = true)
     private int id;
     
     @DatabaseField(unique = true)
