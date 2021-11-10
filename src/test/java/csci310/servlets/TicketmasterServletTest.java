@@ -1,10 +1,8 @@
 package csci310.servlets;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import csci310.Authentication;
+import csci310.Configuration;
 import csci310.Database;
 import csci310.models.User;
 import csci310.models.UserTest;
@@ -26,25 +24,24 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class TicketmasterServletTest {
-    private static JdbcConnectionSource connectionSource;
-    private static Dao<User, Integer> userDao;
-    private static User user;
+    private static Database database;
+
     private static String userToken;
     private static String eventKwd;
+
     @BeforeClass
     public static void setUp() throws SQLException {
-        connectionSource = Database.connect();
-        TableUtils.dropTable(connectionSource, User.class, true);
-        TableUtils.createTable(connectionSource, User.class);
-        userDao = DaoManager.createDao(connectionSource, User.class);
-        user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
-        userDao.create(user);
+        database = new Database(Configuration.load("test"));
+        User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        database.users.dao().create(user);
+
         userToken = Authentication.get().key(user);
         eventKwd = "keyword,Football";
     }
+
     @AfterClass
     public static void tearDown() throws SQLException {
-        TableUtils.dropTable(connectionSource, User.class, true);
+        database.users.clear();
     }
     
     @InjectMocks TicketmasterServlet servlet;

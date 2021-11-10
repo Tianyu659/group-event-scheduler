@@ -1,7 +1,5 @@
 package csci310;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import csci310.exception.RequestException;
 import csci310.models.User;
 import io.jsonwebtoken.JwtException;
@@ -12,15 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class Authentication {
     public static final Authentication instance = new Authentication(Configuration.load());
     private final Key secret;
 
     public Authentication(Configuration configuration) {
-        Map<String, String> values = configuration.values("authentication");
-        this.secret = Keys.hmacShaKeyFor(values.get("secret").getBytes());
+        String secret = configuration.value("authentication.secret");
+        this.secret = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String key(User user) {
@@ -29,8 +26,7 @@ public class Authentication {
 
     public User user(String token) throws SQLException {
         String subject = Jwts.parserBuilder().setSigningKey(this.secret).build().parseClaimsJws(token).getBody().getSubject();
-        Dao<User, Integer> userDao = DaoManager.createDao(Database.connect(), User.class);
-        return userDao.queryForId(Integer.valueOf(subject));
+        return Database.load().users.dao().queryForId(Integer.valueOf(subject));
     }
 
     public User authenticate(HttpServletRequest request) throws RequestException {

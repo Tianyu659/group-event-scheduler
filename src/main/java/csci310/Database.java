@@ -1,37 +1,62 @@
 package csci310;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import csci310.exception.ConfigurationException;
-import csci310.models.User;
+import csci310.models.*;
 
-import java.util.Map;
+import java.sql.SQLException;
 
 public class Database {
-    private static final JdbcConnectionSource connectionSource = Database.setup(Configuration.load());
+    private static final Database instance = new Database(Configuration.load());
 
-    public static JdbcConnectionSource connect() {
-        return Database.connectionSource;
+    JdbcConnectionSource connectionSource;
+
+    public class Table<T> {
+        private final Class<T> tClass;
+
+        public Table(Class<T> tClass) {
+            this.tClass = tClass;
+        }
+
+        public Dao<T, Integer> dao() throws SQLException {
+            ConfigurationException.wrap(() -> {
+                TableUtils.createTableIfNotExists(connectionSource, this.tClass);
+                return null;
+            }, "unable to create table for " + tClass.getName());
+            return DaoManager.createDao(connectionSource, tClass);
+        }
+
+        public void clear() throws SQLException {
+            TableUtils.dropTable(connectionSource, this.tClass, true);
+            TableUtils.createTable(connectionSource, this.tClass);
+        }
     }
 
-    public static JdbcConnectionSource setup(Configuration configuration) {
-        JdbcConnectionSource connectionSource = Database.createConnectionSource(configuration);
-        ConfigurationException.wrap(() -> {
-            TableUtils.createTableIfNotExists(connectionSource, User.class);
-            return null;
-        }, "Unable to set up database!");
-        return connectionSource;
+    public Table<User> users;
+    public Table<GroupDate> groupDates;
+
+    public Database(Configuration configuration) {
+        this.connectionSource = Database.createConnectionSource(configuration);
+        this.users = new Table<>(User.class);
+        this.groupDates = new Table<>(GroupDate.class);
+    }
+
+    public static Database load() {
+        return Database.instance;
     }
 
     public static JdbcConnectionSource createConnectionSource(Configuration configuration) {
-        Map<String, String> values = configuration.values("database");
-        if (values.get("type").equals("sqlite")) {
+        String type = configuration.value("database.type");
+        if (type.equals("sqlite")) {
             return ConfigurationException.wrap(
-                    () -> new JdbcPooledConnectionSource(values.get("url")),
-                    "Unable to initialize SQLite connector!");
+                    () -> new JdbcPooledConnectionSource(configuration.value("database.url")),
+                    "unable to initialize SQLite connector!");
         } else {
-            throw new ConfigurationException("unknown database type " + values.get("type"));
+            throw new ConfigurationException("unknown database type " + type);
         }
     }
 }

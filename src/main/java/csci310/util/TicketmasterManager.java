@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class TicketmasterManager {
 
-	private static final String API_KEY = Configuration.load().values("ticketmaster").get("key");
+	private static final String API_KEY = Configuration.load().value("ticketmaster.key");
 	
 	private static final String ROOT_URL = "https://app.ticketmaster.com/discovery/v2/";
 	

@@ -2,7 +2,6 @@ package csci310.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.exception.RequestException;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +22,7 @@ public class SessionServlet extends HttpServlet {
         try {
             SessionForm form = Form.read(request, SessionForm.class);
             Dao<User, Integer> userDao = RequestException.wrap(
-                    () -> DaoManager.createDao(Database.connect(), User.class),
+                    () -> Database.load().users.dao(),
                     "cannot connect to database!");
             List<User> results = RequestException.wrap(
                     () -> userDao.queryForFieldValues(Map.of("username", form.getUsername())),

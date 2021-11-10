@@ -1,9 +1,6 @@
 package csci310.servlets;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.table.TableUtils;
+import csci310.Configuration;
 import csci310.Database;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
@@ -19,18 +16,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class SessionServletTest {
-    private static JdbcConnectionSource connectionSource;
-    private static Dao<User, Integer> userDao;
-    private static User user;
+    private static Database database;
 
     @BeforeClass
-    public static void setupTestDatabase() throws SQLException {
-        SessionServletTest.connectionSource = Database.connect();
-        TableUtils.dropTable(SessionServletTest.connectionSource, User.class, true);
-        TableUtils.createTable(SessionServletTest.connectionSource, User.class);
-        SessionServletTest.userDao = DaoManager.createDao(SessionServletTest.connectionSource, User.class);
-        SessionServletTest.user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
-        SessionServletTest.userDao.create(user);
+    public static void setupDatabase() throws SQLException {
+        database = new Database(Configuration.load("test"));
+        User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        database.users.dao().create(user);
     }
 
     @Test
@@ -95,6 +87,6 @@ public class SessionServletTest {
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
-        TableUtils.dropTable(SessionServletTest.connectionSource, User.class, true);
+        database.users.clear();
     }
 }

@@ -2,7 +2,6 @@ package csci310.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.exception.RequestException;
@@ -36,7 +35,7 @@ public class UserServlet extends HttpServlet {
 		try {
 			UserForm form = Form.read(request, UserForm.class);
 			Dao<User, Integer> userDao = RequestException.wrap(
-					() -> DaoManager.createDao(Database.connect(), User.class),
+					() -> Database.load().users.dao(),
 					"cannot connect to database!");
 			User user = form.validate();
 
