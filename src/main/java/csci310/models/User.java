@@ -39,22 +39,25 @@ public class User {
     }
     
     interface PasswordOp<T> {
-        T run(Argon2 argon2,char[] bufer);
+        T run(Argon2 argon2, char[] buffer);
     }
     
-    <T> T passwordOperation(String password,PasswordOp<T> op) {
+    public static <T> T passwordOperation(String password, PasswordOp<T> op) {
         final Argon2 a2 = Argon2Factory.create();
         final char[] buf = password.toCharArray();
-        try {return op.run(a2,buf);}
-        finally {a2.wipeArray(buf);}
+        try {
+            return op.run(a2, buf);
+        } finally {
+            a2.wipeArray(buf);
+        }
     }
     
     public boolean comparePassword(String password) {
-        return passwordOperation(password,(a,b) -> a.verify(this.password,b));
+        return passwordOperation(password, (a, b) -> a.verify(this.password, b));
     }
     
     public void setPassword(String password) {
-        this.password = passwordOperation(password,(a,b) -> a.hash(10,65535,1,b));
+        this.password = passwordOperation(password, (a, b) -> a.hash(10, 65535, 1, b));
     }
     
     public String getFirstName() {

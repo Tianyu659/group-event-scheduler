@@ -36,7 +36,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testGet() throws IOException {
+    public void testDoGet() throws IOException {
         String token = Authentication.get().key(UserServletTest.user);
 
         UserServlet servlet = new UserServlet();
@@ -50,7 +50,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testGetInvalid() throws IOException {
+    public void testDoGetInvalid() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", "ayayayaya")
@@ -62,7 +62,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testGetMissing() throws IOException {
+    public void testDoGetMissing() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", null)
@@ -74,7 +74,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testGetNonexistent() throws IOException {
+    public void testDoGetNonexistent() throws IOException {
         User user = UserTest.createUser("nkim", "secret", "Noah", "Kim");
         String token = Authentication.get().key(user);
 
@@ -89,7 +89,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testCreateUser() throws IOException {
+    public void testDoPost() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"nkim\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
@@ -100,7 +100,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testCreateUserExisting() throws IOException {
+    public void testDoPostExisting() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\", \"password\": \"secret\", \"firstName\": \"Tommy\", \"lastName\": \"Trojan\"}")
@@ -111,7 +111,7 @@ public class UserServletTest {
     }
 
     @Test
-    public void testCreateUserInvalid() throws IOException {
+    public void testDoPostInvalid() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\"}")

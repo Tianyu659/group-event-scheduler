@@ -53,6 +53,19 @@ public class UserTest {
         Assert.assertFalse(user.comparePassword(password + " incorrect"));
     }
 
+    @Test
+    public void testPasswordOperation() {
+        String result = User.passwordOperation("asdfjkl;", (a, b) -> a.hash(10, 65535, 1, b));
+        Assert.assertTrue(result.startsWith("$argon2i$v=19$m=65535,t=10,p=1"));
+    }
+
+    @Test
+    public void testComparePassword() {
+        User user = new User();
+        user.setPassword("asdfjkl;");
+        Assert.assertTrue(user.comparePassword("asdfjkl;"));
+    }
+
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         TableUtils.dropTable(UserTest.connectionSource, User.class, true);
