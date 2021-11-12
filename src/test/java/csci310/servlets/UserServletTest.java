@@ -88,7 +88,7 @@ public class UserServletTest {
                 .withBody("{\"username\": \"nkim\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doPost(request, response.bind(HttpServletResponse.SC_OK));
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
         Assert.assertNotNull(response);
     }
 

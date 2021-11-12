@@ -1,0 +1,20 @@
+{
+  "name": "My Event",
+  "description": "Something super fun",
+  "events": [
+    {
+      "name": "Fishing",
+      "description": "For fish",
+      "location": "Alaska",
+      "time": "2022-01-01 00:00:00",
+      "duration": 300
+    },
+    {
+      "name": "Baseball",
+      "description": "At the game",
+      "location": "Dodger's stadium",
+      "time": "2022-02-01 14:00:00",
+      "duration": 180
+    }
+  ]
+}

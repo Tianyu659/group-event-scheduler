@@ -38,11 +38,13 @@ public class Database {
 
     public Table<User> users;
     public Table<GroupDate> groupDates;
+    public Table<GroupDateEvent> groupDateEvents;
 
     public Database(Configuration configuration) {
         this.connectionSource = Database.createConnectionSource(configuration);
         this.users = new Table<>(User.class);
         this.groupDates = new Table<>(GroupDate.class);
+        this.groupDateEvents = new Table<>(GroupDateEvent.class);
     }
 
     public static Database load() {

@@ -1,23 +1,37 @@
 package csci310.models;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.table.TableUtils;
+import csci310.Configuration;
 import csci310.Database;
+import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.sql.SQLException;
 
 public class GroupDateTest {
-    static JdbcConnectionSource connectionSource;
-    private static Dao<GroupDate, Integer> dao;
+    private static Database database;
+    private static User user;
 
-//    @BeforeClass
-//    public static void setupTestDatabase() throws SQLException {
-//        UserTest.connectionSource = Database.connect();
-//        TableUtils.dropTable(UserTest.connectionSource, User.class, true);
-//        TableUtils.createTable(UserTest.connectionSource, User.class);
-//        GroupDateTest.dao = DaoManager.createDao(UserTest.connectionSource, User.class);
-//    }
+    public static GroupDate createGroupDate(User creator, String name, String description) {
+        GroupDate groupDate = new GroupDate();
+        groupDate.setCreator(creator);
+        groupDate.setName(name);
+        groupDate.setDescription(description);
+        groupDate.setLive(true);
+        return groupDate;
+    }
+
+    @BeforeClass
+    public static void setupTestDatabase() throws SQLException {
+        database = new Database(Configuration.load("test"));
+        user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        database.users.dao().create(user);
+    }
+
+    @Test
+    public void testGetEvents() throws SQLException {
+        GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
+        database.groupDates.dao().create(groupDate);
+        Assert.assertEquals(0, groupDate.getEvents().size());
+    }
 }
