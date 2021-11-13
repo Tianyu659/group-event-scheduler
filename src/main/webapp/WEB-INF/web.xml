@@ -12,6 +12,10 @@
         <servlet-name>SessionServlet</servlet-name>
         <servlet-class>csci310.servlets.SessionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GroupDateServlet</servlet-name>
+        <servlet-class>csci310.servlets.GroupDateServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/api/users/*</url-pattern>
@@ -19,5 +23,9 @@
     <servlet-mapping>
         <servlet-name>SessionServlet</servlet-name>
         <url-pattern>/api/session/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupDateServlet</servlet-name>
+        <url-pattern>/api/groupDates/*</url-pattern>
     </servlet-mapping>
 </web-app>

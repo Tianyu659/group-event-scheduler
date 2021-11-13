@@ -3,8 +3,11 @@ package csci310.servlets;
 import csci310.Authentication;
 import csci310.Configuration;
 import csci310.Database;
+import csci310.Resources;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
+import csci310.models.GroupDate;
+import csci310.models.GroupDateTest;
 import csci310.models.User;
 import csci310.models.UserTest;
 import org.junit.AfterClass;
@@ -17,23 +20,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class UserServletTest {
+public class GroupDateServletTest {
     private static Database database;
-    private static User user;
+    private static String token;
 
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         database = new Database(Configuration.load("test"));
-        user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);
+        database.users.dao().create(otherUser);
+        GroupDate groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Super fun event!");
+        GroupDate otherGroupDate = GroupDateTest.createGroupDate(otherUser, "Other Test Group Date", "Super fun event!");
+        database.groupDates.dao().create(groupDate);
+        database.groupDates.dao().create(otherGroupDate);
+        token = Authentication.get().key(user);
     }
 
     @Test
     public void testDoGet() throws IOException {
-        String token = Authentication.get().key(UserServletTest.user);
-
-        UserServlet servlet = new UserServlet();
+        GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/")
                 .withHeader("Authorization", token)
                 .build();
 
@@ -43,37 +52,50 @@ public class UserServletTest {
     }
 
     @Test
-    public void testDoGetInvalid() throws IOException {
-        UserServlet servlet = new UserServlet();
+    public void testDoGetOne() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withHeader("Authorization", "ayayayaya")
+                .withPathInfo("/1")
+                .withHeader("Authorization", token)
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doGet(request, response.bind(HttpServletResponse.SC_BAD_REQUEST));
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
         Assert.assertNotNull(response);
     }
 
     @Test
-    public void testDoGetMissing() throws IOException {
-        UserServlet servlet = new UserServlet();
+    public void testDoGetOneNotMine() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/2")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetNonExistent() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/100")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetUnauthorized() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", null)
-                .build();
-
-        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doGet(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
-        Assert.assertNotNull(response);
-    }
-
-    @Test
-    public void testDoGetNonexistent() throws IOException {
-        User user = UserTest.createUser("nkim", "secret", "Noah", "Kim");
-        String token = Authentication.get().key(user);
-
-        UserServlet servlet = new UserServlet();
-        HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withHeader("Authorization", token)
+                .withPathInfo("/")
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -83,39 +105,34 @@ public class UserServletTest {
 
     @Test
     public void testDoPost() throws IOException {
-        UserServlet servlet = new UserServlet();
+        GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withBody("{\"username\": \"nkim\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
+                .withHeader("Authorization", token)
+                .withBody(Resources.read("json/GroupDateServletTest.testDoPost.json"))
                 .build();
+
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
         Assert.assertNotNull(response);
     }
 
     @Test
-    public void testDoPostExisting() throws IOException {
-        UserServlet servlet = new UserServlet();
+    public void testDoPostUnauthorized() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withBody("{\"username\": \"ttrojan\", \"password\": \"secret\", \"firstName\": \"Tommy\", \"lastName\": \"Trojan\"}")
+                .withHeader("Authorization", null)
+                .withBody(Resources.read("json/GroupDateServletTest.testDoPost.json"))
                 .build();
-        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doPost(request, response.bind(HttpServletResponse.SC_BAD_REQUEST));
-        Assert.assertNotNull(response);
-    }
 
-    @Test
-    public void testDoPostInvalid() throws IOException {
-        UserServlet servlet = new UserServlet();
-        HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withBody("{\"username\": \"ttrojan\"}")
-                .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doPost(request, response.bind(HttpServletResponse.SC_BAD_REQUEST));
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
         Assert.assertNotNull(response);
     }
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         database.users.clear();
+        database.groupDates.clear();
+        database.groupDateEvents.clear();
     }
 }

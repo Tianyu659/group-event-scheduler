@@ -2,14 +2,13 @@ package csci310.models;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import java.time.LocalDateTime;
 
 @DatabaseTable(tableName = "groupDateEvents")
 public class GroupDateEvent {
     @DatabaseField(generatedId = true, unique = true)
     private int id;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignColumnName = "id")
+    @DatabaseField(foreign = true)
     private GroupDate groupDate;
 
     @DatabaseField()
@@ -19,7 +18,10 @@ public class GroupDateEvent {
     private String description;
 
     @DatabaseField()
-    private LocalDateTime time;
+    private String location;
+
+    @DatabaseField()
+    private long time;
 
     @DatabaseField()
     private int duration;
@@ -52,11 +54,19 @@ public class GroupDateEvent {
         return description;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setTime(long time) {
         this.time = time;
     }
 
-    public LocalDateTime getTime() {
+    public long getTime() {
         return time;
     }
 

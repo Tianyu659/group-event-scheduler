@@ -10,6 +10,11 @@ import java.io.StringReader;
 public class MockHttpServletRequestBuilder {
     private final HttpServletRequest mock = EasyMock.mock(HttpServletRequest.class);
 
+    public MockHttpServletRequestBuilder withPathInfo(String pathInfo) {
+        EasyMock.expect(this.mock.getPathInfo()).andReturn(pathInfo);
+        return this;
+    }
+
     public MockHttpServletRequestBuilder withBody(String body) throws IOException {
         EasyMock.expect(this.mock.getReader()).andReturn(new BufferedReader(new StringReader(body)));
         return this;
