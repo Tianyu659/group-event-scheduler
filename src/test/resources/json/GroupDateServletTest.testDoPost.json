@@ -16,5 +16,13 @@
       "time": 1636775919,
       "duration": 180
     }
+  ],
+  "invitations": [
+    {
+      "username": "ttrojan"
+    },
+    {
+      "username": "doesnotexist"
+    }
   ]
 }

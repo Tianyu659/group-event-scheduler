@@ -11,6 +11,7 @@ import csci310.models.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +21,17 @@ public class UserServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-			User user = Authentication.get().authenticate(request);
+			Authentication.get().authenticate(request);
+
+			Dao<User, Integer> userDao = RequestException.wrap(
+					() -> Database.load().users.dao(),
+					"cannot connect to database!");
+			List<User> users =  RequestException.wrap(
+					userDao::queryForAll,
+					"cannot connect to database");
+
 			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(response.getWriter(), user);
+			objectMapper.writeValue(response.getWriter(), users);
 			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (RequestException exception) {

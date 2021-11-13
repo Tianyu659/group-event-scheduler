@@ -13,4 +13,24 @@ public class Invitation {
 
     @DatabaseField(canBeNull = false, foreign = true, foreignColumnName = "id")
     public User user;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setGroupDate(GroupDate groupDate) {
+        this.groupDate = groupDate;
+    }
+
+    public GroupDate getGroupDate() {
+        return groupDate;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

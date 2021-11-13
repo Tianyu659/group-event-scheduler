@@ -10,16 +10,19 @@ public class GroupDateForm extends Form {
     private final String name;
     private final String description;
     private final Vector<GroupDateEventForm> events;
+    private final Vector<InvitationForm> invitations;
 
     @JsonCreator
     public GroupDateForm(
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "description", required = true) String description,
-            @JsonProperty(value = "events", required = true) Vector<GroupDateEventForm> events
+            @JsonProperty(value = "events", required = true) Vector<GroupDateEventForm> events,
+            @JsonProperty(value = "invitations", required = true) Vector<InvitationForm> invitations
     ) {
         this.name = name;
         this.description = description;
         this.events = events;
+        this.invitations = invitations;
     }
 
     public GroupDate validate() {
@@ -31,5 +34,9 @@ public class GroupDateForm extends Form {
 
     public Vector<GroupDateEventForm> getEventForms() {
         return this.events;
+    }
+
+    public Vector<InvitationForm> getInvitationForms() {
+        return this.invitations;
     }
 }

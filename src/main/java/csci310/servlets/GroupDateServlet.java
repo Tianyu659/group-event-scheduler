@@ -9,8 +9,10 @@ import csci310.exception.RequestException;
 import csci310.forms.Form;
 import csci310.forms.GroupDateEventForm;
 import csci310.forms.GroupDateForm;
+import csci310.forms.InvitationForm;
 import csci310.models.GroupDate;
 import csci310.models.GroupDateEvent;
+import csci310.models.Invitation;
 import csci310.models.User;
 
 import javax.servlet.http.HttpServlet;
@@ -69,6 +71,12 @@ public class GroupDateServlet extends HttpServlet {
             Dao<GroupDateEvent, Integer> eventDao = RequestException.wrap(
                     () -> Database.load().groupDateEvents.dao(),
                     "cannot connect to database!");
+            Dao<User, Integer> userDao = RequestException.wrap(
+                    () -> Database.load().users.dao(),
+                    "cannot connect to database!");
+            Dao<Invitation, Integer> invitationDao = RequestException.wrap(
+                    () -> Database.load().invitations.dao(),
+                    "cannot connect to database!");
 
             GroupDate groupDate = form.validate();
             RequestException.wrap(
@@ -80,6 +88,20 @@ public class GroupDateServlet extends HttpServlet {
                 RequestException.wrap(
                         () -> eventDao.create(groupDateEvent),
                         "cannot connect to database!");
+            }
+
+            for (InvitationForm invitationForm : form.getInvitationForms()) {
+                List<User> invitee = RequestException.wrap(
+                        () -> userDao.queryForEq("username", invitationForm.getUsername()),
+                        "cannot connect to database!");
+                if (!invitee.isEmpty()) {
+                    Invitation invitation = new Invitation();
+                    invitation.setGroupDate(groupDate);
+                    invitation.setUser(invitee.get(0));
+                    RequestException.wrap(
+                            () -> invitationDao.create(invitation),
+                            "cannot connect to database!");
+                }
             }
 
             response.setContentType("application/json");
