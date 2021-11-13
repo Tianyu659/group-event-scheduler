@@ -40,6 +40,7 @@ public class GroupDateServletTest {
     public void testDoGet() throws IOException {
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/")
                 .withHeader("Authorization", token)
                 .build();
 
@@ -77,5 +78,6 @@ public class GroupDateServletTest {
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         database.users.clear();
+        database.groupDates.clear();
     }
 }

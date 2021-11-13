@@ -2,6 +2,7 @@ package csci310.models;
 
 import csci310.Configuration;
 import csci310.Database;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,5 +34,11 @@ public class GroupDateTest {
         GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
         database.groupDates.dao().create(groupDate);
         Assert.assertEquals(0, groupDate.getEvents().size());
+    }
+
+    @AfterClass
+    public static void teardownTestDatabase() throws SQLException {
+        database.users.clear();
+        database.groupDates.clear();
     }
 }

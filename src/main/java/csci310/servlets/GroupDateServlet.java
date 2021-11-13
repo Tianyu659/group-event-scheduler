@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
+import csci310.api.Path;
 import csci310.exception.RequestException;
 import csci310.forms.Form;
 import csci310.forms.GroupDateForm;
@@ -24,14 +25,31 @@ public class GroupDateServlet extends HttpServlet {
             Dao<GroupDate, Integer> dao = RequestException.wrap(
                     () -> Database.load().groupDates.dao(),
                     "cannot connect to database!");
-            List<GroupDate> groupDates = RequestException.wrap(
-                    () -> dao.queryForEq("creator_id", user.getId()),
-                    "cannot connect to database!");
 
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(response.getWriter(), groupDates);
+            Path path = new Path(request.getPathInfo());
+
+            if (path.size() == 0) {
+                List<GroupDate> groupDates = RequestException.wrap(
+                        () -> dao.queryForEq("creator_id", user.getId()),
+                        "cannot connect to database!");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(response.getWriter(), groupDates);
+            } else {
+                int id = path.id(0);
+                GroupDate groupDate = RequestException.wrap(
+                        () -> dao.queryForId(id),
+                        "cannot connect to database!");
+                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                    throw new RequestException(404, "group date does not exist!");
+                } else {
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(response.getWriter(), groupDate);
+                }
+            }
         } catch (RequestException exception) {
             exception.apply(response);
         }
@@ -49,6 +67,7 @@ public class GroupDateServlet extends HttpServlet {
 //            objectMapper.writeValue(response.getWriter(), user);
             response.getWriter().println("{}");
         } catch (RequestException exception) {
+            exception.printStackTrace();
             exception.apply(response);
         }
     }
