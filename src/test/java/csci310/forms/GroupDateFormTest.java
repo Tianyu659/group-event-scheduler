@@ -1,11 +1,9 @@
 package csci310.forms;
 
 import csci310.models.GroupDate;
-import csci310.models.GroupDateEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.util.Vector;
 
 public class GroupDateFormTest {
