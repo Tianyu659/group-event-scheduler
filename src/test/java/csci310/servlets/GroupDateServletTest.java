@@ -79,5 +79,6 @@ public class GroupDateServletTest {
     public static void teardownTestDatabase() throws SQLException {
         database.users.clear();
         database.groupDates.clear();
+        database.groupDateEvents.clear();
     }
 }

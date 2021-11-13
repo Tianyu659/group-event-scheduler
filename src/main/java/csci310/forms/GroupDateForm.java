@@ -2,6 +2,7 @@ package csci310.forms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import csci310.models.GroupDate;
 
 import java.util.Vector;
 
@@ -19,5 +20,16 @@ public class GroupDateForm extends Form {
         this.name = name;
         this.description = description;
         this.events = events;
+    }
+
+    public GroupDate validate() {
+        GroupDate groupDate = new GroupDate();
+        groupDate.setName(this.name);
+        groupDate.setDescription(this.description);
+        return groupDate;
+    }
+
+    public Vector<GroupDateEventForm> getEventForms() {
+        return this.events;
     }
 }

@@ -8,7 +8,7 @@ public class GroupDateEvent {
     @DatabaseField(generatedId = true, unique = true)
     private int id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(foreign = true)
     private GroupDate groupDate;
 
     @DatabaseField()
@@ -16,6 +16,9 @@ public class GroupDateEvent {
 
     @DatabaseField()
     private String description;
+
+    @DatabaseField()
+    private String location;
 
     @DatabaseField()
     private long time;
@@ -49,6 +52,14 @@ public class GroupDateEvent {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setTime(long time) {

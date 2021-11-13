@@ -7,8 +7,10 @@ import csci310.Database;
 import csci310.api.Path;
 import csci310.exception.RequestException;
 import csci310.forms.Form;
+import csci310.forms.GroupDateEventForm;
 import csci310.forms.GroupDateForm;
 import csci310.models.GroupDate;
+import csci310.models.GroupDateEvent;
 import csci310.models.User;
 
 import javax.servlet.http.HttpServlet;
@@ -61,11 +63,29 @@ public class GroupDateServlet extends HttpServlet {
             GroupDateForm form = Form.read(request, GroupDateForm.class);
             User user = Authentication.get().authenticate(request);
 
+            Dao<GroupDate, Integer> dao = RequestException.wrap(
+                    () -> Database.load().groupDates.dao(),
+                    "cannot connect to database!");
+            Dao<GroupDateEvent, Integer> eventDao = RequestException.wrap(
+                    () -> Database.load().groupDateEvents.dao(),
+                    "cannot connect to database!");
+
+            GroupDate groupDate = form.validate();
+            RequestException.wrap(
+                    () -> dao.create(groupDate),
+                    "cannot connect to database!");
+
+            for (GroupDateEventForm eventForm : form.getEventForms()) {
+                GroupDateEvent groupDateEvent = eventForm.validate(groupDate);
+                RequestException.wrap(
+                        () -> eventDao.create(groupDateEvent),
+                        "cannot connect to database!");
+            }
+
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_CREATED);
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            objectMapper.writeValue(response.getWriter(), user);
-            response.getWriter().println("{}");
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(), user);
         } catch (RequestException exception) {
             exception.printStackTrace();
             exception.apply(response);

@@ -2,6 +2,8 @@ package csci310.forms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import csci310.models.GroupDate;
+import csci310.models.GroupDateEvent;
 
 public class GroupDateEventForm extends Form {
     private final String name;
@@ -23,5 +25,16 @@ public class GroupDateEventForm extends Form {
         this.location = location;
         this.time = time;
         this.duration = duration;
+    }
+
+    public GroupDateEvent validate(GroupDate groupDate) {
+        GroupDateEvent groupDateEvent = new GroupDateEvent();
+        groupDateEvent.setGroupDate(groupDate);
+        groupDateEvent.setName(this.name);
+        groupDateEvent.setDescription(this.description);
+        groupDateEvent.setLocation(this.location);
+        groupDateEvent.setTime(this.time);
+        groupDateEvent.setDuration(this.duration);
+        return groupDateEvent;
     }
 }
