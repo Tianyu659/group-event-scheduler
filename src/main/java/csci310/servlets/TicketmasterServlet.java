@@ -14,10 +14,11 @@ public class TicketmasterServlet extends HttpServlet {
         Authentication.get().authenticate(request);
     }
     static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
         response.getWriter().print(
-            TicketmasterManager.searchEventByKeyword(
-                request.getHeader("keyword")
-            )
+                TicketmasterManager.searchEventByKeyword(
+                        request.getParameter("keyword")
+                )
         );
     }
     @Override

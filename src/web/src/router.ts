@@ -4,7 +4,7 @@ import {
   RouteLocationRaw,
   RouteRecordRaw,
 } from "vue-router";
-import Home from "./views/Home.vue";
+
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
@@ -26,8 +26,9 @@ function isAuthenticated(
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
-    component: Home,
+    name: "dashboard",
+    component: Dashboard,
+    beforeEnter: isAuthenticated,
   },
   {
     path: "/login/",
@@ -44,12 +45,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/register/",
     name: "register",
     component: Register,
-  },
-  {
-    path: "/dashboard/",
-    name: "dashboard",
-    component: Dashboard,
-    beforeEnter: isAuthenticated,
   },
 ];
 

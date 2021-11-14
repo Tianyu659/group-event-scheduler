@@ -46,6 +46,7 @@ export class Session {
         return response.json().then((data: Record<string, never>) => {
           this.token = data["token"];
           this.user = User.wrap(data["user"]);
+          console.log(`token: ${this.token}`);
           return this.user;
         });
       } else {

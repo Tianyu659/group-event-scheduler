@@ -1,7 +1,7 @@
 <template>
   <div id="navigation">
     <router-link v-if="session.user === null" to="/">Home</router-link>
-    <router-link v-else to="/dashboard">Home</router-link>
+    <router-link v-else :to="{ name: 'dashboard' }">Home</router-link>
     <div class="spacer" />
     <router-link to="/profile" v-if="session.user !== null">
       {{ session.user.firstName }}
