@@ -2,6 +2,7 @@ package csci310.servlets;
 
 import csci310.Authentication;
 import csci310.exception.RequestException;
+import csci310.models.EventSearch;
 import csci310.util.TicketmasterManager;
 
 import javax.servlet.http.HttpServlet;
@@ -15,9 +16,7 @@ public class TicketmasterServlet extends HttpServlet {
     }
     static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException {
         response.getWriter().print(
-            TicketmasterManager.searchEventByKeyword(
-                request.getHeader("keyword")
-            )
+            TicketmasterManager.searchEvent(new EventSearch(request.getParameterMap()))
         );
     }
     @Override
