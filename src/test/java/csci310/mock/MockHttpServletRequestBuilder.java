@@ -16,6 +16,12 @@ public class MockHttpServletRequestBuilder {
         return this;
     }
     
+
+    public MockHttpServletRequestBuilder withPathInfo(String pathInfo) {
+        EasyMock.expect(this.mock.getPathInfo()).andReturn(pathInfo);
+        return this;
+    }
+
     public MockHttpServletRequestBuilder withBody(String body) throws IOException {
         EasyMock.expect(this.mock.getReader()).andReturn(new BufferedReader(new StringReader(body)));
         return this;
