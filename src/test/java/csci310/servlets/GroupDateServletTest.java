@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupDateServletTest {
     private static Database database;
@@ -37,9 +39,30 @@ public class GroupDateServletTest {
         database.groupDates.dao().create(otherGroupDate);
         token = Authentication.get().key(user);
     }
-
+    
+    HttpServletRequest request(final String pathInfo,final String auth,final String...other) {
+        Map<String,String[]> headers = new HashMap<>();
+        if(auth != null)
+            headers.put("Authorization",new String[] {auth});
+        for(final String s : other) {
+            final String[] split = s.split(",",2);
+            headers.put(split[0],split[1].split(","));
+        }
+        return new MockHttpServletRequestBuilder().withPathInfo(pathInfo)
+                                                  .params(headers)
+                                                  .build();
+    }
+    void test(final String pathInfo,final String auth,final int status) throws IOException {
+        final GroupDateServlet servlet = new GroupDateServlet();
+        final HttpServletRequest request = request(pathInfo,auth);
+        final MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request,response.bind(status));
+        Assert.assertNotNull(response);
+    }
+    
     @Test
     public void testDoGet() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withPathInfo("/")
@@ -49,10 +72,13 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
         Assert.assertNotNull(response);
+        */
+        test("/",token,HttpServletResponse.SC_OK);
     }
 
     @Test
     public void testDoGetOne() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withPathInfo("/1")
@@ -62,10 +88,13 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
         Assert.assertNotNull(response);
+        */
+        test("/1",token,HttpServletResponse.SC_OK);
     }
 
     @Test
     public void testDoGetOneNotMine() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withPathInfo("/2")
@@ -75,10 +104,13 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
         Assert.assertNotNull(response);
+        */
+        test("/2",token,HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
     public void testDoGetNonExistent() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withPathInfo("/100")
@@ -88,10 +120,13 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
         Assert.assertNotNull(response);
+        */
+        test("/100",token,HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
     public void testDoGetUnauthorized() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", null)
@@ -101,10 +136,13 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
         Assert.assertNotNull(response);
+        */
+        test("/",null,HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     @Test
     public void testDoPost() throws IOException {
+        /*
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
@@ -114,13 +152,16 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
         Assert.assertNotNull(response);
+        */
+        test("/100",token,HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
     public void testDoPostUnauthorized() throws IOException {
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withHeader("Authorization", null)
+                //.withHeader("Authorization", null)
+                .params(new HashMap<>())
                 .withBody(Resources.read("json/GroupDateServletTest.testDoPost.json"))
                 .build();
 

@@ -43,12 +43,6 @@ public class Authentication {
             } catch (JwtException exception) {
                 throw new RequestException(HttpServletResponse.SC_BAD_REQUEST, "invalid JWT format!");
             }
-        } else {
-            if(token == null) System.err.println("token is null");
-            else {
-                for(final String s : token) System.err.print(s+' ');
-                System.err.println();
-            }
         }
 
         throw new RequestException(HttpServletResponse.SC_UNAUTHORIZED, "user authentication is required!");
