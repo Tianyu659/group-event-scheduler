@@ -160,7 +160,6 @@ public class GroupDateServletTest {
     public void testDoPostUnauthorized() throws IOException {
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                //.withHeader("Authorization", null)
                 .params(new HashMap<>())
                 .withBody(Resources.read("json/GroupDateServletTest.testDoPost.json"))
                 .build();
