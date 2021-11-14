@@ -15,9 +15,7 @@ public class TicketmasterServlet extends HttpServlet {
     }
     static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException {
         response.getWriter().print(
-            TicketmasterManager.searchEventByKeyword(
-                request.getHeader("keyword")
-            )
+            TicketmasterManager.queryTicketmaster(request.getParameterMap())
         );
     }
     @Override

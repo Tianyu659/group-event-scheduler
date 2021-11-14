@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 //import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.BitSet;
+import java.util.Map;
+import java.util.StringJoiner;
 
 public class TicketmasterManager {
 
@@ -44,5 +47,27 @@ public class TicketmasterManager {
         String lineString = in.readLine();
         return lineString;
 	}
-
+	
+	private static final String QUERY = ROOT_URL+"events.json?apikey="+API_KEY;
+	public static String queryTicketmaster(Map<String,String[]> parameters) throws IOException {
+		final StringBuilder sb = new StringBuilder(QUERY);
+		parameters.remove("Authorization");
+		for(Map.Entry<String,String[]> param : parameters.entrySet()) {
+			final StringJoiner sj1 = new StringJoiner(",");
+			for(final String s : param.getValue())
+				sj1.add(s);
+			sb.append('&')
+			  .append(param.getKey())
+			  .append('=')
+			  .append(sj1);
+		}
+		final HttpURLConnection c = (HttpURLConnection)new URL(sb.toString()).openConnection();
+		c.setRequestMethod("GET");
+		c.setRequestProperty("Content-Type","application/json");
+		c.setRequestProperty("Authorization","Token "+API_KEY);
+		try(final BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()))) {
+			return in.readLine();
+		}
+	}
+	
 }

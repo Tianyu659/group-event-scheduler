@@ -8,6 +8,7 @@ import csci310.models.User;
 import csci310.models.UserTest;
 import org.junit.*;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,13 +51,15 @@ public class TicketmasterServletTest {
     
     static HttpServletRequest request(final String auth,final String...other) {
         final HttpServletRequest request = mock(HttpServletRequest.class);
-        Map<String,String> headers = new HashMap<>();
-        headers.put("Authorization",auth);
+        Map<String,String[]> headers = new HashMap<>();
+        if(auth != null)
+            headers.put("Authorization",new String[] {auth});
         for(final String s : other) {
             final String[] split = s.split(",",2);
-            headers.put(split[0],split[1]);
+            headers.put(split[0],split[1].split(","));
         }
-        doAnswer(a -> headers.get(a.<String>getArgument(0))).when(request).getHeader("Authorization");
+        when(request.getParameterMap()).thenReturn(headers);
+        doAnswer(a -> headers.get(a.<String>getArgument(0))).when(request).getHeader(Mockito.anyString());
         return request;
     }
     static HttpServletResponse response(final StringWriter sw) throws IOException {

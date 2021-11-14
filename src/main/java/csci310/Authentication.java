@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class Authentication {
     public static final Authentication instance = new Authentication(Configuration.load());
@@ -30,10 +31,10 @@ public class Authentication {
     }
 
     public User authenticate(HttpServletRequest request) throws RequestException {
-        String token = request.getHeader("Authorization");
-        if (token != null) {
+        String[] token = request.getParameterMap().get("Authorization");
+        if (token != null && token.length == 1) {
             try {
-                User user = RequestException.wrap(() -> this.user(token), "unable to access database!");
+                User user = RequestException.wrap(() -> this.user(token[0]), "unable to access database!");
                 if (user != null) {
                     return user;
                 } else {
@@ -41,6 +42,12 @@ public class Authentication {
                 }
             } catch (JwtException exception) {
                 throw new RequestException(HttpServletResponse.SC_BAD_REQUEST, "invalid JWT format!");
+            }
+        } else {
+            if(token == null) System.err.println("token is null");
+            else {
+                for(final String s : token) System.err.print(s+' ');
+                System.err.println();
             }
         }
 
