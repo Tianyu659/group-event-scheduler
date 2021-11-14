@@ -15,7 +15,7 @@
       <p>You don't have any invitations yet.</p>
     </div>
     <div>
-      <h2>Create an Event</h2>
+      <h2>Create a Group Date</h2>
       <group-date-form @refresh="refresh()" />
     </div>
   </div>

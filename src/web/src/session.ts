@@ -24,7 +24,7 @@ export class Session {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     }).then((response: Response) => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         return response.json().then((data: Record<string, never>) => {
           return User.wrap(data);
         });

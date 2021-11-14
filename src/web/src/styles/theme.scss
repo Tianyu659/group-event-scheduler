@@ -1,1 +1,47 @@
-$color-primary: lightblue;
+$color-primary: #2380ef;
+$color-primary-text: white;
+$color-secondary: #FFCC00;
+
+$font-size: 16px;
+$font-family: "Lato", "Arial", sans-serif;
+$font-weight: 300;
+
+strong {
+  font-weight: normal;
+}
+
+body {
+  font-size: $font-size;
+  font-family: $font-family;
+  font-weight: $font-weight;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-weight;
+  color: $color-primary;
+  margin-bottom: 0.5em;
+}
+
+h5, h6 {
+  color: black;
+}
+
+h3 {
+  font-size: 1.35em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
