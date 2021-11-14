@@ -20,7 +20,8 @@ public class SessionServletTest {
 
     @BeforeClass
     public static void setupDatabase() throws SQLException {
-        database = new Database(Configuration.load("test"));
+        Configuration.load("test");
+        database = Database.load();
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
     }

@@ -16,6 +16,7 @@ import java.util.Map;
 
 public class Configuration {
     private static final Map<String, Configuration> profiles = Configuration.read(new File("configuration.xml"));
+    private static Configuration profile;
 
     private final Map<String, String> values;
 
@@ -33,11 +34,20 @@ public class Configuration {
     }
 
     public static Configuration load(String profile) {
-        return Configuration.profiles.get(profile);
+        Configuration.profile = Configuration.profiles.get(profile);
+        return Configuration.profile;
+    }
+
+    public static void reset() {
+        Configuration.profile = null;
     }
 
     public static Configuration load() {
-        return Configuration.load("");
+        if (Configuration.profile == null) {
+            return Configuration.load("");
+        } else {
+            return Configuration.profile;
+        }
     }
 
     public static Map<String, Configuration> read(File file) {

@@ -11,7 +11,7 @@ import csci310.models.*;
 import java.sql.SQLException;
 
 public class Database {
-    private static final Database instance = new Database(Configuration.load());
+    private static Database instance;
 
     JdbcConnectionSource connectionSource;
 
@@ -50,6 +50,9 @@ public class Database {
     }
 
     public static Database load() {
+        if (Database.instance == null) {
+            Database.instance = new Database(Configuration.load());
+        }
         return Database.instance;
     }
 

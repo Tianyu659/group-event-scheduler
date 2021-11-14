@@ -45,7 +45,14 @@ public class ConfigurationTest {
 
     @Test
     public void testLoad() {
+        Configuration.reset();
         Assert.assertNotNull(Configuration.load());
+    }
+
+    @Test
+    public void testReset() {
+        Configuration.reset();
+        Assert.assertNotNull(Configuration.load("test"));
     }
 
     @Test
