@@ -6,10 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Map;
 
 public class MockHttpServletRequestBuilder {
     private final HttpServletRequest mock = EasyMock.mock(HttpServletRequest.class);
-
+    
+    public MockHttpServletRequestBuilder params(Map<String,String[]> params) {
+        EasyMock.expect(mock.getParameterMap()).andReturn(params);
+        return this;
+    }
+    
     public MockHttpServletRequestBuilder withBody(String body) throws IOException {
         EasyMock.expect(this.mock.getReader()).andReturn(new BufferedReader(new StringReader(body)));
         return this;
