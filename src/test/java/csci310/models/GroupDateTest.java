@@ -22,6 +22,15 @@ public class GroupDateTest {
         return groupDate;
     }
 
+    public static GroupDateEvent createGroupDateEvent(GroupDate groupDate, String name, String description) {
+        GroupDateEvent groupDateEvent = new GroupDateEvent();
+        groupDateEvent.setGroupDate(groupDate);
+        groupDateEvent.setName(name);
+        groupDateEvent.setDescription(description);
+        groupDateEvent.setTime(System.currentTimeMillis() / 1000);
+        return groupDateEvent;
+    }
+
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         Configuration.load("test");
@@ -39,7 +48,6 @@ public class GroupDateTest {
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
-        database.users.clear();
-        database.groupDates.clear();
+        database.drop();
     }
 }

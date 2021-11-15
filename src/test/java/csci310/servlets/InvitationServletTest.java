@@ -3,6 +3,7 @@ package csci310.servlets;
 import csci310.Authentication;
 import csci310.Configuration;
 import csci310.Database;
+import csci310.Resources;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
 import csci310.models.*;
@@ -28,8 +29,10 @@ public class InvitationServletTest {
         User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);
         database.users.dao().create(otherUser);
-        GroupDate groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Super fun event!");
+        GroupDate groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Awesome group date!");
         database.groupDates.dao().create(groupDate);
+        database.groupDateEvents.dao().create(GroupDateTest.createGroupDateEvent(groupDate, "Event 1", "Super fun event!"));
+        database.groupDateEvents.dao().create(GroupDateTest.createGroupDateEvent(groupDate, "Event 2", "Another super fun event!"));
         Invitation invitation = new Invitation();
         invitation.setGroupDate(groupDate);
         invitation.setUser(otherUser);
@@ -56,6 +59,7 @@ public class InvitationServletTest {
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withPathInfo("/1/responses/")
                 .withHeader("Authorization", token)
+                .withBody(Resources.read("json/InvitationServletTest.testDoPost.json"))
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -65,8 +69,6 @@ public class InvitationServletTest {
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
-        database.users.clear();
-        database.groupDates.clear();
-        database.invitations.clear();
+        database.drop();
     }
 }

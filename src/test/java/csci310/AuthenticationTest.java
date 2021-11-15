@@ -37,15 +37,8 @@ public class AuthenticationTest {
     @Test
     public void testAuthenticate() throws RequestException {
         String token = Authentication.get().key(AuthenticationTest.user);
-        /*
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
-                .build();
-        */
-        Map<String,String[]> headers = new HashMap<>();
-        headers.put("Authorization",new String[] {token});
-        HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .params(headers)
                 .build();
         User user = Authentication.get().authenticate(request);
         Assert.assertEquals(AuthenticationTest.user.getId(), user.getId());
@@ -53,6 +46,6 @@ public class AuthenticationTest {
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
-        database.users.clear();
+        database.drop();
     }
 }

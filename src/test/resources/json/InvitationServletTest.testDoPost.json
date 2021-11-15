@@ -1,3 +1,15 @@
 {
-
+  "accepted": true,
+  "events": [
+    {
+      "eventId": 1,
+      "available": true,
+      "interest": 3
+    },
+    {
+      "eventId": 2,
+      "available": false,
+      "interest": 0
+    }
+  ]
 }
