@@ -96,12 +96,12 @@ public class TicketmasterServletTest {
                     "user"
                 )
             ),
-            "{\"error\": \"invalid authentication!\"}"
+            "{\"error\":\"invalid authentication!\"}"
         );
     }
     @Test
     public void testdoPostNoToken() {
-        testToken(null,"{\"error\": \"user authentication is required!\"}");
+        testToken(null,"{\"error\":\"user authentication is required!\"}");
     }
     
     @Test
