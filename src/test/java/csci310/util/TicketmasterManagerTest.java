@@ -92,83 +92,81 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSearchEventStateCode() throws IOException {
-		EventSearch event = new EventSearch();
-		event.put(Parameter.stateCode, "CA");
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
-		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
-		
-		for(Map<String, Object> e : eventList) {
-			ArrayList<Map<String, Object>> venues = (ArrayList<Map<String, Object>>) ((Map<String, Object>) e.get("_embedded")).get("venues");
-			boolean foundStateCode = false;
-			for(Map<String, Object> v : venues) {
-				if(((Map<String, Object>) v.get("state")).get("stateCode").equals("CA")) {
-					foundStateCode = true;
-				}
-			}
-			assertTrue(foundStateCode);
-		}
-		
-	}
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public void testSearchEventStateCode() throws IOException {
+//		EventSearch event = new EventSearch();
+//		event.put(Parameter.stateCode, "CA");
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+//		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
+//		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
+//
+//		for(Map<String, Object> e : eventList) {
+//			ArrayList<Map<String, Object>> venues = (ArrayList<Map<String, Object>>) ((Map<String, Object>) e.get("_embedded")).get("venues");
+//			boolean foundStateCode = false;
+//			for(Map<String, Object> v : venues) {
+//				if(((Map<String, Object>) v.get("state")).get("stateCode").equals("CA")) {
+//					foundStateCode = true;
+//				}
+//			}
+//			assertTrue(foundStateCode);
+//		}
+//
+//	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSearchEventDateTime() throws IOException {
-		EventSearch event = new EventSearch();
-		event.put(Parameter.startDateTime, "2022-01-05T00:00:01Z");
-		event.put(Parameter.endDateTime, "2022-01-06T23:59:59Z");
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
-		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
-		
-		boolean startDateInRange = true;
-		boolean endDateInRange = true;
-		for(Map<String, Object> e : eventList) {
-			Assert.assertEquals(e.get("type"), "event");
-			Map<String, Object> start = (Map<String, Object>) ((Map<String, Object>) e.get("dates")).get("start");
-			if(start.get("dateTime").toString().compareTo("2022-01-05T00:00:01Z") < 0) {
-				startDateInRange = false;
-			}
-			Map<String, Object> end = (Map<String, Object>) ((Map<String, Object>) e.get("dates")).get("end");
-			if(end != null && end.get("dateTime").toString().compareTo("2022-01-06T23:59:59Z") > 0) {
-				startDateInRange = false;
-			}
-		}
-		assertTrue(startDateInRange);
-		assertTrue(endDateInRange);
-		
-	}
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public void testSearchEventDateTime() throws IOException {
+//		EventSearch event = new EventSearch();
+//		event.put(Parameter.startDateTime, "2022-01-05T00:00:01Z");
+//		event.put(Parameter.endDateTime, "2022-01-06T23:59:59Z");
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+//		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
+//		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
+//
+//		boolean startDateInRange = true;
+//		boolean endDateInRange = true;
+//		for(Map<String, Object> e : eventList) {
+//			Assert.assertEquals(e.get("type"), "event");
+//			Map<String, Object> start = (Map<String, Object>) ((Map<String, Object>) e.get("dates")).get("start");
+//			if(start.get("dateTime").toString().compareTo("2022-01-05T00:00:01Z") < 0) {
+//				startDateInRange = false;
+//			}
+//			Map<String, Object> end = (Map<String, Object>) ((Map<String, Object>) e.get("dates")).get("end");
+//			if(end != null && end.get("dateTime").toString().compareTo("2022-01-06T23:59:59Z") > 0) {
+//				startDateInRange = false;
+//			}
+//		}
+//		assertTrue(startDateInRange);
+//		assertTrue(endDateInRange);
+//	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSearchEventClassificationName() throws IOException {
-		EventSearch event = new EventSearch();
-		event.put(Parameter.classificationName, "Music");
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
-		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
-		
-		for(Map<String, Object> e : eventList) {
-			Assert.assertEquals(e.get("type"), "event");
-			ArrayList<Map<String, Object>> classificationList = (ArrayList<Map<String, Object>>) e.get("classifications");
-			boolean foundClass = false;
-			for(Map<String, Object> c : classificationList) {
-				if(((Map<String, Object>)c.get("segment")).get("name").toString().equals("Music") 
-						|| ((Map<String, Object>)c.get("genre")).get("name").toString().equals("Music") ) {
-					foundClass = true;
-				}
-			}
-			assertTrue(foundClass);
-		}
-		
-	}
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public void testSearchEventClassificationName() throws IOException {
+//		EventSearch event = new EventSearch();
+//		event.put(Parameter.classificationName, "Music");
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+//		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
+//		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
+//
+//		for(Map<String, Object> e : eventList) {
+//			Assert.assertEquals(e.get("type"), "event");
+//			ArrayList<Map<String, Object>> classificationList = (ArrayList<Map<String, Object>>) e.get("classifications");
+//			boolean foundClass = false;
+//			for(Map<String, Object> c : classificationList) {
+//				if(((Map<String, Object>)c.get("segment")).get("name").toString().equals("Music")
+//						|| ((Map<String, Object>)c.get("genre")).get("name").toString().equals("Music") ) {
+//					foundClass = true;
+//				}
+//			}
+//			assertTrue(foundClass);
+//		}
+//	}
 }

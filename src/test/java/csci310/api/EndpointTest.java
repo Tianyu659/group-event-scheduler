@@ -19,8 +19,8 @@ public class EndpointTest {
 
     @BeforeClass
     public static void setupTestDatabase() {
-        Configuration configuration = Configuration.load("test");
-        database = new Database(configuration);
+        Configuration.load("test");
+        database = Database.load();
     }
 
     @Test

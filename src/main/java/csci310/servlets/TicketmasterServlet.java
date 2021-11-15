@@ -15,6 +15,7 @@ public class TicketmasterServlet extends HttpServlet {
         Authentication.get().authenticate(request);
     }
     static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
         response.getWriter().print(
             TicketmasterManager.searchEvent(new EventSearch(request.getParameterMap()))
         );

@@ -7,11 +7,15 @@
       once.
     </p>
     <div>
-      <h2>My Events</h2>
-      <p>You don't have any events yet. Create one below!</p>
+      <h2>
+        My Group Dates
+        <router-link :to="{ name: 'create' }">+</router-link>
+      </h2>
+      <p>You don't have any group dates yet.</p>
     </div>
     <div>
-      <h2>New Event</h2>
+      <h2>My Invitations</h2>
+      <p>You don't have any invitations yet.</p>
     </div>
   </div>
 </template>

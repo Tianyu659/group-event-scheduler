@@ -11,7 +11,7 @@ import csci310.models.*;
 import java.sql.SQLException;
 
 public class Database {
-    private static final Database instance = new Database(Configuration.load());
+    private static Database instance;
 
     JdbcConnectionSource connectionSource;
 
@@ -36,18 +36,27 @@ public class Database {
         }
     }
 
-    public Table<User> users;
-    public Table<GroupDate> groupDates;
-    public Table<GroupDateEvent> groupDateEvents;
+    public final Table<User> users;
+    public final Table<GroupDate> groupDates;
+    public final Table<GroupDateEvent> groupDateEvents;
+    public final Table<Invitation> invitations;
+    public final Table<InvitationResponse> invitationResponses;
+    public final Table<InvitationEventResponse> invitationEventResponses;
 
     public Database(Configuration configuration) {
         this.connectionSource = Database.createConnectionSource(configuration);
         this.users = new Table<>(User.class);
         this.groupDates = new Table<>(GroupDate.class);
         this.groupDateEvents = new Table<>(GroupDateEvent.class);
+        this.invitations = new Table<>(Invitation.class);
+        this.invitationResponses = new Table<>(InvitationResponse.class);
+        this.invitationEventResponses = new Table<>(InvitationEventResponse.class);
     }
 
     public static Database load() {
+        if (Database.instance == null) {
+            Database.instance = new Database(Configuration.load());
+        }
         return Database.instance;
     }
 

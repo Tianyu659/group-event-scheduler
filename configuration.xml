@@ -7,7 +7,7 @@
     </configuration>
     <configuration>
         <value key="database.type">sqlite</value>
-        <value key="database.url">jdbc:sqlite:test.sqlite3</value>
+        <value key="database.url">jdbc:sqlite:run.sqlite3</value>
         <value key="authentication.secret">hello, world! this is a development key :)</value>
         <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
     </configuration>

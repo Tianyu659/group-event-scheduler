@@ -1,0 +1,35 @@
+@use "theme";
+
+ul.fancy {
+  list-style: none;
+  padding: 0;
+
+  &.click li {
+    cursor: pointer;
+  }
+
+  li {
+    padding: 0.4em 0.5em;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+    font: inherit;
+    border: 1px solid lightgray;
+    border-top: none;
+
+    &:first-child {
+      border-top: 1px solid lightgray;
+      border-top-left-radius: 0.25em;
+      border-top-right-radius: 0.25em;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 0.25em;
+      border-bottom-right-radius: 0.25em;
+    }
+
+    &:hover {
+      background-color: lighten(theme.$color-primary, 40%);
+    }
+  }
+}

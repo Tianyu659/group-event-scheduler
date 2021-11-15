@@ -11,7 +11,8 @@ public class UserTest {
 
     @BeforeClass
     public static void setupTestDatabase() {
-        database = new Database(Configuration.load("test"));
+        Configuration.load("test");
+        database = Database.load();
     }
 
     public static User createUser(String username, String password, String firstName, String lastName) {

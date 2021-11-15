@@ -10,12 +10,13 @@ import java.sql.SQLException;
 public class DatabaseTest {
     @Test
     public void testConstructor() {
-        Database database = new Database(Configuration.load());
+        Database database = new Database(Configuration.load("test"));
         Assert.assertNotNull(database);
     }
 
     @Test
     public void testLoad() {
+        Configuration.load("test");
         Database database = Database.load();
         Assert.assertNotNull(database);
     }

@@ -28,7 +28,8 @@ public class GroupDateServletTest {
 
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
-        database = new Database(Configuration.load("test"));
+        Configuration.load("test");
+        database = Database.load();
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);

@@ -24,4 +24,13 @@ export class User {
       data["lastName"]
     );
   }
+
+  public matches(search: string): boolean {
+    search = search.toLowerCase();
+    return (
+      this.username.toLowerCase().indexOf(search) > -1 ||
+      this.firstName.toLowerCase().indexOf(search) > -1 ||
+      this.lastName.toLowerCase().indexOf(search) > -1
+    );
+  }
 }

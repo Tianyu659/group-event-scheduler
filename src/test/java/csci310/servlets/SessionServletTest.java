@@ -20,7 +20,8 @@ public class SessionServletTest {
 
     @BeforeClass
     public static void setupDatabase() throws SQLException {
-        database = new Database(Configuration.load("test"));
+        Configuration.load("test");
+        database = Database.load();
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
     }
@@ -46,7 +47,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"incorrect credentials!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -58,7 +59,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"form data did not conform to schema!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -70,7 +71,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"form data did not conform to schema!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"incorrect credentials!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @AfterClass

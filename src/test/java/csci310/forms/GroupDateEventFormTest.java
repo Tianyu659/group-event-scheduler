@@ -10,6 +10,8 @@ public class GroupDateEventFormTest {
     public void testValidate() {
         GroupDate groupDate = new GroupDate();
         GroupDateEventForm groupDateEventForm = new GroupDateEventForm(
+                "",
+                "",
                 "name",
                 "description",
                 "location",

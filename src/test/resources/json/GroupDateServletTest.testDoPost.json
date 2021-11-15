@@ -3,6 +3,8 @@
   "description": "Something super fun",
   "events": [
     {
+      "url": "",
+      "eid": "",
       "name": "Fishing",
       "description": "For fish",
       "location": "Alaska",
@@ -10,11 +12,21 @@
       "duration": 300
     },
     {
+      "url": "",
+      "eid": "",
       "name": "Baseball",
       "description": "At the game",
       "location": "Dodger's stadium",
       "time": 1636775919,
       "duration": 180
+    }
+  ],
+  "invitations": [
+    {
+      "username": "ttrojan"
+    },
+    {
+      "username": "doesnotexist"
     }
   ]
 }
