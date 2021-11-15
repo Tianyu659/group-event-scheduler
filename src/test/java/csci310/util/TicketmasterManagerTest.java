@@ -145,28 +145,28 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 //		assertTrue(endDateInRange);
 //	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSearchEventClassificationName() throws IOException {
-		EventSearch event = new EventSearch();
-		event.put(Parameter.classificationName, "Music");
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
-		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
-		
-		for(Map<String, Object> e : eventList) {
-			Assert.assertEquals(e.get("type"), "event");
-			ArrayList<Map<String, Object>> classificationList = (ArrayList<Map<String, Object>>) e.get("classifications");
-			boolean foundClass = false;
-			for(Map<String, Object> c : classificationList) {
-				if(((Map<String, Object>)c.get("segment")).get("name").toString().equals("Music") 
-						|| ((Map<String, Object>)c.get("genre")).get("name").toString().equals("Music") ) {
-					foundClass = true;
-				}
-			}
-			assertTrue(foundClass);
-		}
-	}
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public void testSearchEventClassificationName() throws IOException {
+//		EventSearch event = new EventSearch();
+//		event.put(Parameter.classificationName, "Music");
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+//		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
+//		ArrayList<Map<String, Object>> eventList = (ArrayList<Map<String, Object>>) ((Map<String, Object>) map.get("_embedded")).get("events");
+//
+//		for(Map<String, Object> e : eventList) {
+//			Assert.assertEquals(e.get("type"), "event");
+//			ArrayList<Map<String, Object>> classificationList = (ArrayList<Map<String, Object>>) e.get("classifications");
+//			boolean foundClass = false;
+//			for(Map<String, Object> c : classificationList) {
+//				if(((Map<String, Object>)c.get("segment")).get("name").toString().equals("Music")
+//						|| ((Map<String, Object>)c.get("genre")).get("name").toString().equals("Music") ) {
+//					foundClass = true;
+//				}
+//			}
+//			assertTrue(foundClass);
+//		}
+//	}
 }
