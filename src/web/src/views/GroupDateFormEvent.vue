@@ -13,7 +13,7 @@ import { Prop } from "vue-property-decorator";
 import { GroupDateEvent } from "@/models/groupDate";
 
 @Options({})
-export default class GroupDateForm extends Vue {
+export default class GroupDateFormEvent extends Vue {
   @Prop() public groupDateEvent!: GroupDateEvent;
 }
 </script>

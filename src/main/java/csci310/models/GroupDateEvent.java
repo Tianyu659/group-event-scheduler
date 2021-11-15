@@ -12,6 +12,12 @@ public class GroupDateEvent {
     private GroupDate groupDate;
 
     @DatabaseField()
+    private String eid;
+
+    @DatabaseField()
+    private String url;
+
+    @DatabaseField()
     private String name;
 
     @DatabaseField()
@@ -36,6 +42,22 @@ public class GroupDateEvent {
 
     public GroupDate getGroupDate() {
         return groupDate;
+    }
+
+    public void setEid(String eid) {
+        this.eid = eid;
+    }
+
+    public String getEid() {
+        return eid;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public void setName(String name) {

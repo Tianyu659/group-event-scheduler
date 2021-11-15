@@ -8,6 +8,8 @@ export class GroupDateEvent {
   public constructor(
     public id: number,
     public groupDate: GroupDate,
+    public eid: string,
+    public url: string,
     public name: string,
     public description: string,
     public location: string,
@@ -16,7 +18,7 @@ export class GroupDateEvent {
   ) {}
 
   public static empty(groupDate: GroupDate): GroupDateEvent {
-    return new GroupDateEvent(0, groupDate, "", "", "", new Date(), 60);
+    return new GroupDateEvent(0, groupDate, "", "", "", "", "", new Date(), 60);
   }
 }
 

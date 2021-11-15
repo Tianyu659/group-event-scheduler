@@ -23,7 +23,7 @@
       <group-date-form-event
         v-for="groupDateEvent of groupDate.events"
         :group-date-event="groupDateEvent"
-        :key="groupDateEvent.id"
+        :key="groupDateEvent"
       />
       <div v-if="groupDate.events.length === 0">
         You haven't added any events!
@@ -32,6 +32,14 @@
     </div>
     <div>
       <h3>Invitations</h3>
+      <group-date-form-invitation
+        v-for="invitation of groupDate.invitations"
+        :invitation="invitation"
+        :key="invitation"
+      />
+      <div v-if="groupDate.invitations.length === 0">
+        You haven't invited anyone!
+      </div>
       <group-date-form-invitation-form :group-date="groupDate" />
     </div>
   </div>
@@ -44,9 +52,11 @@ import { GroupDate } from "@/models/groupDate";
 import GroupDateFormEvent from "@/views/GroupDateFormEvent.vue";
 import GroupDateFormEventForm from "@/views/GroupDateFormEventForm.vue";
 import GroupDateFormInvitationForm from "@/views/GroupDateFormInvitationForm.vue";
+import GroupDateFormInvitation from "@/views/GroupDateFormInvitation.vue";
 
 @Options({
   components: {
+    GroupDateFormInvitation,
     GroupDateFormInvitationForm,
     GroupDateFormEventForm,
     GroupDateFormEvent,

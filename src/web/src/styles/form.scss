@@ -5,6 +5,28 @@ form, .form {
     display: block;
     margin-bottom: 0.5em;
 
+    &.right {
+      text-align: right;
+    }
+
+    &.flex {
+      display: flex;
+      flex-direction: row;
+
+      & > * {
+        flex: 1;
+        margin: 0 0.5em;
+      }
+
+      & > *:first-child {
+        margin-left: 0;
+      }
+
+      & > *:last-child {
+        margin-right: 0;
+      }
+    }
+
     input, label {
       width: 100%;
       display: block;

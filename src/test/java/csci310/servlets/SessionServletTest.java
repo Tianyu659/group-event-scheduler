@@ -47,7 +47,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"incorrect credentials!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"form data did not conform to schema!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"form data did not conform to schema!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SessionServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(400));
 
-        Assert.assertEquals("{\"error\": \"incorrect credentials!\"}", response.getBody().toString().trim());
+        Assert.assertTrue(response.getBody().toString().contains("\"error\":"));
     }
 
     @AfterClass
