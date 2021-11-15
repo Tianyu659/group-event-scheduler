@@ -36,10 +36,12 @@ public class Database {
         }
     }
 
-    public Table<User> users;
-    public Table<GroupDate> groupDates;
-    public Table<GroupDateEvent> groupDateEvents;
-    public Table<Invitation> invitations;
+    public final Table<User> users;
+    public final Table<GroupDate> groupDates;
+    public final Table<GroupDateEvent> groupDateEvents;
+    public final Table<Invitation> invitations;
+    public final Table<InvitationResponse> invitationResponses;
+    public final Table<InvitationEventResponse> invitationEventResponses;
 
     public Database(Configuration configuration) {
         this.connectionSource = Database.createConnectionSource(configuration);
@@ -47,6 +49,8 @@ public class Database {
         this.groupDates = new Table<>(GroupDate.class);
         this.groupDateEvents = new Table<>(GroupDateEvent.class);
         this.invitations = new Table<>(Invitation.class);
+        this.invitationResponses = new Table<>(InvitationResponse.class);
+        this.invitationEventResponses = new Table<>(InvitationEventResponse.class);
     }
 
     public static Database load() {
