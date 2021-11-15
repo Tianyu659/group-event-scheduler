@@ -1,6 +1,6 @@
 import {
   createRouter,
-  createWebHistory,
+  createWebHashHistory,
   RouteLocationRaw,
   RouteRecordRaw,
 } from "vue-router";
@@ -9,6 +9,7 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
+import CreateGroupDate from "./views/CreateGroupDate.vue";
 import { session } from "@/session";
 
 function isAuthenticated(
@@ -46,10 +47,15 @@ const routes: Array<RouteRecordRaw> = [
     name: "register",
     component: Register,
   },
+  {
+    path: "/create/",
+    name: "create",
+    component: CreateGroupDate,
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
 
