@@ -32,6 +32,7 @@
     </div>
     <div>
       <h3>Invitations</h3>
+      <group-date-form-invitation-form :group-date="groupDate" />
     </div>
   </div>
 </template>
@@ -42,9 +43,14 @@ import { session } from "@/session";
 import { GroupDate } from "@/models/groupDate";
 import GroupDateFormEvent from "@/views/GroupDateFormEvent.vue";
 import GroupDateFormEventForm from "@/views/GroupDateFormEventForm.vue";
+import GroupDateFormInvitationForm from "@/views/GroupDateFormInvitationForm.vue";
 
 @Options({
-  components: { GroupDateFormEventForm, GroupDateFormEvent },
+  components: {
+    GroupDateFormInvitationForm,
+    GroupDateFormEventForm,
+    GroupDateFormEvent,
+  },
 })
 export default class GroupDateForm extends Vue {
   public groupDate: GroupDate = GroupDate.empty(session.user!);
