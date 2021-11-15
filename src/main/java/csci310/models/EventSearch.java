@@ -1,5 +1,6 @@
 package csci310.models;
 
+import java.util.Map;
 import java.util.StringJoiner;
 
 public class EventSearch {
@@ -40,6 +41,14 @@ public class EventSearch {
             v = sanitize(v);
         }
         data[param.ordinal()] = v;
+    }
+    
+    public EventSearch() {}
+    public EventSearch(final Map<String,String[]> params) {
+        for(final Map.Entry<String,String[]> e : params.entrySet()) {
+            try {put(Parameter.valueOf(e.getKey()),e.getValue());}
+            catch(final IllegalArgumentException ignored) {}
+        }
     }
     
     @Override

@@ -4,6 +4,7 @@ import csci310.exception.RequestException;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.models.User;
 import csci310.models.UserTest;
+import csci310.servlets.UserServletTest;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -11,6 +12,8 @@ import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthenticationTest {
     private static Database database;
@@ -34,10 +37,16 @@ public class AuthenticationTest {
     @Test
     public void testAuthenticate() throws RequestException {
         String token = Authentication.get().key(AuthenticationTest.user);
+        /*
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
                 .build();
-
+        */
+        Map<String,String[]> headers = new HashMap<>();
+        headers.put("Authorization",new String[] {token});
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .params(headers)
+                .build();
         User user = Authentication.get().authenticate(request);
         Assert.assertEquals(AuthenticationTest.user.getId(), user.getId());
     }
