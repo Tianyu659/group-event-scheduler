@@ -109,7 +109,6 @@ public class GroupDateServlet extends HttpServlet {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(response.getWriter(), user);
         } catch (RequestException exception) {
-            exception.printStackTrace();
             exception.apply(response);
         }
     }

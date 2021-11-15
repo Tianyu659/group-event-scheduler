@@ -30,9 +30,8 @@ public class Database {
             return DaoManager.createDao(connectionSource, tClass);
         }
 
-        public void clear() throws SQLException {
+        public void drop() throws SQLException {
             TableUtils.dropTable(connectionSource, this.tClass, true);
-            TableUtils.createTable(connectionSource, this.tClass);
         }
     }
 
@@ -58,6 +57,15 @@ public class Database {
             Database.instance = new Database(Configuration.load());
         }
         return Database.instance;
+    }
+
+    public void drop() throws SQLException {
+        this.users.drop();
+        this.groupDates.drop();
+        this.groupDateEvents.drop();
+        this.invitations.drop();
+        this.invitationResponses.drop();
+        this.invitationEventResponses.drop();
     }
 
     public static JdbcConnectionSource createConnectionSource(Configuration configuration) {

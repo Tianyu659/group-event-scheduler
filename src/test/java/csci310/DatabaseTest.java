@@ -47,7 +47,7 @@ public class DatabaseTest {
         EasyMock.expect(configuration.value("database.url")).andReturn("jdbc:sqlite:test.sqlite3");
         EasyMock.replay(configuration);
         Database database = new Database(configuration);
-        database.users.clear();
+        database.drop();
     }
 
     @Test

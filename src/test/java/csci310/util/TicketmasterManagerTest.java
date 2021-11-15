@@ -79,6 +79,7 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+
 		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEvent(event), typeRef);
 		ArrayList<Object> eventList = (ArrayList<Object>) ((Map<String, Object>) map.get("_embedded")).get("events");
 		ArrayList<Map<String, Object>> eventList2 = new ArrayList<Map<String, Object>>();
