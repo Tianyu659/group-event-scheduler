@@ -1,5 +1,9 @@
 <template>
-  <div></div>
+  <div>
+    Invited {{ invitation.user.firstName }} {{ invitation.user.lastName }} ({{
+      invitation.user.username
+    }})
+  </div>
 </template>
 
 <script lang="ts">

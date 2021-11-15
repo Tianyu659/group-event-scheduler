@@ -5,9 +5,13 @@
       <input type="text" placeholder="name" v-model="search" @input="filter" />
       <label>Search for a user</label>
     </div>
-    <ul class="users">
-      <li v-for="user of filteredUsers" :key="user.id">
-        {{ user.firstName }} {{ user.lastName }}
+    <ul class="fancy click">
+      <li
+        v-for="user of filteredUsers"
+        :key="user.id"
+        @click="onClickUser(user)"
+      >
+        {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
       </li>
     </ul>
   </div>
@@ -15,7 +19,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GroupDate } from "@/models/groupDate";
+import { GroupDate, Invitation } from "@/models/groupDate";
 import { Prop } from "vue-property-decorator";
 import { url } from "@/url";
 import { session } from "@/session";
@@ -35,6 +39,7 @@ export default class GroupDateFormInvitationForm extends Vue {
     }).then((response: Response) => {
       response.json().then((data: Array<Record<string, never>>) => {
         this.users = data.map(User.wrap);
+        console.log(this.users);
         this.filter();
       });
     });
@@ -52,6 +57,10 @@ export default class GroupDateFormInvitationForm extends Vue {
         }
       }
     }
+  }
+
+  public onClickUser(user: User): void {
+    this.$emit("submit", new Invitation(0, this.groupDate, user));
   }
 }
 </script>

@@ -1,9 +1,7 @@
 <template>
-  <div class="form">
-    <div class="group">
-      <input type="text" placeholder="event name" />
-      <label>Event name</label>
-    </div>
+  <div class="event">
+    <h4>{{ groupDateEvent.name }}</h4>
+    <p>{{ groupDateEvent.description }}</p>
   </div>
 </template>
 

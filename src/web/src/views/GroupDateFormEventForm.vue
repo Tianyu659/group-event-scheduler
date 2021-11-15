@@ -2,29 +2,33 @@
   <div class="form">
     <h4>Manual Event</h4>
     <div class="group">
-      <input type="text" placeholder="event name" />
+      <input type="text" placeholder="event name" v-model="name" />
       <label>Event name</label>
     </div>
     <div class="group">
-      <input type="text" placeholder="event description" />
+      <input
+        type="text"
+        placeholder="event description"
+        v-model="description"
+      />
       <label>Event description</label>
     </div>
     <div class="group">
-      <input type="text" placeholder="event location" />
+      <input type="text" placeholder="event location" v-model="location" />
       <label>Event location</label>
     </div>
     <div class="group flex">
       <div>
-        <input type="datetime-local" v-model="time" @input="test" />
+        <input type="datetime-local" v-model="time" />
         <label>Event time</label>
       </div>
       <div>
-        <input type="number" />
+        <input type="number" v-model="duration" />
         <label>Duration in minutes</label>
       </div>
     </div>
     <div class="group right">
-      <button>Add event</button>
+      <button @click="onClickAdd">Add event</button>
     </div>
   </div>
 </template>
@@ -37,15 +41,27 @@ import { Prop } from "vue-property-decorator";
 @Options({})
 export default class GroupDateForm extends Vue {
   @Prop() groupDate!: GroupDate;
-  public groupDateEvent!: GroupDateEvent;
+  public name = "";
+  public description = "";
+  public location = "";
+  public duration = 60;
   public time = "";
 
-  public created(): void {
-    this.groupDateEvent = GroupDateEvent.empty(this.groupDate);
-  }
-
-  public test(): void {
-    console.log(this.time);
+  public onClickAdd(): void {
+    this.$emit(
+      "submit",
+      new GroupDateEvent(
+        0,
+        this.groupDate,
+        "",
+        "",
+        this.name,
+        this.description,
+        this.location,
+        new Date(this.time),
+        this.duration
+      )
+    );
   }
 }
 </script>
