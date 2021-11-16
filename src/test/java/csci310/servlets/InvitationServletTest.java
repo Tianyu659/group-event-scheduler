@@ -54,6 +54,20 @@ public class InvitationServletTest {
     }
 
     @Test
+    public void testDoGetUnauthorized() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/")
+                .withHeader("Authorization", null)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
+        Assert.assertNotNull(response);
+    }
+
+
+    @Test
     public void testDoPost() throws IOException {
         InvitationServlet servlet = new InvitationServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
@@ -64,6 +78,33 @@ public class InvitationServletTest {
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoPostUnauthorized() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/1/responses/")
+                .withHeader("Authorization", null)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoPostNotFound() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/blah/")
+                .withHeader("Authorization", token)
+                .withBody(Resources.read("json/InvitationServletTest.testDoPost.json"))
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
         Assert.assertNotNull(response);
     }
 

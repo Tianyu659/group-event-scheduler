@@ -12,6 +12,27 @@ export class Invitation {
   }
 }
 
+function getVenue(data: Record<string, any>): Record<string, any> | null {
+  return data["_embedded"]["venues"][0] ?? null;
+}
+
+function formatLocation(venue: Record<string, any> | null): string {
+  if (venue === null) {
+    return "No location provided";
+  }
+
+  let result = venue["name"].trim();
+  if (venue["city"]) {
+    result += `, ${venue["city"]["name"].trim()}`;
+  }
+
+  if (venue["state"]) {
+    result += `, ${venue["state"]["stateCode"].trim()}`;
+  }
+
+  return result;
+}
+
 export class GroupDateEvent {
   public constructor(
     public id: number,
@@ -27,6 +48,26 @@ export class GroupDateEvent {
 
   public static empty(groupDate: GroupDate): GroupDateEvent {
     return new GroupDateEvent(0, groupDate, "", "", "", "", "", new Date(), 60);
+  }
+
+  public static ticketmaster(
+    groupDate: GroupDate,
+    data: Record<string, any>
+  ): GroupDateEvent {
+    const venue = getVenue(data);
+    const location = formatLocation(venue);
+
+    return new GroupDateEvent(
+      0,
+      groupDate,
+      data["id"],
+      data["url"],
+      data["name"],
+      data["info"],
+      location,
+      new Date(data["dates"]["start"]["dateTime"]),
+      60
+    );
   }
 
   public dump(): Record<string, any> {
