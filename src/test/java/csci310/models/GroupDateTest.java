@@ -37,15 +37,6 @@ public class GroupDateTest {
         database.users.dao().create(user);
     }
     
-    @Before
-    public void before() throws SQLException {
-        database.groupDates.clear();
-        database.groupDateEvents.clear();
-        database.invitations.clear();
-        database.invitationResponses.clear();
-        database.invitationEventResponses.clear();
-    }
-
     @Test
     public void testGetEvents() throws SQLException {
         GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
@@ -53,31 +44,61 @@ public class GroupDateTest {
         Assert.assertEquals(0, groupDate.getEvents().size());
     }
     
-    static GroupDateEvent makeGDE(final GroupDate gd) {
+    static GroupDateEvent makeGDE(final GroupDate gd,final int e) throws SQLException {
         final GroupDateEvent o = new GroupDateEvent();
         o.setGroupDate(gd);
+        o.setUrl("");
+        o.setTime(0);
+        o.setName(gd.getName());
+        o.setDuration(0);
+        o.setEid(""+e);
+        o.setDescription(gd.getDescription());
+        o.setLocation("");
+        database.groupDateEvents.dao().create(o);
         return o;
     }
-    static void makeIER(final GroupDateEvent gde,final int interest) throws SQLException {
+    static Invitation makeI(final GroupDate gd) throws SQLException {
+        final Invitation i = new Invitation();
+        i.setGroupDate(gd);
+        i.setUser(user);
+        database.invitations.dao().create(i);
+        return i;
+    }
+    static InvitationResponse makeIR(final Invitation i) throws SQLException {
+        final InvitationResponse ir = new InvitationResponse();
+        ir.setAccepted(false);
+        ir.setInvitation(i);
+        database.invitationResponses.dao().create(ir);
+        return ir;
+    }
+    static void makeIER(final GroupDateEvent gde,
+                        final InvitationResponse ir,
+                        final int interest)
+                        throws SQLException {
         final InvitationEventResponse o = new InvitationEventResponse();
-        o.available = (o.interest = interest) != 0;
-        o.event = gde;
+        o.setInterest(interest);
+        o.setAvailable(interest != 0);
+        o.setEvent(gde);
+        o.setInvitationResponse(ir);
         database.invitationEventResponses.dao().create(o);
     }
     @Test
     public void testSelectEventAllAvailable() throws SQLException {
         final int nDates = 10;
         final GroupDate gd = createGroupDate(user,"gd","");
+        gd.setLive(false);
         database.groupDates.dao().create(gd);
         final GroupDateEvent[] dates = new GroupDateEvent[nDates];
-        for(int i = 0;i < nDates;++i) dates[i] = makeGDE(gd);
+        for(int i = 0;i < nDates;++i) dates[i] = makeGDE(gd,i);
+        final InvitationResponse[] invitations = new InvitationResponse[nDates];
+        for(int i = 0;i < nDates;++i) invitations[i] = makeIR(makeI(gd));
         
         final int nUsers = 6;
         final int nResponses = nUsers*nDates;
         final int[] sum = new int[nDates];
         for(int i = 0;i < nResponses;++i) {
             final int date = i % nDates,rate = (i % 5) + 1;
-            makeIER(dates[date],rate);
+            makeIER(dates[date],invitations[date],rate);
             sum[date] += rate;
         }
         
@@ -100,12 +121,14 @@ public class GroupDateTest {
         final GroupDate gd = createGroupDate(user,"gd","");
         database.groupDates.dao().create(gd);
         final GroupDateEvent[] dates = new GroupDateEvent[nDates];
-        for(int i = 0;i < nDates;++i) dates[i] = makeGDE(gd);
+        for(int i = 0;i < nDates;++i) dates[i] = makeGDE(gd,i);
+        final InvitationResponse[] invitations = new InvitationResponse[nDates];
+        for(int i = 0;i < nDates;++i) invitations[i] = makeIR(makeI(gd));
     
         final int nUsers = 6;
         final int nResponses = nUsers*nDates;
         for(int i = 0;i < nResponses;++i)
-            makeIER(dates[i % nDates],i % 6);
+            makeIER(dates[i % nDates],invitations[i % nDates],0);
         
         Assert.assertNull(gd.selectEvent());
     }
