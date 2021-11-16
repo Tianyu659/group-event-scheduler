@@ -1,6 +1,5 @@
 package csci310.servlets;
 
-import com.j256.ormlite.table.TableUtils;
 import csci310.Authentication;
 import csci310.Configuration;
 import csci310.Database;
@@ -42,7 +41,7 @@ public class TicketmasterServletTest {
 
     @AfterClass
     public static void tearDown() throws SQLException {
-        database.users.clear();
+        database.drop();
     }
     
     @InjectMocks TicketmasterServlet servlet;
@@ -52,13 +51,12 @@ public class TicketmasterServletTest {
     static HttpServletRequest request(final String auth,final String...other) {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         Map<String,String[]> headers = new HashMap<>();
-        if(auth != null)
-            headers.put("Authorization",new String[] {auth});
         for(final String s : other) {
             final String[] split = s.split(",",2);
             headers.put(split[0],split[1].split(","));
         }
         when(request.getParameterMap()).thenReturn(headers);
+        when(request.getHeader("Authorization")).thenReturn(auth);
         doAnswer(a -> headers.get(a.<String>getArgument(0))).when(request).getHeader(Mockito.anyString());
         return request;
     }
@@ -81,24 +79,11 @@ public class TicketmasterServletTest {
         }
         return null;
     }
-    
+
     private void testToken(final String token,final String result) {
         assertEquals(result.trim(),exec(token).trim());
     }
-    @Test
-    public void testdoPostBadToken() {
-        testToken(
-            Authentication.get().key(
-                UserTest.createUser(
-                    "invalid",
-                    "user",
-                    "invalid",
-                    "user"
-                )
-            ),
-            "{\"error\":\"invalid authentication!\"}"
-        );
-    }
+
     @Test
     public void testdoPostNoToken() {
         testToken(null,"{\"error\":\"user authentication is required!\"}");

@@ -31,10 +31,10 @@ public class Authentication {
     }
 
     public User authenticate(HttpServletRequest request) throws RequestException {
-        String[] token = request.getParameterMap().get("Authorization");
-        if (token != null && token.length == 1) {
+        String token = request.getHeader("Authorization");
+        if (token != null) {
             try {
-                User user = RequestException.wrap(() -> this.user(token[0]), "unable to access database!");
+                User user = RequestException.wrap(() -> this.user(token), "unable to access database!");
                 if (user != null) {
                     return user;
                 } else {

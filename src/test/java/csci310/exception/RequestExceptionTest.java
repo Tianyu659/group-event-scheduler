@@ -26,4 +26,12 @@ public class RequestExceptionTest {
                 .bind(200);
         exception.apply(response);
     }
+
+    @Test
+    public void testApplyDetails() throws IOException {
+        RequestException exception = new RequestException(200, "hello!", "details");
+        HttpServletResponse response = new MockHttpServletResponseTarget()
+                .bind(200);
+        exception.apply(response);
+    }
 }

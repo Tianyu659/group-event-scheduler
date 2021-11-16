@@ -88,6 +88,6 @@ public class SessionServletTest {
 
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
-        database.users.clear();
+        database.drop();
     }
 }
