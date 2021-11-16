@@ -87,11 +87,14 @@ public class InvitationServlet extends HttpServlet {
                             () -> invitationEventResponseDao.create(invitationEventResponse),
                             "cannot connect to database!");
                 }
-            }
 
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_CREATED);
-            response.getWriter().println("{}");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                response.getWriter().println("{}");
+            } else {
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
         } catch (RequestException exception) {
             exception.printStackTrace();
             exception.apply(response);

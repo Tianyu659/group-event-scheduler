@@ -1,5 +1,6 @@
 package csci310.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
@@ -65,6 +66,12 @@ public class GroupDate {
     @JsonProperty("events")
     public List<GroupDateEvent> getEvents() throws SQLException {
         Dao<GroupDateEvent, Integer> dao = Database.load().groupDateEvents.dao();
+        return dao.queryForEq("groupDate_id", this.getId());
+    }
+
+    @JsonIgnore
+    public List<Invitation> getInvitations() throws SQLException {
+        Dao<Invitation, Integer> dao = Database.load().invitations.dao();
         return dao.queryForEq("groupDate_id", this.getId());
     }
 }
