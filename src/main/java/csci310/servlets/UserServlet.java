@@ -57,14 +57,9 @@ public class UserServlet extends HttpServlet {
 						"username is already taken");
 			}
 
-			try {
-				userDao.create(user);
-			} catch (SQLException exception) {
-				throw new RequestException(
-						HttpServletResponse.SC_BAD_REQUEST,
-						"invalid user credentials",
-						exception.toString());
-			}
+			RequestException.wrap(
+					() -> userDao.create(user),
+					"cannot connect to database!");
 
 			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_CREATED);

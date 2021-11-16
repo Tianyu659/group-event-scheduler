@@ -26,15 +26,20 @@ function isAuthenticated(
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "dashboard",
-    component: Dashboard,
-    beforeEnter: isAuthenticated,
+    path: "/register/",
+    name: "register",
+    component: Register,
   },
   {
     path: "/login/",
     name: "login",
     component: Login,
+  },
+  {
+    path: "/",
+    name: "dashboard",
+    component: Dashboard,
+    beforeEnter: isAuthenticated,
   },
   {
     path: "/profile/",
@@ -43,14 +48,10 @@ const routes: Array<RouteRecordRaw> = [
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/register/",
-    name: "register",
-    component: Register,
-  },
-  {
     path: "/create/",
     name: "create",
     component: CreateGroupDate,
+    beforeEnter: isAuthenticated,
   },
 ];
 

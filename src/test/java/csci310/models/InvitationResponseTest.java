@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
-public class InvitationTest {
+public class InvitationResponseTest {
     private static Database database;
+    private static GroupDateEvent groupDateEvent;
     private static Invitation invitation;
 
     @BeforeClass
@@ -23,7 +24,7 @@ public class InvitationTest {
         database.users.dao().create(otherUser);
         GroupDate groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Awesome group date!");
         database.groupDates.dao().create(groupDate);
-        GroupDateEvent groupDateEvent = GroupDateTest.createGroupDateEvent(groupDate, "Event 1", "Super fun event!");
+        groupDateEvent = GroupDateTest.createGroupDateEvent(groupDate, "Event 1", "Super fun event!");
         database.groupDateEvents.dao().create(groupDateEvent);
         invitation = new Invitation();
         invitation.setGroupDate(groupDate);
@@ -32,13 +33,16 @@ public class InvitationTest {
     }
 
     @Test
-    public void testGetResponse() throws SQLException {
-        Assert.assertNull(invitation.getResponse());
+    public void testGetEventResponses() throws SQLException {
         InvitationResponse invitationResponse = new InvitationResponse();
         invitationResponse.setInvitation(invitation);
         invitationResponse.setAccepted(true);
         database.invitationResponses.dao().create(invitationResponse);
-        Assert.assertNotNull(invitation.getResponse());
+        InvitationEventResponse invitationEventResponse = new InvitationEventResponse();
+        invitationEventResponse.setEvent(groupDateEvent);
+        invitationEventResponse.setInvitationResponse(invitationResponse);
+        database.invitationEventResponses.dao().create(invitationEventResponse);
+        Assert.assertEquals(1, invitationResponse.getEventResponses().size());
     }
 
     @AfterClass

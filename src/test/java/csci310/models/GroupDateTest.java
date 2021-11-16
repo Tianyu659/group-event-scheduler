@@ -110,6 +110,18 @@ public class GroupDateTest {
         Assert.assertNull(gd.selectEvent());
     }
 
+    @Test
+    public void testGetInvitations() throws SQLException {
+        GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
+        database.groupDates.dao().create(groupDate);
+        User other = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
+        Invitation invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(other);
+        database.invitations.dao().create(invitation);
+        Assert.assertEquals(1, groupDate.getInvitations().size());
+    }
+
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         database.drop();
