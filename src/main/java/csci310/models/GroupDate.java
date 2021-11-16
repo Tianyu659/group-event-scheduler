@@ -67,4 +67,8 @@ public class GroupDate {
         Dao<GroupDateEvent, Integer> dao = Database.load().groupDateEvents.dao();
         return dao.queryForEq("groupDate_id", this.getId());
     }
+    
+    public GroupDateEvent selectEvent() throws SQLException {
+        return null;
+    }
 }
