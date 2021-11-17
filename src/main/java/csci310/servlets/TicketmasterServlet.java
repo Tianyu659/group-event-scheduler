@@ -25,6 +25,8 @@ public class TicketmasterServlet extends HttpServlet {
         try {
             verify(request);
             queryTicketmaster(request,response);
-        } catch(final RequestException e) {e.apply(response);}
+        } 
+        catch(final RequestException e) {e.apply(response);} 
+        catch (InterruptedException e) {}
     }
 }
