@@ -5,6 +5,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EventSearchTest {
     @Test
     public void testsanitize() {
@@ -49,5 +52,20 @@ public class EventSearchTest {
         String[] n = null;
         test.put(EventSearch.Parameter.id, n);
         assertEquals("",test.toString());
+    }
+    @Test
+    public void testParameterToString() {
+    	assertEquals("id", EventSearch.Parameter.id.toString());
+    }
+    @Test
+    public void testEventSearchMaps() {
+    	Map<String, String[]> params = new HashMap<String, String[]>();
+    	String[] strings0 = null;
+    	params.put("notid", strings0);
+    	EventSearch eventSearch = new EventSearch(params);
+    	String[] strings = {"0"};
+    	params.put("id", strings);
+    	eventSearch = new EventSearch(params);
+    	assertEquals("&id=0", eventSearch.toString());
     }
 }
