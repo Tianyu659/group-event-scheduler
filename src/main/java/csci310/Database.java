@@ -33,6 +33,7 @@ public class Database {
         }
 
         public void drop() throws SQLException {
+            dao = null;
             TableUtils.dropTable(connectionSource, this.tClass, true);
         }
     }
