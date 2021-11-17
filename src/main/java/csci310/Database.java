@@ -17,17 +17,19 @@ public class Database {
 
     public class Table<T> {
         private final Class<T> tClass;
+        private Dao<T,Integer> dao = null;
 
         public Table(Class<T> tClass) {
             this.tClass = tClass;
         }
 
         public Dao<T, Integer> dao() throws SQLException {
+            if(dao != null) return dao;
             ConfigurationException.wrap(() -> {
                 TableUtils.createTableIfNotExists(connectionSource, this.tClass);
                 return null;
             }, "unable to create table for " + tClass.getName());
-            return DaoManager.createDao(connectionSource, tClass);
+            return dao = DaoManager.createDao(connectionSource, tClass);
         }
 
         public void drop() throws SQLException {
