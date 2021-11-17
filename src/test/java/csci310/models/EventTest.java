@@ -2,7 +2,7 @@ package csci310.models;
 
 import org.junit.Test;
 
-import csci310.models.Event.Wrapper;
+//import csci310.models.Event.Wrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,13 @@ public class EventTest {
     public void testsplit() {
         List<String> split = Event.split(
             "",
+            ','
+        );
+        assertNotNull(split);
+        assertTrue(split.isEmpty());
+        
+        split = Event.split(
+            "  ",
             ','
         );
         assertNotNull(split);
@@ -75,6 +82,15 @@ public class EventTest {
         assertEquals(2,split.size());
         assertEquals("a",split.get(0));
         assertEquals("b",split.get(1));
+        
+        split = Event.split(
+            "a,b",
+            ',',
+            1
+        );
+        assertNotNull(split);
+        assertEquals(1,split.size());
+        assertEquals("a,b",split.get(0));
     }
     @Test
     public void testparseArray() {
@@ -114,6 +130,12 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+        test = Event.parseArray(
+                "[ \"a\", null ]"
+            );
+            assertNotNull(test);
+            assertEquals(1,test.size());
     
         test = Event.parseArray(
             "[[1,2],[3]]"
@@ -318,5 +340,11 @@ public class EventTest {
     	assertNull(Event.Wrapper.detect("}"));
     	assertEquals(Event.Wrapper.arr, Event.Wrapper.detect(" ["));
     	assertEquals(Event.Wrapper.obj, Event.Wrapper.detect("{[]}"));
+    }
+    @Test
+    public void testData() {
+    	Event event = new Event("");
+    	assertEquals(Event.Type.parseValue(""), event.data);
+    	assertNull(event.data);
     }
 }
