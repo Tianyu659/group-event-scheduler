@@ -46,7 +46,8 @@ public class GroupDateTest {
         Assert.assertEquals(0, groupDate.getEvents().size());
     }
     
-    @Test
+    @SuppressWarnings("unlikely-arg-type")
+	@Test
     public void testGroupDateEvent() throws SQLException {
         GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
         database.groupDates.dao().create(groupDate);
