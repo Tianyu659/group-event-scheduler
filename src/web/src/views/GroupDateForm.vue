@@ -28,7 +28,7 @@
       <div v-if="groupDate.events.length === 0">
         You haven't added any events!
       </div>
-      <group-date-form-event-form
+      <group-date-form-event-search
         :group-date="groupDate"
         @submit="onCreateEvent"
       />
@@ -63,9 +63,11 @@ import GroupDateFormEvent from "@/views/GroupDateFormEvent.vue";
 import GroupDateFormEventForm from "@/views/GroupDateFormEventForm.vue";
 import GroupDateFormInvitationForm from "@/views/GroupDateFormInvitationForm.vue";
 import GroupDateFormInvitation from "@/views/GroupDateFormInvitation.vue";
+import GroupDateFormEventSearch from "@/views/GroupDateFormEventSearch.vue";
 
 @Options({
   components: {
+    GroupDateFormEventSearch,
     GroupDateFormInvitation,
     GroupDateFormInvitationForm,
     GroupDateFormEventForm,
