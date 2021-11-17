@@ -39,7 +39,7 @@ export default class GroupDateForm extends Vue {
         this.events.length = 0;
         this.events.push(
           ...data["_embedded"]["events"].map((data: any) =>
-            GroupDateEvent.ticketmaster(this.groupDate, data)
+            GroupDateEvent.ticketmaster(data)
           )
         );
       });

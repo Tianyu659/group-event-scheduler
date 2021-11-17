@@ -7,8 +7,56 @@ export class Invitation {
     public user: User
   ) {}
 
+  public static wrap(data: Record<string, any>): Invitation {
+    return new Invitation(
+      data["id"],
+      GroupDate.wrap(data["groupDate"]),
+      User.wrap(data["user"])
+    );
+  }
+
   public dump(): Record<string, any> {
     return { username: this.user.username };
+  }
+}
+
+export class InvitationEventResponse {
+  public constructor(
+    public event: GroupDateEvent,
+    public available: boolean,
+    public interest: number
+  ) {}
+
+  public dump(): Record<string, any> {
+    return {
+      eventId: this.event.id,
+      available: this.available,
+      interest: this.interest,
+    };
+  }
+}
+
+export class InvitationResponse {
+  public constructor(
+    public accepted: boolean,
+    public events: Array<InvitationEventResponse>
+  ) {}
+
+  public static create(invitation: Invitation): InvitationResponse {
+    return new InvitationResponse(
+      true,
+      invitation.groupDate.events.map(
+        (groupDateEvent: GroupDateEvent) =>
+          new InvitationEventResponse(groupDateEvent, false, 1)
+      )
+    );
+  }
+
+  public dump(): Record<string, any> {
+    return {
+      accepted: this.accepted,
+      events: this.events.map((event: InvitationEventResponse) => event.dump()),
+    };
   }
 }
 
@@ -36,7 +84,6 @@ function formatLocation(venue: Record<string, any> | null): string {
 export class GroupDateEvent {
   public constructor(
     public id: number,
-    public groupDate: GroupDate,
     public eid: string,
     public url: string,
     public name: string,
@@ -46,20 +93,16 @@ export class GroupDateEvent {
     public duration: number
   ) {}
 
-  public static empty(groupDate: GroupDate): GroupDateEvent {
-    return new GroupDateEvent(0, groupDate, "", "", "", "", "", new Date(), 60);
+  public static empty(): GroupDateEvent {
+    return new GroupDateEvent(0, "", "", "", "", "", new Date(), 60);
   }
 
-  public static ticketmaster(
-    groupDate: GroupDate,
-    data: Record<string, any>
-  ): GroupDateEvent {
+  public static ticketmaster(data: Record<string, any>): GroupDateEvent {
     const venue = getVenue(data);
     const location = formatLocation(venue);
 
     return new GroupDateEvent(
       0,
-      groupDate,
       data["id"],
       data["url"],
       data["name"],
@@ -67,6 +110,19 @@ export class GroupDateEvent {
       location,
       new Date(data["dates"]["start"]["dateTime"]),
       60
+    );
+  }
+
+  public static wrap(data: Record<string, any>): GroupDateEvent {
+    return new GroupDateEvent(
+      data["id"],
+      data["eid"],
+      data["url"],
+      data["name"],
+      data["description"],
+      data["location"],
+      new Date(data["time"] * 1000),
+      data["duration"]
     );
   }
 
@@ -96,6 +152,18 @@ export class GroupDate {
 
   public static empty(creator: User): GroupDate {
     return new GroupDate(0, "", "", true, creator, [], []);
+  }
+
+  public static wrap(data: Record<string, any>): GroupDate {
+    return new GroupDate(
+      data["id"],
+      data["name"],
+      data["description"],
+      data["live"],
+      User.wrap(data["creator"]),
+      data["events"].map(GroupDateEvent.wrap),
+      []
+    );
   }
 
   public dump(): Record<string, any> {

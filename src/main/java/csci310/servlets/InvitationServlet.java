@@ -26,13 +26,30 @@ public class InvitationServlet extends HttpServlet {
                     () -> Database.load().invitations.dao(),
                     "cannot connect to database!");
 
-            List<Invitation> invitations = RequestException.wrap(
-                    () -> dao.queryForEq("user_id", user.getId()),
-                    "cannot connect to database!");
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(response.getWriter(), invitations);
+            Path path = new Path(request.getPathInfo());
+
+            if (path.size() == 0) {
+                List<Invitation> invitations = RequestException.wrap(
+                        () -> dao.queryForEq("user_id", user.getId()),
+                        "cannot connect to database!");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(response.getWriter(), invitations);
+            } else {
+                int id = path.id(0);
+                Invitation invitation = RequestException.wrap(
+                        () -> dao.queryForId(id),
+                        "cannot connect to database!");
+                if (invitation == null || invitation.getUser().getId() != user.getId()) {
+                    throw new RequestException(404, "invitation does not exist!");
+                } else {
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(response.getWriter(), invitation);
+                }
+            }
         } catch (RequestException exception) {
             exception.apply(response);
         }

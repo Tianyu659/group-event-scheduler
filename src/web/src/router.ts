@@ -10,6 +10,8 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
 import CreateGroupDate from "./views/CreateGroupDate.vue";
+import GroupDateDetails from "./views/GroupDateDetails.vue";
+import InvitationDetails from "./views/InvitationDetails.vue";
 import { session } from "@/session";
 
 function isAuthenticated(
@@ -51,6 +53,18 @@ const routes: Array<RouteRecordRaw> = [
     path: "/create/",
     name: "create",
     component: CreateGroupDate,
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: "/date/:id/",
+    name: "date",
+    component: GroupDateDetails,
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: "/invitation/:id/",
+    name: "invitation",
+    component: InvitationDetails,
     beforeEnter: isAuthenticated,
   },
 ];
