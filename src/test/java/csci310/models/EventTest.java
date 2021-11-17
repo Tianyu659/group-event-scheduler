@@ -2,6 +2,8 @@ package csci310.models;
 
 import org.junit.Test;
 
+import csci310.models.Event.Wrapper;
+
 import java.util.List;
 import java.util.Map;
 
@@ -308,5 +310,13 @@ public class EventTest {
             "null"
         );
         assertNull(obj);
+    }
+    @Test
+    public void testWrapperDetect() {
+    	assertNull(Event.Wrapper.detect(""));
+    	assertNull(Event.Wrapper.detect(" "));
+    	assertNull(Event.Wrapper.detect("}"));
+    	assertEquals(Event.Wrapper.arr, Event.Wrapper.detect(" ["));
+    	assertEquals(Event.Wrapper.obj, Event.Wrapper.detect("{[]}"));
     }
 }
