@@ -4,7 +4,7 @@
       <input
         id="name"
         type="text"
-        placeholder="username"
+        placeholder="Group date name"
         v-model="groupDate.name"
       />
       <label>Name</label>
@@ -13,7 +13,7 @@
       <input
         id="description"
         type="text"
-        placeholder="description"
+        placeholder="Group date description"
         v-model="groupDate.description"
       />
       <label>Description</label>
@@ -64,6 +64,7 @@ import GroupDateFormEventForm from "@/views/GroupDateFormEventForm.vue";
 import GroupDateFormInvitationForm from "@/views/GroupDateFormInvitationForm.vue";
 import GroupDateFormInvitation from "@/views/GroupDateFormInvitation.vue";
 import GroupDateFormEventSearch from "@/views/GroupDateFormEventSearch.vue";
+import { url } from "@/url";
 
 @Options({
   components: {
@@ -86,7 +87,22 @@ export default class GroupDateForm extends Vue {
   }
 
   public onClickSubmit(): void {
-    console.log(this.groupDate.dump());
+    fetch(url("/groupDates/"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: session.token!,
+      },
+      body: JSON.stringify(this.groupDate.dump()),
+    }).then((response: Response) => {
+      response.json().then((data: Record<string, never>) => {
+        if (response.status === 201) {
+          console.log(data);
+        } else {
+          console.error(data);
+        }
+      });
+    });
   }
 }
 </script>

@@ -9,6 +9,7 @@ import java.util.Vector;
 public class GroupDateForm extends Form {
     private final String name;
     private final String description;
+    private final boolean live;
     private final Vector<GroupDateEventForm> events;
     private final Vector<InvitationForm> invitations;
 
@@ -16,11 +17,13 @@ public class GroupDateForm extends Form {
     public GroupDateForm(
             @JsonProperty(value = "name", required = true) String name,
             @JsonProperty(value = "description", required = true) String description,
+            @JsonProperty(value = "live", required = true) boolean live,
             @JsonProperty(value = "events", required = true) Vector<GroupDateEventForm> events,
             @JsonProperty(value = "invitations", required = true) Vector<InvitationForm> invitations
     ) {
         this.name = name;
         this.description = description;
+        this.live = live;
         this.events = events;
         this.invitations = invitations;
     }
@@ -29,6 +32,7 @@ public class GroupDateForm extends Form {
         GroupDate groupDate = new GroupDate();
         groupDate.setName(this.name);
         groupDate.setDescription(this.description);
+        groupDate.setLive(this.live);
         return groupDate;
     }
 

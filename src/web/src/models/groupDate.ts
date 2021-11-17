@@ -63,7 +63,7 @@ export class GroupDateEvent {
       data["id"],
       data["url"],
       data["name"],
-      data["info"],
+      data["info"] || "",
       location,
       new Date(data["dates"]["start"]["dateTime"]),
       60
@@ -95,7 +95,7 @@ export class GroupDate {
   ) {}
 
   public static empty(creator: User): GroupDate {
-    return new GroupDate(0, "", "", false, creator, [], []);
+    return new GroupDate(0, "", "", true, creator, [], []);
   }
 
   public dump(): Record<string, any> {

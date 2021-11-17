@@ -79,6 +79,7 @@ public class GroupDateServlet extends HttpServlet {
                     "cannot connect to database!");
 
             GroupDate groupDate = form.validate();
+            groupDate.setCreator(user);
             RequestException.wrap(
                     () -> dao.create(groupDate),
                     "cannot connect to database!");
@@ -107,7 +108,7 @@ public class GroupDateServlet extends HttpServlet {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_CREATED);
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(response.getWriter(), user);
+            objectMapper.writeValue(response.getWriter(), groupDate);
         } catch (RequestException exception) {
             exception.apply(response);
         }

@@ -8,7 +8,7 @@
     <div class="group">
       <button class="primary" @click="onClickSearch">Search by keyword</button>
     </div>
-    <ul class="fancy click">
+    <ul class="fancy click" v-show="events.length > 0">
       <li v-for="event of events" :key="event.eid" @click="onClickEvent(event)">
         {{ event.name }}: {{ event.location }}
       </li>
