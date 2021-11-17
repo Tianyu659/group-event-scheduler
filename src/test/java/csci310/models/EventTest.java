@@ -124,6 +124,19 @@ public class EventTest {
         assertEquals(1,split.size());
         assertEquals("a,b",split.get(0));
     }
+    
+    @Test
+    public void testsplit10() {
+    	List<String> split = Event.split(
+            "abc,,bcdd",
+            ',',
+            1
+        );
+        assertNotNull(split);
+        assertEquals(1,split.size());
+        assertEquals("abc,,bcdd",split.get(0));
+    }
+    
     @Test
     public void testparseArray() {
         List<Object> test = Event.parseArray(
