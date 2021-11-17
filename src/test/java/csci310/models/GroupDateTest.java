@@ -5,6 +5,8 @@ import csci310.Database;
 import io.cucumber.java.bs.I;
 import org.junit.*;
 
+import static org.junit.Assert.*;
+
 import java.sql.SQLException;
 
 public class GroupDateTest {
@@ -42,6 +44,18 @@ public class GroupDateTest {
         GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
         database.groupDates.dao().create(groupDate);
         Assert.assertEquals(0, groupDate.getEvents().size());
+    }
+    
+    @Test
+    public void testGroupDateEvent() throws SQLException {
+        GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
+        database.groupDates.dao().create(groupDate);
+        GroupDateEvent event = createGroupDateEvent(groupDate, "name", "des");
+        assertEquals(groupDate, event.getGroupDate());
+        assertTrue(event.equals(event));
+        GroupDateEvent event2 = null;
+        assertFalse(event.equals(event2));
+        assertFalse(event.equals("notEvent"));
     }
     
     static GroupDateEvent makeGDE(final GroupDate gd,final int e) throws SQLException {
