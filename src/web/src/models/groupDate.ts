@@ -4,14 +4,16 @@ export class Invitation {
   public constructor(
     public id: number,
     public groupDate: GroupDate,
-    public user: User
+    public user: User,
+    public response: InvitationResponse | null = null
   ) {}
 
   public static wrap(data: Record<string, any>): Invitation {
     return new Invitation(
       data["id"],
       GroupDate.wrap(data["groupDate"]),
-      User.wrap(data["user"])
+      User.wrap(data["user"]),
+      InvitationResponse.wrap(data["response"])
     );
   }
 
@@ -34,6 +36,14 @@ export class InvitationEventResponse {
       interest: this.interest,
     };
   }
+
+  public static wrap(data: Record<string, any>): InvitationEventResponse {
+    return new InvitationEventResponse(
+      GroupDateEvent.wrap(data["event"]),
+      data["available"],
+      data["interest"]
+    );
+  }
 }
 
 export class InvitationResponse {
@@ -50,6 +60,19 @@ export class InvitationResponse {
           new InvitationEventResponse(groupDateEvent, false, 1)
       )
     );
+  }
+
+  public static wrap(
+    data: Record<string, any> | null
+  ): InvitationResponse | null {
+    if (data === null) {
+      return null;
+    } else {
+      return new InvitationResponse(
+        data["accepted"],
+        data["events"].map(InvitationEventResponse.wrap)
+      );
+    }
   }
 
   public dump(): Record<string, any> {

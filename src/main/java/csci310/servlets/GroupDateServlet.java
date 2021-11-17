@@ -10,10 +10,7 @@ import csci310.forms.Form;
 import csci310.forms.GroupDateEventForm;
 import csci310.forms.GroupDateForm;
 import csci310.forms.InvitationForm;
-import csci310.models.GroupDate;
-import csci310.models.GroupDateEvent;
-import csci310.models.Invitation;
-import csci310.models.User;
+import csci310.models.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +37,7 @@ public class GroupDateServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.writeValue(response.getWriter(), groupDates);
-            } else {
+            } else if (path.size() == 1) {
                 int id = path.id(0);
                 GroupDate groupDate = RequestException.wrap(
                         () -> dao.queryForId(id),
@@ -52,6 +49,22 @@ public class GroupDateServlet extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_OK);
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(response.getWriter(), groupDate);
+                }
+            } else if (path.size() == 2) {
+                int id = path.id(0);
+                GroupDate groupDate = RequestException.wrap(
+                        () -> dao.queryForId(id),
+                        "cannot connect to database!");
+                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                    throw new RequestException(404, "group date does not exist!");
+                } else {
+                    List<Invitation> invitations = RequestException.wrap(
+                            groupDate::getInvitations,
+                            "cannot connect to database!");
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(response.getWriter(), invitations);
                 }
             }
         } catch (RequestException exception) {
