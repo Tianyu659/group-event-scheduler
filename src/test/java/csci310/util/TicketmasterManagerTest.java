@@ -29,20 +29,21 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 	
 	// rate limitation of 5 requests per second
 	private final CountDownLatch waiter = new CountDownLatch(1);
-	private static Instant startInstant;
+//	private static Instant startInstant;
 	
-	@BeforeClass
-	public static void setInitialTime() {
-		startInstant = Instant.now();
-	}
+//	@BeforeClass
+//	public static void setInitialTime() {
+//		startInstant = Instant.now();
+//	}
 	
 	@After
 	public void wait200() throws InterruptedException {
-		Long t = Duration.between(startInstant, Instant.now()).toMillis();
-		if (t<200) {
-			waiter.await(200-t, TimeUnit.MILLISECONDS);
-		}
-		startInstant = Instant.now();
+		waiter.await(200, TimeUnit.MILLISECONDS);
+//		Long t = Duration.between(startInstant, Instant.now()).toMillis();
+//		if (t<200) {
+//			waiter.await(200-t, TimeUnit.MILLISECONDS);
+//		}
+//		startInstant = Instant.now();
 	}
 	
 	@Test
