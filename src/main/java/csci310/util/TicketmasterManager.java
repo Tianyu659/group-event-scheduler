@@ -7,12 +7,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-//import java.net.MalformedURLException;
-//import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.BitSet;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class TicketmasterManager {
 
@@ -20,8 +19,20 @@ public class TicketmasterManager {
 	
 	private static final String ROOT_URL = "https://app.ticketmaster.com/discovery/v2/";
 	
+	private static Instant startInstant = Instant.now();
+	private static final CountDownLatch waiter = new CountDownLatch(1);
+	
+	private static void checkRateLimit() throws InterruptedException {
+		Long t = Duration.between(startInstant, Instant.now()).toMillis();
+		if (t<200) {
+			waiter.await(200, TimeUnit.MILLISECONDS);
+		}
+		startInstant = Instant.now();
+	}
+	
 	//Basic Event Search by keyword
-	public static String searchEventByKeyword(String keyword) throws IOException {
+	public static String searchEventByKeyword(String keyword) throws IOException, InterruptedException {
+		checkRateLimit();
 		URL url = new URL(ROOT_URL + "events.json?apikey=" + API_KEY + "&keyword=" + keyword);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	    connection.setRequestMethod("GET");
@@ -34,7 +45,8 @@ public class TicketmasterManager {
 	}	
 	
 	//Event Details
-	public static String getEventDetails(String eventID) throws IOException {
+	public static String getEventDetails(String eventID) throws IOException, InterruptedException {
+		checkRateLimit();
 		URL url = new URL(ROOT_URL + "events/" + eventID + ".json?apikey=" + API_KEY);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -47,7 +59,8 @@ public class TicketmasterManager {
 	}
 	
 	// EventSearch
-	public static String searchEvent(EventSearch event) throws IOException {
+	public static String searchEvent(EventSearch event) throws IOException, InterruptedException {
+		checkRateLimit();
 		URL url = new URL(ROOT_URL + "events.json?apikey=" + API_KEY + event.toString());
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
