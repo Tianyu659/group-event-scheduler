@@ -17,13 +17,15 @@ public class Database {
 
     public class Table<T> {
         private final Class<T> tClass;
+        private Dao<T,Integer> dao = null;
 
         public Table(Class<T> tClass) {
             this.tClass = tClass;
         }
 
         public Dao<T, Integer> dao() throws SQLException {
-            return DaoManager.createDao(connectionSource, tClass);
+            if(dao != null) return dao;
+            return dao = DaoManager.createDao(connectionSource, tClass);
         }
 
         public void create() {
@@ -34,6 +36,7 @@ public class Database {
         }
 
         public void drop() throws SQLException {
+            dao = null;
             TableUtils.dropTable(connectionSource, this.tClass, true);
         }
     }

@@ -38,6 +38,7 @@ public class DatabaseTest {
         EasyMock.replay(configuration);
         Database database = new Database(configuration);
         Assert.assertNotNull(database.users.dao());
+        Assert.assertNotNull(database.users.dao());
     }
 
     @Test
