@@ -24,7 +24,7 @@
         </select>
         <label>Available</label>
       </div>
-      <div>
+      <div v-show="invitationEventResponse.available">
         <input
           type="number"
           min="1"

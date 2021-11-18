@@ -38,7 +38,8 @@ a {
 
 #content {
   max-width: 800px;
-  margin: 2em auto 7em auto;
+  margin: 2em auto 4em auto;
+  min-height: calc(100vh - 13rem);
 
   &.small {
     max-width: 25em;
@@ -60,8 +61,4 @@ a {
   padding: 1em 0.75em;
   text-align: center;
 
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }

@@ -65,6 +65,7 @@ import GroupDateFormInvitationForm from "@/views/GroupDateFormInvitationForm.vue
 import GroupDateFormInvitation from "@/views/GroupDateFormInvitation.vue";
 import GroupDateFormEventSearch from "@/views/GroupDateFormEventSearch.vue";
 import { url } from "@/url";
+import router from "@/router";
 
 @Options({
   components: {
@@ -97,7 +98,7 @@ export default class GroupDateForm extends Vue {
     }).then((response: Response) => {
       response.json().then((data: Record<string, never>) => {
         if (response.status === 201) {
-          console.log(data);
+          router.push({ name: "date", params: { id: data["id"] } });
         } else {
           console.error(data);
         }
