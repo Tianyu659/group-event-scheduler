@@ -1,7 +1,7 @@
 <template>
   <div id="navigation">
-    <router-link v-if="session.user === null" to="/">Home</router-link>
-    <router-link v-else :to="{ name: 'dashboard' }">Home</router-link>
+    <router-link v-if="session.user === null" to="/login">Groupie</router-link>
+    <router-link v-else :to="{ name: 'dashboard' }">Groupie</router-link>
     <div class="spacer" />
     <router-link to="/profile" v-if="session.user !== null">
       {{ session.user.firstName }}
@@ -17,6 +17,7 @@
     <router-link to="/login" v-if="session.user === null">Login</router-link>
   </div>
   <router-view id="content" />
+  <div id="footer">Created by Team 54</div>
 </template>
 
 <script lang="ts">
