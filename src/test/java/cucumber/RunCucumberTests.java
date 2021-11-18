@@ -1,10 +1,10 @@
 package cucumber;
 
 import csci310.Database;
+import csci310.models.UserTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
@@ -23,9 +23,20 @@ public class RunCucumberTests {
 	@BeforeClass
 	public static void setup() throws IOException, SQLException {
 		if (Files.exists(Path.of("run.sqlite3"))) {
+			if (Files.exists(Path.of("run.original.sqlite3"))) {
+				Files.delete(Path.of("run.original.sqlite3"));
+			}
+
 			Files.copy(Path.of("run.sqlite3"), Path.of("run.original.sqlite3"));
 			Database database = Database.load();
 			database.drop();
+			database.create();
+
+			database.users.dao().create(UserTest.createUser(
+					"ttrojan",
+					"asdfjkl;",
+					"Tommy",
+					"Trojan"));
 		}
 
 		WebDriverManager.chromedriver().setup();

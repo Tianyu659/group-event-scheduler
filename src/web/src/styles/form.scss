@@ -5,6 +5,10 @@ form, .form {
     display: block;
     margin-bottom: 0.5em;
 
+    &.buttons {
+      margin-top: 1em;
+    }
+
     &.right {
       text-align: right;
     }

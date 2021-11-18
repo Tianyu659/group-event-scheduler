@@ -5,7 +5,7 @@
       <p>{{ groupDate.description }}</p>
       <h2>Events</h2>
       <div>
-        <group-date-form-event
+        <group-date-details-event
           v-for="event of groupDate.events"
           :group-date-event="event"
           :key="event.id"
@@ -29,11 +29,14 @@ import { Options, Vue } from "vue-class-component";
 import { session } from "@/session";
 import { url } from "@/url";
 import { GroupDate, Invitation } from "@/models/groupDate";
-import GroupDateFormEvent from "@/views/GroupDateFormEvent.vue";
 import GroupDateDetailsInvitation from "@/views/GroupDateDetailsInvitation.vue";
+import GroupDateDetailsEvent from "@/views/GroupDateDetailsEvent.vue";
 
 @Options({
-  components: { GroupDateDetailsInvitation, GroupDateFormEvent },
+  components: {
+    GroupDateDetailsEvent,
+    GroupDateDetailsInvitation,
+  },
 })
 export default class Home extends Vue {
   public readonly session = session;
