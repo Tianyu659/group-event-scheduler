@@ -1,9 +1,14 @@
 package csci310.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import csci310.Database;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 import java.util.Objects;
 
@@ -104,6 +109,21 @@ public class GroupDateEvent {
     public int getDuration() {
         return duration;
     }
+
+    public Vector<Integer> getInterest() throws SQLException {
+        Dao<InvitationEventResponse, Integer> dao = Database.load().invitationEventResponses.dao();
+        List<InvitationEventResponse> responses = dao.queryForEq("event_id", this.getId());
+        Vector<Integer> interest = new Vector<>();
+        for (InvitationEventResponse response : responses) {
+            if (response.isAvailable()) {
+                interest.add(response.getInterest());
+            } else {
+                interest.add(-1);
+            }
+        }
+        return interest;
+    }
+
     
     @Override
     public boolean equals(Object o) {

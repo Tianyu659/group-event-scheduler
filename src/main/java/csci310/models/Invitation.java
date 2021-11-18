@@ -41,6 +41,7 @@ public class Invitation {
         return user;
     }
 
+    @JsonProperty("response")
     public InvitationResponse getResponse() throws SQLException {
         Dao<InvitationResponse, Integer> dao = Database.load().invitationResponses.dao();
         List<InvitationResponse> results = dao.queryForEq("invitation_id", this.getId());

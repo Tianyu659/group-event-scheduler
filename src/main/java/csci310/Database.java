@@ -23,11 +23,14 @@ public class Database {
         }
 
         public Dao<T, Integer> dao() throws SQLException {
+            return DaoManager.createDao(connectionSource, tClass);
+        }
+
+        public void create() {
             ConfigurationException.wrap(() -> {
                 TableUtils.createTableIfNotExists(connectionSource, this.tClass);
                 return null;
             }, "unable to create table for " + tClass.getName());
-            return DaoManager.createDao(connectionSource, tClass);
         }
 
         public void drop() throws SQLException {
@@ -56,7 +59,17 @@ public class Database {
         if (Database.instance == null) {
             Database.instance = new Database(Configuration.load());
         }
+        Database.instance.create();
         return Database.instance;
+    }
+
+    public void create() {
+        this.users.create();
+        this.groupDates.create();
+        this.groupDateEvents.create();
+        this.invitations.create();
+        this.invitationResponses.create();
+        this.invitationEventResponses.create();
     }
 
     public void drop() throws SQLException {

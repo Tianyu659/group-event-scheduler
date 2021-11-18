@@ -5,6 +5,12 @@
         <value key="authentication.secret">hello, world! this is a development key :)</value>
         <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
     </configuration>
+    <configuration profile="acceptance">
+        <value key="database.type">sqlite</value>
+        <value key="database.url">jdbc:sqlite:acceptance.sqlite3</value>
+        <value key="authentication.secret">hello, world! this is a development key :)</value>
+        <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
+    </configuration>
     <configuration>
         <value key="database.type">sqlite</value>
         <value key="database.url">jdbc:sqlite:run.sqlite3</value>

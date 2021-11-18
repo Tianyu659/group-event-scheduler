@@ -37,6 +37,10 @@ public class InvitationServletTest {
         invitation.setGroupDate(groupDate);
         invitation.setUser(otherUser);
         database.invitations.dao().create(invitation);
+        invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(user);
+        database.invitations.dao().create(invitation);
         token = Authentication.get().key(otherUser);
     }
 
@@ -50,6 +54,32 @@ public class InvitationServletTest {
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetOne() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/1")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetOneNotMine() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/2")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
         Assert.assertNotNull(response);
     }
 

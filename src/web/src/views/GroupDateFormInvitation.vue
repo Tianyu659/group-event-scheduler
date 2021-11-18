@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="invitation">
     Invited {{ invitation.user.firstName }} {{ invitation.user.lastName }} ({{
       invitation.user.username
     }})
@@ -17,4 +17,10 @@ export default class GroupDateFormInvitation extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.invitation {
+  border: 1px solid lightgray;
+  padding: 1em;
+  border-radius: 0.25rem;
+}
+</style>

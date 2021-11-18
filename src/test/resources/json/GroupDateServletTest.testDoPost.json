@@ -1,32 +1,21 @@
 {
-  "name": "My Event",
-  "description": "Something super fun",
+  "name": "Name",
+  "description": "Description",
+  "live": true,
   "events": [
     {
-      "url": "",
-      "eid": "",
-      "name": "Fishing",
-      "description": "For fish",
-      "location": "Alaska",
-      "time": 1636775919,
-      "duration": 300
-    },
-    {
-      "url": "",
-      "eid": "",
-      "name": "Baseball",
-      "description": "At the game",
-      "location": "Dodger's stadium",
-      "time": 1636775919,
-      "duration": 180
+      "eid": "G5dIZpYhpTdMS",
+      "url": "https://www.ticketmaster.com/san-antonio-spurs-vs-phoenix-suns-san-antonio-texas-11-22-2021/event/3A005B06D6FC3DF3",
+      "name": "San Antonio Spurs vs. Phoenix Suns",
+      "description": "Fans are encouraged to wear a mask if they are not fully vaccinated or if they live with someone at increased risk for severe illness. The AT&T Center is 100% cashless. Max bag size 6\" x 8\". Ages two and up require a ticket.",
+      "location": "AT&T Center, San Antonio, TX",
+      "time": 1637631000,
+      "duration": 60
     }
   ],
   "invitations": [
     {
-      "username": "ttrojan"
-    },
-    {
-      "username": "doesnotexist"
+      "username": "noahbkim"
     }
   ]
 }
