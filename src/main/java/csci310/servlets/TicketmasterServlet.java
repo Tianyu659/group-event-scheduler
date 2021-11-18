@@ -14,7 +14,7 @@ public class TicketmasterServlet extends HttpServlet {
     static void verify(HttpServletRequest request) throws RequestException {
         Authentication.get().authenticate(request);
     }
-    static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    static void queryTicketmaster(HttpServletRequest request,HttpServletResponse response) throws IOException, InterruptedException {
         response.setContentType("application/json");
         response.getWriter().print(
             TicketmasterManager.searchEvent(new EventSearch(request.getParameterMap()))
@@ -25,6 +25,8 @@ public class TicketmasterServlet extends HttpServlet {
         try {
             verify(request);
             queryTicketmaster(request,response);
-        } catch(final RequestException e) {e.apply(response);}
+        } 
+        catch(final RequestException e) {e.apply(response);} 
+        catch (InterruptedException e) {}
     }
 }

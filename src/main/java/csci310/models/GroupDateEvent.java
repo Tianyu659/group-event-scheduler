@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
+import java.util.Objects;
+
 @DatabaseTable(tableName = "groupDateEvents")
 public class GroupDateEvent {
     @DatabaseField(generatedId = true, unique = true)
@@ -121,4 +123,14 @@ public class GroupDateEvent {
         }
         return interest;
     }
+
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        return eid.contentEquals(((GroupDateEvent)o).eid);
+    }
+    
+    @Override public int hashCode() {return eid.hashCode();}
 }
