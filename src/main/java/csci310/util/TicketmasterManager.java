@@ -20,12 +20,15 @@ public class TicketmasterManager {
 	private static final String ROOT_URL = "https://app.ticketmaster.com/discovery/v2/";
 	
 	private static Instant startInstant = Instant.now();
-	private static final CountDownLatch waiter = new CountDownLatch(1);
+
+	public static CountDownLatch waiter = new CountDownLatch(1);
 	
-	private static void checkRateLimit() throws InterruptedException {
-		Long t = Duration.between(startInstant, Instant.now()).toMillis();
-		if (t<200) {
-			waiter.await(200, TimeUnit.MILLISECONDS);
+	public static void checkRateLimit() {
+		long t = Duration.between(startInstant, Instant.now()).toMillis();
+		if (t < 200) {
+			try {
+				waiter.await(200, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException ignored) {}
 		}
 		startInstant = Instant.now();
 	}
@@ -59,7 +62,7 @@ public class TicketmasterManager {
 	}
 	
 	// EventSearch
-	public static String searchEvent(EventSearch event) throws IOException, InterruptedException {
+	public static String searchEvent(EventSearch event) throws IOException {
 		checkRateLimit();
 		URL url = new URL(ROOT_URL + "events.json?apikey=" + API_KEY + event.toString());
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();

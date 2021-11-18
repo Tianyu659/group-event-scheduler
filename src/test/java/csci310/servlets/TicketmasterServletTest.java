@@ -49,30 +49,27 @@ public class TicketmasterServletTest {
     @Before public void before() {MockitoAnnotations.initMocks(this);}
     @After public void after() {}
     
-    static HttpServletRequest request(final String auth,final String...other) {
+    static HttpServletRequest request(final String auth) {
         final HttpServletRequest request = mock(HttpServletRequest.class);
-        Map<String,String[]> headers = new HashMap<>();
-        for(final String s : other) {
-            final String[] split = s.split(",",2);
-            headers.put(split[0],split[1].split(","));
-        }
-        when(request.getParameterMap()).thenReturn(headers);
+        Map<String, String[]> parameters = new HashMap<>();
+        when(request.getParameterMap()).thenReturn(parameters);
         when(request.getHeader("Authorization")).thenReturn(auth);
-        doAnswer(a -> headers.get(a.<String>getArgument(0))).when(request).getHeader(Mockito.anyString());
         return request;
     }
+
     static HttpServletResponse response(final StringWriter sw) throws IOException {
         final HttpServletResponse response = mock(HttpServletResponse.class);
         when(response.getWriter()).thenReturn(new PrintWriter(sw));
         return response;
     }
-    String exec(final String auth,final String...other) {
+
+    String exec(final String auth) {
         try {
-            final HttpServletRequest request = request(auth,other);
+            final HttpServletRequest request = request(auth);
             final StringWriter sw = new StringWriter();
             final HttpServletResponse response = response(sw);
         
-            servlet.doPost(request,response);
+            servlet.doPost(request, response);
             return sw.toString();
         } catch(final Exception e) {
             e.printStackTrace();
@@ -86,13 +83,13 @@ public class TicketmasterServletTest {
     }
 
     @Test
-    public void testdoPostNoToken() {
+    public void testDoPostNoToken() {
         testToken(null,"{\"error\":\"user authentication is required!\"}");
     }
     
     @Test
-    public void testdoPostQuery() {
+    public void testDoPostQuery() {
         // The scope of this test only cares that the servlet doesn't throw.
-        exec(userToken,eventKwd);
+        exec(userToken);
     }
 }
