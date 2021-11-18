@@ -74,7 +74,8 @@ public class Event {
                     if(!(escaped = c == '\\')) {
                         if(stack.isEmpty() && c == split) {
                             final String o = new String(arr,start,i-start).trim();
-                            if(!o.isEmpty()) out.add(o);
+                            if(!o.isEmpty()) 
+                            	out.add(o);
                             start = i + 1;
                             if(++count == max) break;
                         } else if((Character)c == stack.peek()) stack.pop();

@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import java.sql.SQLException;
 
 public class InvitationResponseTest {
@@ -36,11 +38,15 @@ public class InvitationResponseTest {
     public void testGetEventResponses() throws SQLException {
         InvitationResponse invitationResponse = new InvitationResponse();
         invitationResponse.setInvitation(invitation);
+        assertEquals(invitation, invitationResponse.getInvitation());
         invitationResponse.setAccepted(true);
+        assertTrue(invitationResponse.isAccepted());
         database.invitationResponses.dao().create(invitationResponse);
         InvitationEventResponse invitationEventResponse = new InvitationEventResponse();
         invitationEventResponse.setEvent(groupDateEvent);
         invitationEventResponse.setInvitationResponse(invitationResponse);
+        assertEquals(invitationResponse, invitationEventResponse.getInvitationResponse());
+        assertEquals(0, invitationEventResponse.getId());
         database.invitationEventResponses.dao().create(invitationEventResponse);
         Assert.assertEquals(1, invitationResponse.getEventResponses().size());
     }

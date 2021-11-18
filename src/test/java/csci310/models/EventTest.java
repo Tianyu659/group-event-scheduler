@@ -2,6 +2,8 @@ package csci310.models;
 
 import org.junit.Test;
 
+//import csci310.models.Event.Wrapper;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,22 @@ public class EventTest {
         assertNotNull(split);
         assertTrue(split.isEmpty());
         
-        split = Event.split(
+    }
+    
+    @Test
+    public void testsplit2() {
+    	List<String> split = Event.split(
+            "  ",
+            ','
+        );
+        assertNotNull(split);
+        assertTrue(split.isEmpty());
+        
+    }
+    
+    @Test
+    public void testsplit3() {
+    	List<String> split = Event.split(
             " a , b ",
             ','
         );
@@ -26,7 +43,11 @@ public class EventTest {
         assertEquals("a",split.get(0));
         assertEquals("b",split.get(1));
         
-        split = Event.split(
+    }
+    
+    @Test
+    public void testsplit4() {
+    	List<String> split = Event.split(
             "\"a,b\",c",
             ','
         );
@@ -34,8 +55,12 @@ public class EventTest {
         assertEquals(2,split.size());
         assertEquals("\"a,b\"",split.get(0));
         assertEquals("c",split.get(1));
+        
+    }
     
-        split = Event.split(
+    @Test
+    public void testsplit5() {
+    	List<String> split = Event.split(
             "{a,b},[c,d],\"e,f,{g,h},[i,j]\"",
             ','
         );
@@ -44,16 +69,24 @@ public class EventTest {
         assertEquals("{a,b}",split.get(0));
         assertEquals("[c,d]",split.get(1));
         assertEquals("\"e,f,{g,h},[i,j]\"",split.get(2));
+        
+    }
     
-        split = Event.split(
+    @Test
+    public void testsplit6() {
+    	List<String> split = Event.split(
             "{a,[b,{c},d],\"f}\\\"\",g}",
             ','
         );
         assertNotNull(split);
         assertEquals(1,split.size());
         assertEquals("{a,[b,{c},d],\"f}\\\"\",g}",split.get(0));
+        
+    }
     
-        split = Event.split(
+    @Test
+    public void testsplit7() {
+    	List<String> split = Event.split(
             "a,b,c,d,e",
             ',',
             3
@@ -64,7 +97,11 @@ public class EventTest {
         assertEquals("b",split.get(1));
         assertEquals("c,d,e",split.get(2));
         
-        split = Event.split(
+    }
+    
+    @Test
+    public void testsplit8() {
+    	List<String> split = Event.split(
             "a,b",
             ',',
             3
@@ -73,7 +110,33 @@ public class EventTest {
         assertEquals(2,split.size());
         assertEquals("a",split.get(0));
         assertEquals("b",split.get(1));
+        
     }
+    
+    @Test
+    public void testsplit9() {
+    	List<String> split = Event.split(
+            "a,b",
+            ',',
+            1
+        );
+        assertNotNull(split);
+        assertEquals(1,split.size());
+        assertEquals("a,b",split.get(0));
+    }
+    
+    @Test
+    public void testsplit10() {
+    	List<String> split = Event.split(
+            "abc,,bcdd",
+            ',',
+            1
+        );
+        assertNotNull(split);
+        assertEquals(1,split.size());
+        assertEquals("abc,,bcdd",split.get(0));
+    }
+    
     @Test
     public void testparseArray() {
         List<Object> test = Event.parseArray(
@@ -82,7 +145,11 @@ public class EventTest {
         assertNotNull(test);
         assertTrue(test.isEmpty());
         
-        test = Event.parseArray(
+    }
+    
+    @Test
+    public void testparseArray2() {
+    	List<Object> test = Event.parseArray(
             "[\"a\"]"
         );
         assertNotNull(test);
@@ -95,8 +162,12 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+    }
     
-        test = Event.parseArray(
+    @Test
+    public void testparseArray3() {
+    	List<Object> test = Event.parseArray(
             "[ \"a\", \"b\" ]"
         );
         assertNotNull(test);
@@ -112,8 +183,22 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+    }
     
-        test = Event.parseArray(
+    @Test
+    public void testparseArray4() {
+    	List<Object> test = Event.parseArray(
+            "[ \"a\", null ]"
+        );
+        assertNotNull(test);
+        assertEquals(1,test.size());
+        
+    }
+    
+    @Test
+    public void testparseArray5() {
+    	List<Object> test = Event.parseArray(
             "[[1,2],[3]]"
         );
         assertNotNull(test);
@@ -147,7 +232,11 @@ public class EventTest {
             fail(e.toString());
         }
         
-        test = Event.parseArray(
+    }
+    
+    @Test
+    public void testparseArray6() {
+    	List<Object> test = Event.parseArray(
             "[{\"a\":1,\"b\":2},{\"c\":3}]"
         );
         assertNotNull(test);
@@ -188,8 +277,12 @@ public class EventTest {
         );
         assertNotNull(test);
         assertTrue(test.isEmpty());
+        
+    }
     
-        test = Event.parseObject(
+    @Test
+    public void testparseObject2() {
+    	Map<String,Object> test = Event.parseObject(
             "{\"test\":\"a\"}"
         );
         assertNotNull(test);
@@ -202,8 +295,12 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+    }
     
-        test = Event.parseObject(
+    @Test
+    public void testparseObject3() {
+    	Map<String,Object> test = Event.parseObject(
             "{ \"test1\" :\"a\", \"test2\": \"b\" }"
         );
         assertNotNull(test);
@@ -219,8 +316,12 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+    }
     
-        test = Event.parseObject(
+    @Test
+    public void testparseObject4() {
+    	Map<String,Object> test = Event.parseObject(
             "{\"test1\":{\"a\":1,\"b\":2},\"test2\":{\"c\":3}}"
         );
         assertNotNull(test);
@@ -253,8 +354,12 @@ public class EventTest {
             e.printStackTrace();
             fail(e.toString());
         }
+        
+    }
     
-        test = Event.parseObject(
+    @Test
+    public void testparseObject5() {
+    	Map<String,Object> test = Event.parseObject(
             "{\"test1\":[1,2],\"test2\":[3]}"
         );
         assertNotNull(test);
@@ -295,8 +400,11 @@ public class EventTest {
         );
         assertNotNull(test);
         assertEquals("",test);
-        
-        test = Event.parseString(
+    }
+    
+    @Test
+    public void testparseString2() {
+        String test = Event.parseString(
             "\"\\\"\""
         );
         assertNotNull(test);
@@ -308,5 +416,19 @@ public class EventTest {
             "null"
         );
         assertNull(obj);
+    }
+    @Test
+    public void testWrapperDetect() {
+    	assertNull(Event.Wrapper.detect(""));
+    	assertNull(Event.Wrapper.detect(" "));
+    	assertNull(Event.Wrapper.detect("}"));
+    	assertEquals(Event.Wrapper.arr, Event.Wrapper.detect(" ["));
+    	assertEquals(Event.Wrapper.obj, Event.Wrapper.detect("{[]}"));
+    }
+    @Test
+    public void testData() {
+    	Event event = new Event("");
+    	assertEquals(Event.Type.parseValue(""), event.data);
+    	assertNull(event.data);
     }
 }
