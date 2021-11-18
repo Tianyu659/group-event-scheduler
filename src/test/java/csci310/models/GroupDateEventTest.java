@@ -23,7 +23,7 @@ public class GroupDateEventTest {
     }
 
     @Test
-    public void testGetInvitationCount() throws SQLException {
+    public void testGetInterest() throws SQLException {
         GroupDate groupDate = GroupDateTest.createGroupDate(user, "My Event", "Very fun event!");
         database.groupDates.dao().create(groupDate);
         GroupDateEvent groupDateEvent = new GroupDateEvent();
