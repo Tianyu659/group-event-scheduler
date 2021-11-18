@@ -15,6 +15,10 @@ a {
   text-decoration: none;
 }
 
+#app {
+  min-height: 100vh;
+}
+
 #navigation {
   display: flex;
   flex-direction: row;
@@ -34,7 +38,7 @@ a {
 
 #content {
   max-width: 800px;
-  margin: 2em auto;
+  margin: 2em auto 7em auto;
 
   &.small {
     max-width: 25em;
@@ -55,4 +59,9 @@ a {
   text-decoration: none;
   padding: 1em 0.75em;
   text-align: center;
+
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
