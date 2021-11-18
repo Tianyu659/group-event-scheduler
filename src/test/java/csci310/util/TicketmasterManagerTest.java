@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import csci310.models.EventSearch;
 import csci310.models.EventSearch.Parameter;
 
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -146,7 +148,7 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testRateLimit() throws IOException, InterruptedException {
+	public void testCheckRateLimitPractical() throws IOException {
 		EventSearch event = new EventSearch();
 		event.put(Parameter.id, "k7vGFpS8LxPSc");
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -168,6 +170,15 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 		Assert.assertEquals(eventList2.get(0).get("name"), "Mozart & Mendelssohn");
 		Assert.assertEquals(eventList2.get(0).get("type"), "event");
 		Assert.assertEquals(eventList2.get(0).get("id"), "k7vGFpS8LxPSc");
+	}
 
+	@Test
+	public void testCheckRateLimit() throws InterruptedException {
+		CountDownLatch existing = TicketmasterManager.waiter;
+		TicketmasterManager.waiter = EasyMock.mock(CountDownLatch.class);
+		EasyMock.expect(TicketmasterManager.waiter.await(EasyMock.anyLong(), EasyMock.anyObject())).andThrow(new InterruptedException());
+		EasyMock.replay(TicketmasterManager.waiter);
+		TicketmasterManager.checkRateLimit();
+		TicketmasterManager.waiter = existing;
 	}
 }
