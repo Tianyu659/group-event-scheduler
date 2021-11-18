@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class Authentication {
     public static final Authentication instance = new Authentication(Configuration.load());

@@ -13,6 +13,7 @@ public class GroupDateFormTest {
         GroupDateForm groupDateForm = new GroupDateForm(
                 "name",
                 "description",
+                true,
                 eventForms,
                 new Vector<>());
         GroupDate groupDate = groupDateForm.validate();
@@ -26,6 +27,7 @@ public class GroupDateFormTest {
         GroupDateForm groupDateForm = new GroupDateForm(
                 "name",
                 "description",
+                true,
                 eventForms,
                 new Vector<>());
         Assert.assertEquals(groupDateForm.getEventForms(), eventForms);

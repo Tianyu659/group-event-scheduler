@@ -74,6 +74,20 @@ public class GroupDate {
         Dao<Invitation, Integer> dao = Database.load().invitations.dao();
         return dao.queryForEq("groupDate_id", this.getId());
     }
+
+    public int[] getInvitationCount() throws SQLException {
+        Dao<Invitation, Integer> dao = Database.load().invitations.dao();
+        List<Invitation> invitations = dao.queryForEq("groupDate_id", this.getId());
+
+        int responded = 0;
+        for (Invitation invitation : invitations) {
+            if (invitation.getResponse() != null) {
+                ++responded;
+            }
+        }
+
+        return new int[] {responded, invitations.size()};
+    }
     
     public GroupDateEvent selectEvent() throws SQLException {
         final List<InvitationEventResponse> responses;

@@ -15,6 +15,10 @@ a {
   text-decoration: none;
 }
 
+#app {
+  min-height: 100vh;
+}
+
 #navigation {
   display: flex;
   flex-direction: row;
@@ -34,7 +38,8 @@ a {
 
 #content {
   max-width: 800px;
-  margin: 2em auto;
+  margin: 2em auto 4em auto;
+  min-height: calc(100vh - 13rem);
 
   &.small {
     max-width: 25em;
@@ -47,4 +52,13 @@ a {
 
 .error {
   color: red;
+}
+
+#footer {
+  background-color: theme.$color-primary;
+  color: white;
+  text-decoration: none;
+  padding: 1em 0.75em;
+  text-align: center;
+
 }

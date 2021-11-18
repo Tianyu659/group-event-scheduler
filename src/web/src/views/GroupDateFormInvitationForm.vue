@@ -5,7 +5,7 @@
       <input type="text" placeholder="name" v-model="search" @input="filter" />
       <label>Search for a user</label>
     </div>
-    <ul class="fancy click">
+    <ul class="fancy click" v-show="filteredUsers.length > 0">
       <li
         v-for="user of filteredUsers"
         :key="user.id"
@@ -39,7 +39,6 @@ export default class GroupDateFormInvitationForm extends Vue {
     }).then((response: Response) => {
       response.json().then((data: Array<Record<string, never>>) => {
         this.users = data.map(User.wrap);
-        console.log(this.users);
         this.filter();
       });
     });

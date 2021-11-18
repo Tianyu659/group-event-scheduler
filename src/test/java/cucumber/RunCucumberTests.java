@@ -1,10 +1,17 @@
 package cucumber;
 
+import csci310.Database;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
 
 /**
  * Run all the cucumber tests in the current package.
@@ -13,10 +20,14 @@ import org.junit.runner.RunWith;
 @CucumberOptions(strict = true)
 //@CucumberOptions(strict = true, features = {"src/test/resources/cucumber/x.feature", "src/test/resources/cucumber/y.feature"}) will run only feature files x.feature and y.feature.
 public class RunCucumberTests {
-
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws IOException, SQLException {
+		if (Files.exists(Path.of("run.sqlite3"))) {
+			Files.copy(Path.of("run.sqlite3"), Path.of("run.original.sqlite3"));
+			Database database = Database.load();
+			database.drop();
+		}
+
 		WebDriverManager.chromedriver().setup();
 	}
-
 }

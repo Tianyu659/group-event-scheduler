@@ -52,7 +52,6 @@ export default class GroupDateForm extends Vue {
       "submit",
       new GroupDateEvent(
         0,
-        this.groupDate,
         "",
         "",
         this.name,
