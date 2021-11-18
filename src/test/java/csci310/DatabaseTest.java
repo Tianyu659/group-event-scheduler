@@ -41,7 +41,39 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testTableClear() throws SQLException {
+    public void testTableCreate() throws SQLException {
+        Configuration configuration = EasyMock.mock(Configuration.class);
+        EasyMock.expect(configuration.value("database.type")).andReturn("sqlite");
+        EasyMock.expect(configuration.value("database.url")).andReturn("jdbc:sqlite:test.sqlite3");
+        EasyMock.replay(configuration);
+        Database database = new Database(configuration);
+        database.users.create();
+        database.users.drop();
+    }
+
+    @Test
+    public void testTableDrop() throws SQLException {
+        Configuration configuration = EasyMock.mock(Configuration.class);
+        EasyMock.expect(configuration.value("database.type")).andReturn("sqlite");
+        EasyMock.expect(configuration.value("database.url")).andReturn("jdbc:sqlite:test.sqlite3");
+        EasyMock.replay(configuration);
+        Database database = new Database(configuration);
+        database.users.drop();
+    }
+
+    @Test
+    public void testCreate() throws SQLException {
+        Configuration configuration = EasyMock.mock(Configuration.class);
+        EasyMock.expect(configuration.value("database.type")).andReturn("sqlite");
+        EasyMock.expect(configuration.value("database.url")).andReturn("jdbc:sqlite:test.sqlite3");
+        EasyMock.replay(configuration);
+        Database database = new Database(configuration);
+        database.create();
+        database.drop();
+    }
+
+    @Test
+    public void testDrop() throws SQLException {
         Configuration configuration = EasyMock.mock(Configuration.class);
         EasyMock.expect(configuration.value("database.type")).andReturn("sqlite");
         EasyMock.expect(configuration.value("database.url")).andReturn("jdbc:sqlite:test.sqlite3");

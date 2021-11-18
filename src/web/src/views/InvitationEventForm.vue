@@ -3,7 +3,13 @@
     <h4>{{ invitationEventResponse.event.name }}</h4>
     <p class="location">
       {{ invitationEventResponse.event.location }}<br />
-      {{ formatDateTime(invitationEventResponse.event.time) }}
+      {{ formatDateTime(invitationEventResponse.event.time) }}<br />
+      {{ invitationEventResponse.event.availableCount }}/{{
+        invitationEventResponse.event.interest.length
+      }}
+      available<span v-if="invitationEventResponse.event.availableCount > 0"
+        >, {{ invitationEventResponse.event.averageInterest }} interest
+      </span>
     </p>
     <p>
       {{
@@ -34,12 +40,13 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
-import { InvitationEventResponse } from "@/models/groupDate";
+import { GroupDate, InvitationEventResponse } from "@/models/groupDate";
 import { formatDateTime } from "@/common/date";
 
 @Options({})
 export default class GroupDateFormEvent extends Vue {
   @Prop() public invitationEventResponse!: InvitationEventResponse;
+  @Prop() public groupDate!: GroupDate;
   public readonly formatDateTime = formatDateTime;
 }
 </script>

@@ -58,6 +58,28 @@ public class GroupDateTest {
         Assert.assertEquals(1, groupDate.getInvitations().size());
     }
 
+    @Test
+    public void testGetInvitationCount() throws SQLException {
+        GroupDate groupDate = createGroupDate(user, "My Event", "Very fun event!");
+        database.groupDates.dao().create(groupDate);
+        User other = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
+        Invitation invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(other);
+        database.invitations.dao().create(invitation);
+        invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(user);
+        database.invitations.dao().create(invitation);
+        InvitationResponse invitationResponse = new InvitationResponse();
+        invitationResponse.setInvitation(invitation);
+        invitationResponse.setAccepted(true);
+        database.invitationResponses.dao().create(invitationResponse);
+        int[] count = groupDate.getInvitationCount();
+        Assert.assertEquals(1, count[0]);
+        Assert.assertEquals(2, count[1]);
+    }
+
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         database.drop();

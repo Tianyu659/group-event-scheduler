@@ -1,9 +1,15 @@
 package csci310.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import csci310.Database;
+import csci310.exception.NotImplementedError;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 @DatabaseTable(tableName = "groupDateEvents")
 public class GroupDateEvent {
@@ -101,5 +107,9 @@ public class GroupDateEvent {
 
     public int getDuration() {
         return duration;
+    }
+
+    public Vector<Integer> getInterest() throws SQLException {
+        throw new NotImplementedError();
     }
 }

@@ -6,11 +6,18 @@
         {{ invitation.groupDate.name }}
       </h1>
       <p>{{ invitation.groupDate.description }}</p>
+      <p>
+        {{ invitation.groupDate.invitationCount[0] }}/{{
+          invitation.groupDate.invitationCount[1]
+        }}
+        responded
+      </p>
       <button>Decline</button>
       <div class="form">
         <h2>Event responses</h2>
         <invitation-event-form
           v-for="event of response.events"
+          :group-date="invitation.groupDate"
           :invitation-event-response="event"
           :key="event.event.id"
         />

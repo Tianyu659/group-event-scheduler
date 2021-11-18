@@ -104,6 +104,14 @@ function formatLocation(venue: Record<string, any> | null): string {
   return result;
 }
 
+function sum(values: Array<number>): number {
+  let total = 0;
+  for (const value of values) {
+    total += value;
+  }
+  return total;
+}
+
 export class GroupDateEvent {
   public constructor(
     public id: number,
@@ -113,7 +121,8 @@ export class GroupDateEvent {
     public description: string,
     public location: string,
     public time: Date,
-    public duration: number
+    public duration: number,
+    public interest: Array<number> = []
   ) {}
 
   public static empty(): GroupDateEvent {
@@ -145,7 +154,8 @@ export class GroupDateEvent {
       data["description"],
       data["location"],
       new Date(data["time"] * 1000),
-      data["duration"]
+      data["duration"],
+      data["interest"]
     );
   }
 
@@ -160,6 +170,16 @@ export class GroupDateEvent {
       duration: this.duration,
     };
   }
+
+  public get availableCount(): number {
+    return this.interest.filter((n: number) => n > -1).length;
+  }
+
+  public get averageInterest(): number {
+    return (
+      sum(this.interest.filter((n: number) => n > -1)) / this.interest.length
+    );
+  }
 }
 
 export class GroupDate {
@@ -170,7 +190,8 @@ export class GroupDate {
     public live: boolean,
     public creator: User,
     public events: Array<GroupDateEvent>,
-    public invitations: Array<Invitation>
+    public invitations: Array<Invitation>,
+    public invitationCount: [number, number] = [0, 0]
   ) {}
 
   public static empty(creator: User): GroupDate {
@@ -185,7 +206,8 @@ export class GroupDate {
       data["live"],
       User.wrap(data["creator"]),
       data["events"].map(GroupDateEvent.wrap),
-      []
+      [],
+      data["invitationCount"]
     );
   }
 
