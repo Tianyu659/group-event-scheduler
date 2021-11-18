@@ -6,7 +6,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import csci310.Database;
-import csci310.exception.NotImplementedError;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -77,6 +76,16 @@ public class GroupDate {
     }
 
     public int[] getInvitationCount() throws SQLException {
-        throw new NotImplementedError();
+        Dao<Invitation, Integer> dao = Database.load().invitations.dao();
+        List<Invitation> invitations = dao.queryForEq("groupDate_id", this.getId());
+
+        int responded = 0;
+        for (Invitation invitation : invitations) {
+            if (invitation.getResponse() != null) {
+                ++responded;
+            }
+        }
+
+        return new int[] {responded, invitations.size()};
     }
 }
