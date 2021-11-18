@@ -84,6 +84,19 @@ public class InvitationServletTest {
     }
 
     @Test
+    public void testDoGetOneNonExistent() throws IOException {
+        InvitationServlet servlet = new InvitationServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/100")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
     public void testDoGetUnauthorized() throws IOException {
         InvitationServlet servlet = new InvitationServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()

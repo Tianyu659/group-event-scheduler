@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-import java.util.Objects;
-
 @DatabaseTable(tableName = "groupDateEvents")
 public class GroupDateEvent {
     @DatabaseField(generatedId = true, unique = true)

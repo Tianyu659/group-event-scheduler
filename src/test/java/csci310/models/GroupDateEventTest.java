@@ -23,6 +23,13 @@ public class GroupDateEventTest {
     }
 
     @Test
+    public void testGetGroupDate() {
+        GroupDateEvent groupDateEvent = new GroupDateEvent();
+        groupDateEvent.setGroupDate(new GroupDate());
+        Assert.assertNotNull(groupDateEvent.getGroupDate());
+    }
+
+    @Test
     public void testGetInterest() throws SQLException {
         GroupDate groupDate = GroupDateTest.createGroupDate(user, "My Event", "Very fun event!");
         database.groupDates.dao().create(groupDate);
