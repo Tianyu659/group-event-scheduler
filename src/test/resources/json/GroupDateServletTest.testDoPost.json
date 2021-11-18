@@ -16,6 +16,9 @@
   "invitations": [
     {
       "username": "noahbkim"
+    },
+    {
+      "username": "nonexistant"
     }
   ]
 }

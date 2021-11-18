@@ -6,10 +6,7 @@ import csci310.Database;
 import csci310.Resources;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
-import csci310.models.GroupDate;
-import csci310.models.GroupDateTest;
-import csci310.models.User;
-import csci310.models.UserTest;
+import csci310.models.*;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -36,6 +33,10 @@ public class GroupDateServletTest {
         GroupDate otherGroupDate = GroupDateTest.createGroupDate(otherUser, "Other Test Group Date", "Super fun event!");
         database.groupDates.dao().create(groupDate);
         database.groupDates.dao().create(otherGroupDate);
+        Invitation invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(user);
+        database.invitations.dao().create(invitation);
         token = Authentication.get().key(user);
     }
 
@@ -79,6 +80,19 @@ public class GroupDateServletTest {
     }
 
     @Test
+    public void testDoGetOneNotMineInvitations() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/2/invitations/")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
     public void testDoGetNonExistent() throws IOException {
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
@@ -92,6 +106,20 @@ public class GroupDateServletTest {
     }
 
     @Test
+    public void testDoGetInvitations() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withPathInfo("/1/invitations/")
+                .withHeader("Authorization", token)
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_OK));
+        Assert.assertNotNull(response);
+    }
+
+
+    @Test
     public void testDoGetUnauthorized() throws IOException {
         GroupDateServlet servlet = new GroupDateServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
@@ -101,6 +129,32 @@ public class GroupDateServletTest {
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doGet(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetNotFound() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/1/invitations/blah/")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoGetNonExistentInvitations() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/100/invitations/")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doGet(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
         Assert.assertNotNull(response);
     }
 

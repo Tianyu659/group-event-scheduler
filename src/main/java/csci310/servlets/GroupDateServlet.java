@@ -66,6 +66,8 @@ public class GroupDateServlet extends HttpServlet {
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(response.getWriter(), invitations);
                 }
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (RequestException exception) {
             exception.apply(response);
