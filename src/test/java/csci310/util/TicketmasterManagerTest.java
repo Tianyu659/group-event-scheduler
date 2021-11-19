@@ -17,7 +17,10 @@ import csci310.models.EventSearch.Parameter;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.junit.FixMethodOrder;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TicketmasterManagerTest extends TicketmasterManager{
 	
 	@Test
@@ -181,4 +184,25 @@ public class TicketmasterManagerTest extends TicketmasterManager{
 		TicketmasterManager.checkRateLimit();
 		TicketmasterManager.waiter = existing;
 	}
+
+	@Test
+	public void testCheckRateLimitCatchException() throws InterruptedException
+	{
+		Thread t = new Thread()
+		{
+			public void run(){
+				TicketmasterManager.checkRateLimit();
+			};
+		};
+		Thread t2 = new Thread()
+		{
+			public void run(){
+				TicketmasterManager.checkRateLimit();
+			};
+		};
+		t.start();
+		t2.start();
+		t2.interrupt();
+	}
+
 }
