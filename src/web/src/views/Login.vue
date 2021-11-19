@@ -1,5 +1,8 @@
 <template>
   <div class="small">
+    <div class="logo spaced">
+      <span>Groupie</span>
+    </div>
     <h1>Login</h1>
     <div class="form">
       <div class="group">
@@ -21,7 +24,7 @@
         <label>Password</label>
       </div>
       <p class="error" v-show="error">{{ error }}</p>
-      <div class="buttons">
+      <div class="group buttons">
         <button @click="onClickSubmit">Submit</button>
         <router-link to="/register" class="button">Register</router-link>
       </div>

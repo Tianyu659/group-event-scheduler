@@ -12,7 +12,7 @@
         }}
         responded
       </p>
-      <button>Decline</button>
+      <button @click="onClickDecline()">Decline</button>
       <div class="form">
         <h2>Event responses</h2>
         <invitation-event-form
@@ -62,6 +62,23 @@ export default class Home extends Vue {
       method: "POST",
       headers: { Authorization: session.token! },
       body: JSON.stringify(this.response!.dump()),
+    }).then((response: Response) => {
+      if (response.status === 201) {
+        this.$router.push({ name: "dashboard" });
+      } else {
+        response.json().then((data: Record<string, any>) => {
+          console.error(data);
+        });
+      }
+    });
+  }
+
+  public onClickDecline(): void {
+    const id = this.$route.params["id"];
+    fetch(url(`/invitations/${id}/responses/`), {
+      method: "POST",
+      headers: { Authorization: session.token! },
+      body: JSON.stringify(new InvitationResponse(false, [])),
     }).then((response: Response) => {
       if (response.status === 201) {
         this.$router.push({ name: "dashboard" });

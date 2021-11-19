@@ -27,7 +27,7 @@
     <div>
       <h2>My Invitations</h2>
       <p v-show="invitations.length === 0">
-        You don't have any group dates yet.
+        You don't have any group date invitations yet.
       </p>
       <ul class="fancy click">
         <li
@@ -71,7 +71,11 @@ export default class Home extends Vue {
     }).then((response: Response) => {
       response.json().then((data: Array<Record<string, never>>) => {
         this.invitations.length = 0;
-        this.invitations.push(...data.map(Invitation.wrap));
+        this.invitations.push(
+          ...data
+            .map(Invitation.wrap)
+            .filter((invitation: Invitation) => invitation.response === null)
+        );
       });
     });
   }
