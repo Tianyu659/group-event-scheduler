@@ -322,7 +322,7 @@ public class EventTest {
     @Test
     public void testparseObject4() {
     	Map<String,Object> test = Event.parseObject(
-            "{\"test1\":{\"a\":1,\"b\":2},\"test2\":{\"c\":3}}"
+            "{\"test1\":{\"a\":1,\"b\":2},,\"test2\":{\"c\":3}}"
         );
         assertNotNull(test);
         assertEquals(2,test.size());
