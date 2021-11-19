@@ -1,5 +1,8 @@
 <template>
   <div class="small">
+    <div class="logo spaced">
+      <span>Groupie</span>
+    </div>
     <h1>Register</h1>
     <div class="form">
       <div class="group">
@@ -48,9 +51,9 @@
         <label>Last name</label>
       </div>
       <p class="error" v-show="error">{{ error }}</p>
-      <div class="buttons">
+      <div class="group buttons">
         <button @click="onClickSubmit">Register</button>
-        <router-link to="/login" class="button">Log in</router-link>
+        <router-link :to="{ name: 'login' }" class="button">Log in</router-link>
       </div>
     </div>
   </div>

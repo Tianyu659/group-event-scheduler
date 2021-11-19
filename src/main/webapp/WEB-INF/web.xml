@@ -12,6 +12,18 @@
         <servlet-name>SessionServlet</servlet-name>
         <servlet-class>csci310.servlets.SessionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GroupDateServlet</servlet-name>
+        <servlet-class>csci310.servlets.GroupDateServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TicketmasterServlet</servlet-name>
+        <servlet-class>csci310.servlets.TicketmasterServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvitationServlet</servlet-name>
+        <servlet-class>csci310.servlets.InvitationServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/api/users/*</url-pattern>
@@ -19,5 +31,17 @@
     <servlet-mapping>
         <servlet-name>SessionServlet</servlet-name>
         <url-pattern>/api/session/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupDateServlet</servlet-name>
+        <url-pattern>/api/groupDates/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TicketmasterServlet</servlet-name>
+        <url-pattern>/api/ticketmaster/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvitationServlet</servlet-name>
+        <url-pattern>/api/invitations/*</url-pattern>
     </servlet-mapping>
 </web-app>

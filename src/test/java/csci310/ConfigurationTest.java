@@ -30,7 +30,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testCreateDocumentBuilderInvalid() throws ConfigurationException, ParserConfigurationException {
+    public void testCreateDocumentBuilderFactory() throws ConfigurationException, ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = EasyMock.mock(DocumentBuilderFactory.class);
         EasyMock.expect(documentBuilderFactory.newDocumentBuilder()).andThrow(new ParserConfigurationException());
         EasyMock.replay(documentBuilderFactory);
@@ -44,9 +44,21 @@ public class ConfigurationTest {
     }
 
     @Test
+    public void testLoad() {
+        Configuration.reset();
+        Assert.assertNotNull(Configuration.load());
+    }
+
+    @Test
+    public void testReset() {
+        Configuration.reset();
+        Assert.assertNotNull(Configuration.load("test"));
+    }
+
+    @Test
     public void testReadConfiguration() throws IOException, ConfigurationException {
-        File file = createTemporaryFile("<configuration><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></configuration>");
-        Configuration configuration = Configuration.read(file);
+        File file = createTemporaryFile("<configurations><configuration profile=\"default\"><value key=\"a\">hello</value><value key=\"b\">world</value></configuration></configurations>");
+        Configuration configuration = Configuration.read(file).get("default");
         Assert.assertNotNull(configuration);
     }
 
@@ -62,7 +74,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testReadConfigurationMissing() throws IOException, ConfigurationException {
+    public void testReadConfigurationMissing() throws ConfigurationException {
         File file = new File("?");
         try {
             Configuration.read(file);
@@ -73,28 +85,20 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testConfigurationValues() throws IOException, ConfigurationException {
-        File file = createTemporaryFile("<configuration><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></configuration>");
-        Configuration configuration = Configuration.read(file);
-        Map<String, String> values = configuration.values("test");
-        Assert.assertEquals(2, values.size());
+    public void testValue() throws IOException, ConfigurationException {
+        File file = createTemporaryFile("<configurations><configuration profile=\"default\"><value key=\"a\">hello</value><value key=\"b\">world</value></configuration></configurations>");
+        Configuration configuration = Configuration.read(file).get("default");
+        String value = configuration.value("a");
+        Assert.assertEquals("hello", value);
     }
 
     @Test
-    public void testConfigurationValuesNested() throws IOException, ConfigurationException {
-        File file = createTemporaryFile("<configuration><parent><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></parent></configuration>");
-        Configuration configuration = Configuration.read(file);
-        Map<String, String> values = configuration.values("parent", "test");
-        Assert.assertEquals(2, values.size());
-    }
-
-    @Test
-    public void testConfigurationValuesNestedMissing() throws IOException, ConfigurationException {
-        File file = createTemporaryFile("<configuration><parent><test><value key=\"a\">hello</value><value key=\"b\">world</value></test></parent></configuration>");
-        Configuration configuration = Configuration.read(file);
+    public void testValueMissing() throws IOException, ConfigurationException {
+        File file = createTemporaryFile("<configurations><configuration profile=\"default\"><value key=\"a\">hello</value><value key=\"b\">world</value></configuration></configurations>");
+        Configuration configuration = Configuration.read(file).get("default");
 
         try {
-            configuration.values("parent", "missing");
+            configuration.value("c");
             Assert.fail();
         } catch (ConfigurationException exception) {
             Assert.assertNotNull(exception);

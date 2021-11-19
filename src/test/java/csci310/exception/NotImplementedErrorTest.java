@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class NotImplementedErrorTest {
     @Test
-    public void throwNotImplementedError() {
+    public void testConstructor() {
         try {
             throw new NotImplementedError();
         } catch (NotImplementedError e) {

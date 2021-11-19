@@ -57,6 +57,14 @@ public class StepDefinitions {
 		driver.findElement(By.id("password")).sendKeys("asdfjkl;");
 	}
 
+	@Then("I log in with {string}, {string}")
+	public void login(String username, String password) {
+		driver.findElement(By.linkText("Login")).click();
+		driver.findElement(By.id("username")).sendKeys(username);
+		driver.findElement(By.id("password")).sendKeys(password);
+		driver.findElement(By.tagName("button")).click();
+	}
+
 	@Then("I enter my login info incorrectly")
 	public void i_enter_my_login_info_incorrectly() {
 		driver.findElement(By.id("username")).sendKeys("noahbkim");

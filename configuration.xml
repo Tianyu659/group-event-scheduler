@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-    <database>
-        <value key="type">sqlite</value>
-        <value key="url">jdbc:sqlite:test.sqlite3</value>
-    </database>
-    <authentication>
-        <value key="secret">hello, world! this is a development key :)</value>
-    </authentication>
-    <ticketmaster>
-        <value key="key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
-    </ticketmaster>
-</configuration>
+<configurations>
+    <configuration profile="test">
+        <value key="database.type">sqlite</value>
+        <value key="database.url">jdbc:sqlite:test.sqlite3</value>
+        <value key="authentication.secret">hello, world! this is a development key :)</value>
+        <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
+    </configuration>
+    <configuration profile="acceptance">
+        <value key="database.type">sqlite</value>
+        <value key="database.url">jdbc:sqlite:acceptance.sqlite3</value>
+        <value key="authentication.secret">hello, world! this is a development key :)</value>
+        <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
+    </configuration>
+    <configuration>
+        <value key="database.type">sqlite</value>
+        <value key="database.url">jdbc:sqlite:run.sqlite3</value>
+        <value key="authentication.secret">hello, world! this is a development key :)</value>
+        <value key="ticketmaster.key">7ehIR2akFvwVaFCZWcsvsLzcbEZ4ik8D</value>
+    </configuration>
+</configurations>

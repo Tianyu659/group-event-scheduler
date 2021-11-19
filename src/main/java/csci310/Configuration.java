@@ -15,56 +15,70 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Configuration {
-    private static Configuration instance = Configuration.load();
-    private final Document document;
+    private static final Map<String, Configuration> profiles = Configuration.read(new File("configuration.xml"));
+    private static Configuration profile;
 
-    private Configuration(Document document) {
-        this.document = document;
+    private final Map<String, String> values;
+
+    private Configuration(Map<String, String> values) {
+        this.values = values;
     }
 
-    public Map<String, String> values(String... path) {
-        Node cursor = this.document.getDocumentElement();
-        for (String part : path) {
-            NodeList children = cursor.getChildNodes();
-
-            boolean found = false;
-            for (int i = 0; i < children.getLength(); ++i) {
-                Node child = children.item(i);
-                if (child.getNodeName().equals(part)) {
-                    cursor = child;
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                throw new ConfigurationException("Couldn't find values for path " + String.join("/", path) + "!");
-            }
+    public String value(String key) {
+        String value = this.values.get(key);
+        if (value == null) {
+            throw new ConfigurationException("unconfigured key: " + key);
+        } else {
+            return value;
         }
+    }
 
-        HashMap<String, String> result = new HashMap<>();
-        NodeList children = cursor.getChildNodes();
-        for (int i = 0; i < children.getLength(); ++i) {
-            Node child = children.item(i);
-            if (child.getNodeName().equals("value")) {
-                String key = child.getAttributes().getNamedItem("key").getNodeValue();
-                String value = child.getTextContent();
-                result.put(key, value);
-            }
-        }
+    public static Configuration load(String profile) {
+        Configuration.profile = Configuration.profiles.get(profile);
+        return Configuration.profile;
+    }
 
-        return result;
+    public static void reset() {
+        Configuration.profile = null;
     }
 
     public static Configuration load() {
-        if (Configuration.instance == null) {
-            Configuration.instance = Configuration.read(new File("configuration.xml"));
+        if (Configuration.profile == null) {
+            return Configuration.load("");
+        } else {
+            return Configuration.profile;
         }
-        return Configuration.instance;
     }
 
-    public static Configuration read(File file) {
+    public static Map<String, Configuration> read(File file) {
         try {
-            return new Configuration(Configuration.createDocumentBuilder().parse(file));
+            Document document = Configuration.createDocumentBuilder().parse(file);
+            Node root = document.getDocumentElement();
+            NodeList children = root.getChildNodes();
+
+            HashMap<String, Configuration> profiles = new HashMap<>();
+            for (int i = 0; i < children.getLength(); ++i) {
+                Node childNode = children.item(i);
+                if (childNode.getNodeName().equals("configuration")) {
+                    Node childNameNode = childNode.getAttributes().getNamedItem("profile");
+                    String name = childNameNode != null ? childNameNode.getTextContent() : "";
+
+                    HashMap<String, String> values = new HashMap<>();
+                    NodeList grandchildren = childNode.getChildNodes();
+                    for (int j = 0; j < grandchildren.getLength(); ++j) {
+                        Node grandchild = grandchildren.item(j);
+                        if (grandchild.getNodeName().equals("value")) {
+                            String key = grandchild.getAttributes().getNamedItem("key").getNodeValue();
+                            String value = grandchild.getTextContent();
+                            values.put(key, value);
+                        }
+                    }
+
+                    profiles.put(name, new Configuration(values));
+                }
+            }
+
+            return profiles;
         } catch (SAXException exception) {
             throw new ConfigurationException("Invalid XML in settings file!");
         } catch (IOException exception) {
