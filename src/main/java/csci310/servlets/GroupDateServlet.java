@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.api.Path;
+import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
 import csci310.forms.Form;
 import csci310.forms.GroupDateEventForm;
@@ -127,5 +128,18 @@ public class GroupDateServlet extends HttpServlet {
         } catch (RequestException exception) {
             exception.apply(response);
         }
+    }
+
+    //try {
+    //        Dao<GroupDate, Integer> dao = RequestException.wrap(
+    //                () -> Database.load().groupDates.dao(),
+    //                "cannot connect to database!");
+    //    } catch (RequestException exception) {
+    //        exception.apply(response);
+    //    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        throw new NotImplementedError();
     }
 }

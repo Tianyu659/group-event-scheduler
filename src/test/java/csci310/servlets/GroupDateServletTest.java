@@ -184,6 +184,23 @@ public class GroupDateServletTest {
         Assert.assertNotNull(response);
     }
 
+    @Test
+    public void testDoDelete() throws SQLException, IOException {
+        GroupDate groupDate = new GroupDate();
+        database.groupDates.dao().create(groupDate);
+
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + groupDate.getId())
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertNotNull(response);
+        Assert.assertNull(database.groupDates.dao().queryForId(groupDate.getId()));
+    }
+
     @AfterClass
     public static void teardownTestDatabase() throws SQLException {
         database.drop();
