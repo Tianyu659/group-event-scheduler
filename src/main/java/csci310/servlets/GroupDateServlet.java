@@ -130,16 +130,27 @@ public class GroupDateServlet extends HttpServlet {
         }
     }
 
-    //try {
-    //        Dao<GroupDate, Integer> dao = RequestException.wrap(
-    //                () -> Database.load().groupDates.dao(),
-    //                "cannot connect to database!");
-    //    } catch (RequestException exception) {
-    //        exception.apply(response);
-    //    }
-
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        throw new NotImplementedError();
+        try {
+            Authentication.get().authenticate(request);
+            Path path = new Path(request.getPathInfo());
+
+            Dao<GroupDate, Integer> dao = RequestException.wrap(
+                    () -> Database.load().groupDates.dao(),
+                    "cannot connect to database!");
+
+            if (path.size() == 1) {
+                // TODO: should actually check if the requesting user is the creator lmfao
+                int id = path.id(0);
+                RequestException.wrap(
+                        () -> dao.deleteById(id),
+                        "cannot connect to database!");
+            } else {
+                throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+            }
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
     }
 }
