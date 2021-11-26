@@ -5,7 +5,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import csci310.Database;
-import csci310.exception.NotImplementedError;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
@@ -82,10 +81,16 @@ public class User {
     }
 
     public List<String> getBlocked() throws SQLException {
-        throw new NotImplementedError();
+        Vector<String> blocked = new Vector<>();
+        Dao<Block, Integer> dao = Database.load().blocks.dao();
+        List<Block> blocks = dao.queryForEq("creator_id", this.getId());
+        for (Block block : blocks) {
+            blocked.add(block.getBlocked().getUsername());
+        }
+        return blocked;
     }
 
     public List<Blackout> getBlackouts() throws SQLException {
-        throw new NotImplementedError();
+        return Database.load().blackouts.dao().queryForEq("creator_id", this.getId());
     }
 }

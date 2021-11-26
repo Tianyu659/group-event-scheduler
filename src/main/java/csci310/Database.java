@@ -77,6 +77,8 @@ public class Database {
         this.invitations.create();
         this.invitationResponses.create();
         this.invitationEventResponses.create();
+        this.blocks.create();
+        this.blackouts.create();
     }
 
     public void drop() throws SQLException {
@@ -86,6 +88,8 @@ public class Database {
         this.invitations.drop();
         this.invitationResponses.drop();
         this.invitationEventResponses.drop();
+        this.blocks.drop();
+        this.blackouts.drop();
     }
 
     public static JdbcConnectionSource createConnectionSource(Configuration configuration) {
