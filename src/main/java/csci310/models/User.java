@@ -1,10 +1,17 @@
 package csci310.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import csci310.Database;
+import csci310.exception.NotImplementedError;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 @DatabaseTable(tableName = "users")
 public class User {
@@ -72,5 +79,13 @@ public class User {
     
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<String> getBlocked() throws SQLException {
+        throw new NotImplementedError();
+    }
+
+    public List<Blackout> getBlackouts() throws SQLException {
+        throw new NotImplementedError();
     }
 }

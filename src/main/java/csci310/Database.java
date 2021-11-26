@@ -47,6 +47,8 @@ public class Database {
     public final Table<Invitation> invitations;
     public final Table<InvitationResponse> invitationResponses;
     public final Table<InvitationEventResponse> invitationEventResponses;
+    public final Table<Block> blocks;
+    public final Table<Blackout> blackouts;
 
     public Database(Configuration configuration) {
         this.connectionSource = Database.createConnectionSource(configuration);
@@ -56,6 +58,8 @@ public class Database {
         this.invitations = new Table<>(Invitation.class);
         this.invitationResponses = new Table<>(InvitationResponse.class);
         this.invitationEventResponses = new Table<>(InvitationEventResponse.class);
+        this.blocks = new Table<>(Block.class);
+        this.blackouts = new Table<>(Blackout.class);
     }
 
     public static Database load() {
