@@ -20,6 +20,7 @@ import java.sql.SQLException;
 public class UserServletTest {
     private static Database database;
     private static User user;
+    private static String token;
 
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
@@ -27,6 +28,7 @@ public class UserServletTest {
         database = Database.load();
         user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
+        token = Authentication.get().key(user);
     }
 
     @Test
@@ -36,6 +38,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
+                .withPathInfo("/")
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -48,6 +51,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", "ayayayaya")
+                .withPathInfo("/")
                 .build();
         
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -60,6 +64,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", null)
+                .withPathInfo("/")
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -75,6 +80,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
+                .withPathInfo("/")
                 .build();
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
@@ -87,6 +93,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"nkim\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
+                .withPathInfo("/")
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
@@ -98,6 +105,7 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\", \"password\": \"secret\", \"firstName\": \"Tommy\", \"lastName\": \"Trojan\"}")
+                .withPathInfo("/")
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_BAD_REQUEST));
@@ -109,10 +117,80 @@ public class UserServletTest {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withBody("{\"username\": \"ttrojan\"}")
+                .withPathInfo("/")
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_BAD_REQUEST));
         Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoPostBlock() throws IOException, SQLException {
+        UserServlet servlet = new UserServlet();
+        int beforeSize = user.getBlocked().size();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withBody("{\"username\": \"ttrojan\"}")
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blocks/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
+        Assert.assertNotNull(response);
+        Assert.assertEquals(beforeSize + 1, user.getBlocked().size());
+    }
+
+    @Test
+    public void testDoPostBlockNonexistent() throws IOException, SQLException {
+        UserServlet servlet = new UserServlet();
+        int beforeSize = user.getBlocked().size();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withBody("{\"username\": \"nobody\"}")
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blocks/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertNotNull(response);
+        Assert.assertEquals(beforeSize, user.getBlocked().size());
+    }
+
+    @Test
+    public void testDoPostBlackout() throws IOException, SQLException {
+        UserServlet servlet = new UserServlet();
+        int beforeSize = user.getBlackouts().size();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withBody("{\"start\": 1, \"end\": 2}")
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blackouts/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_CREATED));
+        Assert.assertNotNull(response);
+        Assert.assertEquals(beforeSize + 1, user.getBlackouts().size());
+    }
+
+    @Test
+    public void testDoPostNotFound() throws IOException {
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withBody("{\"start\": 1, \"end\": 2}")
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+    }
+
+    @Test
+    public void testDoPostNotFoundNested() throws IOException {
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withBody("{\"start\": 1, \"end\": 2}")
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blah/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
     }
 
     @AfterClass

@@ -1,5 +1,6 @@
 package csci310.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -9,6 +10,7 @@ public class Blackout {
     private int id;
 
     @DatabaseField(foreign = true)
+    @JsonIgnore
     private User creator;
 
     @DatabaseField()

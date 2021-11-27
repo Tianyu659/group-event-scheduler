@@ -5,6 +5,7 @@ import csci310.Database;
 import org.junit.*;
 
 import java.sql.*;
+import java.util.List;
 
 public class UserTest {
     private static Database database;
@@ -69,7 +70,10 @@ public class UserTest {
         block.setCreator(user);
         block.setBlocked(user);
         database.blocks.dao().create(block);
-        Assert.assertEquals(1, user.getBlocked().size());
+        Assert.assertNotEquals(0, block.getId());
+        Assert.assertEquals(user.getId(), block.getCreator().getId());
+        List<String> blocked = user.getBlocked();
+        Assert.assertEquals(1, blocked.size());
     }
 
     @Test
@@ -80,7 +84,9 @@ public class UserTest {
         Blackout blackout = new Blackout();
         blackout.setCreator(user);
         database.blackouts.dao().create(blackout);
-        Assert.assertEquals(1, user.getBlackouts().size());
+        List<Blackout> blackouts = user.getBlackouts();
+        Assert.assertEquals(1, blackouts.size());
+        Assert.assertEquals(user.getId(), blackouts.get(0).getCreator().getId());
     }
 
     @AfterClass
