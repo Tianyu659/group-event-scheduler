@@ -1,10 +1,16 @@
 package csci310.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import csci310.Database;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 @DatabaseTable(tableName = "users")
 public class User {
@@ -72,5 +78,19 @@ public class User {
     
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<String> getBlocked() throws SQLException {
+        Vector<String> blocked = new Vector<>();
+        Dao<Block, Integer> dao = Database.load().blocks.dao();
+        List<Block> blocks = dao.queryForEq("creator_id", this.getId());
+        for (Block block : blocks) {
+            blocked.add(block.getBlocked().getUsername());
+        }
+        return blocked;
+    }
+
+    public List<Blackout> getBlackouts() throws SQLException {
+        return Database.load().blackouts.dao().queryForEq("creator_id", this.getId());
     }
 }
