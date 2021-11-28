@@ -6,6 +6,7 @@ import csci310.Database;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
 import csci310.models.Blackout;
+import csci310.models.Block;
 import csci310.models.User;
 import csci310.models.UserTest;
 import org.junit.AfterClass;
@@ -198,9 +199,31 @@ public class UserServletTest {
     public void testDoDeleteBlock() throws SQLException, IOException {
         User user = new User();
         database.users.dao().create(user);
+        Block block = new Block();
+        block.setCreator(user);
+        block.setBlocked(user);
+        database.blocks.dao().create(block);
+        int size = user.getBlocked().size();
+
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blocks/" + block.getId())
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertEquals(size - 1, user.getBlocked().size());
+    }
+
+    @Test
+    public void testDoDeleteBlackout() throws SQLException, IOException {
+        User user = new User();
+        database.users.dao().create(user);
         Blackout blackout = new Blackout();
         blackout.setCreator(user);
         database.blackouts.dao().create(blackout);
+        int size = user.getBlackouts().size();
+
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .withHeader("Authorization", token)
@@ -208,6 +231,29 @@ public class UserServletTest {
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertEquals(size - 1, user.getBlackouts().size());
+    }
+
+    @Test
+    public void testDoDeleteNotFound() throws IOException {
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/1/blah/")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+    }
+
+    @Test
+    public void testDoDeleteNotFoundNested() throws IOException {
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/1/blah/1")
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
     }
 
     @AfterClass

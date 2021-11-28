@@ -146,7 +146,9 @@ public class GroupDateServlet extends HttpServlet {
                 RequestException.wrap(
                         () -> dao.deleteById(id),
                         "cannot connect to database!");
+                response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                response.getWriter().println("{}");
             } else if (path.size() == 3) {
                 if (path.at(1).equals("invitations")) {
                     Dao<Invitation, Integer> dao = RequestException.wrap(
@@ -156,7 +158,9 @@ public class GroupDateServlet extends HttpServlet {
                     RequestException.wrap(
                             () -> dao.deleteById(id),
                             "cannot connect to database!");
+                    response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                    response.getWriter().println("{}");
                 } else if (path.at(1).equals("events")) {
                     Dao<GroupDateEvent, Integer> dao = RequestException.wrap(
                             () -> Database.load().groupDateEvents.dao(),
@@ -165,7 +169,9 @@ public class GroupDateServlet extends HttpServlet {
                     RequestException.wrap(
                             () -> dao.deleteById(id),
                             "cannot connect to database!");
+                    response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                    response.getWriter().println("{}");
                 } else {
                     throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
                 }

@@ -127,6 +127,39 @@ public class UserServlet extends HttpServlet {
 
 	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		throw new NotImplementedError();
+		try {
+			Path path = new Path(request.getPathInfo());
+			Authentication.get().authenticate(request);
+
+			if (path.size() == 3) {
+				if (path.at(1).equals("blocks")) {
+					Dao<Block, Integer> blockDao = RequestException.wrap(
+							() -> Database.load().blocks.dao(),
+							"cannot connect to database!");
+					RequestException.wrap(
+							() -> blockDao.deleteById(path.id(2)),
+							"cannot connect to database");
+					response.setContentType("application/json");
+					response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+					response.getWriter().println("{}");
+				} else if (path.at(1).equals("blackouts")) {
+					Dao<Blackout, Integer> blackoutDao = RequestException.wrap(
+							() -> Database.load().blackouts.dao(),
+							"cannot connect to database!");
+					RequestException.wrap(
+							() -> blackoutDao.deleteById(path.id(2)),
+							"cannot connect to database");
+					response.setContentType("application/json");
+					response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+					response.getWriter().println("{}");
+				} else {
+					throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+				}
+			} else {
+				throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+			}
+		} catch (RequestException exception) {
+			exception.apply(response);
+		}
 	}
 }

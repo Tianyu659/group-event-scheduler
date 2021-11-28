@@ -38,7 +38,7 @@ public class RequestException extends Exception {
     }
 
     public interface ThrowsSQLException<T> {
-        T call() throws SQLException;
+        T call() throws SQLException, RequestException;
     }
 
     public static <T> T wrap(ThrowsSQLException<T> lambda, String message) throws RequestException {
