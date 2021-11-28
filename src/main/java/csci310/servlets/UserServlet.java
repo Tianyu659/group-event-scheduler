@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.api.Path;
+import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
 import csci310.forms.BlackoutForm;
 import csci310.forms.BlockForm;
@@ -30,7 +31,7 @@ public class UserServlet extends HttpServlet {
 			Dao<User, Integer> userDao = RequestException.wrap(
 					() -> Database.load().users.dao(),
 					"cannot connect to database!");
-			List<User> users =  RequestException.wrap(
+			List<User> users = RequestException.wrap(
 					userDao::queryForAll,
 					"cannot connect to database");
 
@@ -122,5 +123,10 @@ public class UserServlet extends HttpServlet {
 		} catch (RequestException exception) {
 			exception.apply(response);
 		}
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		throw new NotImplementedError();
 	}
 }

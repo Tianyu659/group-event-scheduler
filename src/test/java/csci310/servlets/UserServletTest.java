@@ -5,6 +5,7 @@ import csci310.Configuration;
 import csci310.Database;
 import csci310.mock.MockHttpServletRequestBuilder;
 import csci310.mock.MockHttpServletResponseTarget;
+import csci310.models.Blackout;
 import csci310.models.User;
 import csci310.models.UserTest;
 import org.junit.AfterClass;
@@ -191,6 +192,22 @@ public class UserServletTest {
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+    }
+
+    @Test
+    public void testDoDeleteBlock() throws SQLException, IOException {
+        User user = new User();
+        database.users.dao().create(user);
+        Blackout blackout = new Blackout();
+        blackout.setCreator(user);
+        database.blackouts.dao().create(blackout);
+        UserServlet servlet = new UserServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + user.getId() + "/blackouts/" + blackout.getId())
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
     }
 
     @AfterClass
