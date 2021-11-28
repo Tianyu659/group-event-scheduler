@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Step definitions for Cucumber tests.
@@ -74,6 +74,13 @@ public class StepDefinitions {
 	@Then("I should see login error")
 	public void i_should_see_login_error() {
 		assertNotNull(driver.findElement(By.className("error")));
+	}
+	
+	@Then("I should see register page warning {string}")
+	public void i_should_see_register_page_warning(String warning) throws InterruptedException {
+		Thread.sleep(1000);
+		assertNotNull(driver.findElement(By.className("error")));
+		assertEquals(warning, driver.findElement(By.cssSelector(".error")).getAttribute("innerHTML"));
 	}
 
 	@Then("I click login")

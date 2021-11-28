@@ -9,6 +9,13 @@ Feature: Frontend
     Then I enter my registration info
     Then I click register
     Then I should see header "Login"
+	Scenario: Register with duplicate info
+		Given I am on the index page
+    Then I click on login in top right corner
+    Then I click on register
+    Then I enter my registration info
+    Then I click register
+    Then I should see register page warning "username is already taken"
   Scenario: Log in from index page
     Given I am on the index page
     Then I click on login in top right corner
