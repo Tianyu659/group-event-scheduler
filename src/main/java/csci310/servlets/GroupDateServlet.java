@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.api.Path;
+import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
 import csci310.forms.Form;
 import csci310.forms.GroupDateEventForm;
@@ -15,6 +16,7 @@ import csci310.models.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.List;
 
@@ -124,6 +126,52 @@ public class GroupDateServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CREATED);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(response.getWriter(), groupDate);
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Authentication.get().authenticate(request);
+            Path path = new Path(request.getPathInfo());
+
+            if (path.size() == 1) {
+                // TODO: should actually check if the requesting user is the creator lmfao
+                Dao<GroupDate, Integer> dao = RequestException.wrap(
+                        () -> Database.load().groupDates.dao(),
+                        "cannot connect to database!");
+                int id = path.id(0);
+                RequestException.wrap(
+                        () -> dao.deleteById(id),
+                        "cannot connect to database!");
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else if (path.size() == 3) {
+                if (path.at(1).equals("invitations")) {
+                    Dao<Invitation, Integer> dao = RequestException.wrap(
+                            () -> Database.load().invitations.dao(),
+                            "cannot connect to database!");
+                    int id = path.id(2);
+                    RequestException.wrap(
+                            () -> dao.deleteById(id),
+                            "cannot connect to database!");
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                } else if (path.at(1).equals("events")) {
+                    Dao<GroupDateEvent, Integer> dao = RequestException.wrap(
+                            () -> Database.load().groupDateEvents.dao(),
+                            "cannot connect to database!");
+                    int id = path.id(2);
+                    RequestException.wrap(
+                            () -> dao.deleteById(id),
+                            "cannot connect to database!");
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                } else {
+                    throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+                }
+            } else {
+                throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+            }
         } catch (RequestException exception) {
             exception.apply(response);
         }

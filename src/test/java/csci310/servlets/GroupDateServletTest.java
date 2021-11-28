@@ -20,12 +20,13 @@ import java.sql.SQLException;
 public class GroupDateServletTest {
     private static Database database;
     private static String token;
+    private static User user;
 
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         Configuration.load("test");
         database = Database.load();
-        User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
+        user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);
         database.users.dao().create(otherUser);
@@ -181,6 +182,116 @@ public class GroupDateServletTest {
 
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doPost(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoDelete() throws SQLException, IOException {
+        GroupDate groupDate = new GroupDate();
+        database.groupDates.dao().create(groupDate);
+
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + groupDate.getId())
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertNotNull(response);
+        Assert.assertNull(database.groupDates.dao().queryForId(groupDate.getId()));
+    }
+
+    @Test
+    public void testDoDeleteNonExistent() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoDeleteInvitation() throws SQLException, IOException {
+        GroupDate groupDate = new GroupDate();
+        database.groupDates.dao().create(groupDate);
+        Invitation invitation = new Invitation();
+        invitation.setGroupDate(groupDate);
+        invitation.setUser(user);
+        database.invitations.dao().create(invitation);
+
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + groupDate.getId() + "/invitations/" + invitation.getId())
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertNotNull(response);
+        Assert.assertNull(database.invitations.dao().queryForId(invitation.getId()));
+    }
+
+    @Test
+    public void testDoDeleteEvent() throws SQLException, IOException {
+        GroupDate groupDate = new GroupDate();
+        database.groupDates.dao().create(groupDate);
+        GroupDateEvent groupDateEvent = new GroupDateEvent();
+        groupDateEvent.setGroupDate(groupDate);
+        database.groupDateEvents.dao().create(groupDateEvent);
+
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + groupDate.getId() + "/events/" + groupDateEvent.getId())
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NO_CONTENT));
+        Assert.assertNotNull(response);
+        Assert.assertNull(database.groupDateEvents.dao().queryForId(groupDateEvent.getId()));
+    }
+
+    @Test
+    public void testDoDeleteInvalid() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/1/blah/")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoDeleteNonexistent() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/1/blah/1")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_NOT_FOUND));
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoDeleteUnauthorized() throws IOException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", null)
+                .withPathInfo("/1")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doDelete(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
         Assert.assertNotNull(response);
     }
 
