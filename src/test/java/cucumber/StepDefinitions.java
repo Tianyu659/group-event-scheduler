@@ -37,24 +37,18 @@ public class StepDefinitions {
 		driver.findElement(By.linkText("Register")).click();
 	}
 
-	@Then("I enter my registration info")
-	public void i_enter_my_registration_info() {
-		driver.findElement(By.id("username")).sendKeys("noahbkim");
-		driver.findElement(By.id("password")).sendKeys("asdfjkl;");
-		driver.findElement(By.id("password2")).sendKeys("asdfjkl;");
-		driver.findElement(By.id("first-name")).sendKeys("Noah");
-		driver.findElement(By.id("last-name")).sendKeys("Kim");
+	@Then("I enter registration info: {string}, {string}, {string}, {string}, {string}")
+	public void i_enter_my_registration_info(String username, String pwd, String pwd2, String fn, String ln) {
+		driver.findElement(By.id("username")).sendKeys(username);
+		driver.findElement(By.id("password")).sendKeys(pwd);
+		driver.findElement(By.id("password2")).sendKeys(pwd2);
+		driver.findElement(By.id("first-name")).sendKeys(fn);
+		driver.findElement(By.id("last-name")).sendKeys(ln);
 	}
 
 	@Then("I click register")
 	public void i_click_register() {
 		driver.findElement(By.tagName("button")).click();
-	}
-
-	@Then("I enter my login info")
-	public void i_enter_my_login_info() {
-		driver.findElement(By.id("username")).sendKeys("noahbkim");
-		driver.findElement(By.id("password")).sendKeys("asdfjkl;");
 	}
 
 	@Then("I log in with {string}, {string}")
@@ -63,12 +57,6 @@ public class StepDefinitions {
 		driver.findElement(By.id("username")).sendKeys(username);
 		driver.findElement(By.id("password")).sendKeys(password);
 		driver.findElement(By.tagName("button")).click();
-	}
-
-	@Then("I enter my login info incorrectly")
-	public void i_enter_my_login_info_incorrectly() {
-		driver.findElement(By.id("username")).sendKeys("noahbkim");
-		driver.findElement(By.id("password")).sendKeys("oops");
 	}
 
 	@Then("I should see login error")
