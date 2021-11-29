@@ -9,8 +9,8 @@ Feature: Frontend
     Then I enter registration info: "noahbkim", "asdfjkl;", "asdfjkl;", "Noah", "Kim"
     Then I click register
     Then I should see header "Login"
-	Scenario: Register with duplicate info
-		Given I am on the index page
+  Scenario: Register with duplicate info
+    Given I am on the index page
     Then I click on login in top right corner
     Then I click on register
     Then I enter registration info: "noahbkim", "asdfjkl;", "asdfjkl;", "Noah", "Kim"
