@@ -25,10 +25,27 @@ public class BlockTest {
     }
 
     @Test
+    public void testGetBlocked() {
+        Block block = new Block();
+        block.setCreator(user);
+        block.setBlocked(other);
+        Assert.assertEquals(other.getId(), block.getBlocked().getId());
+    }
+
+    @Test
     public void testGetBlockedCache() throws SQLException {
         Block block = new Block();
         block.setCreator(user);
         block.setBlocked(other);
+        Assert.assertEquals(other.getId(), block.getBlockedCache().getId());
+    }
+
+    @Test
+    public void testGetBlockedCacheCached() throws SQLException {
+        Block block = new Block();
+        block.setCreator(user);
+        block.setBlocked(other);
+        Assert.assertEquals(other.getId(), block.getBlockedCache().getId());
         Assert.assertEquals(other.getId(), block.getBlockedCache().getId());
     }
 
