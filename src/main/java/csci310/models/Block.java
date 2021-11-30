@@ -46,6 +46,10 @@ public class Block {
 
     @JsonIgnore
     public User getBlockedCache() throws SQLException {
+        if (this.blockedCache == null) {
+            Dao<User, Integer> dao = Database.load().users.dao();
+            this.blockedCache = dao.queryForId(this.blocked.getId());
+        }
         return this.blockedCache;
     }
 
