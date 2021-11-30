@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
-import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
 import csci310.forms.Form;
 import csci310.forms.SessionForm;
@@ -20,7 +19,15 @@ import java.util.Map;
 public class SessionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        throw new NotImplementedError();
+        try {
+            User user = Authentication.get().authenticate(request);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(), user);
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
     }
 
     @Override

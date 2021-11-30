@@ -43,9 +43,10 @@ public class SessionServletTest {
     public void testDoGetUnauthorized() throws IOException {
         SessionServlet servlet = new SessionServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", null)
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doGet(request, response.bind(403));
+        servlet.doGet(request, response.bind(401));
     }
 
     @Test
