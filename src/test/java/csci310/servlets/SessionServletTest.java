@@ -36,7 +36,7 @@ public class SessionServletTest {
                 .withHeader("Authorization", token)
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doPost(request, response.bind(200));
+        servlet.doGet(request, response.bind(200));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class SessionServletTest {
         HttpServletRequest request = new MockHttpServletRequestBuilder()
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
-        servlet.doPost(request, response.bind(403));
+        servlet.doGet(request, response.bind(403));
     }
 
     @Test
