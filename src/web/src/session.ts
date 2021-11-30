@@ -59,6 +59,10 @@ export class Session {
     });
   }
 
+  public refresh(): Promise<User> {
+    return fetch(url("/users/"));
+  }
+
   public logout(): Promise<void> {
     this.user = null;
     this.token = null;

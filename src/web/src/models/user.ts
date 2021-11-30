@@ -14,7 +14,7 @@ export class User {
   public username: string;
   public firstName: string;
   public lastName: string;
-  public blocked: Array<string>;
+  public blocked: Set<string>;
   public blackouts: Array<Blackout>;
 
   public constructor(
@@ -22,7 +22,7 @@ export class User {
     username: string,
     firstName: string,
     lastName: string,
-    blocked: Array<string> = [],
+    blocked: Set<string> = new Set(),
     blackouts: Array<Blackout> = []
   ) {
     this.id = id;
@@ -39,7 +39,7 @@ export class User {
       data["username"],
       data["firstName"],
       data["lastName"],
-      data["blocked"],
+      new Set(data["blocked"]),
       data["blackouts"].map(Blackout.wrap)
     );
   }

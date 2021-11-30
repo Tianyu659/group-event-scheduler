@@ -1,5 +1,6 @@
 package csci310.servlets;
 
+import csci310.Authentication;
 import csci310.Configuration;
 import csci310.Database;
 import csci310.mock.MockHttpServletRequestBuilder;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 
 public class SessionServletTest {
     private static Database database;
+    private static String token;
 
     @BeforeClass
     public static void setupDatabase() throws SQLException {
@@ -24,6 +26,26 @@ public class SessionServletTest {
         database = Database.load();
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
+        token = Authentication.get().key(user);
+    }
+
+    @Test
+    public void testDoGet() throws IOException {
+        SessionServlet servlet = new SessionServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(200));
+    }
+
+    @Test
+    public void testDoGetUnauthorized() throws IOException {
+        SessionServlet servlet = new SessionServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .build();
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPost(request, response.bind(403));
     }
 
     @Test
