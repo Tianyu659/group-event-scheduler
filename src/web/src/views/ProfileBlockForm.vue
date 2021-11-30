@@ -46,7 +46,10 @@ export default class Home extends Vue {
     this.filteredUsers.length = 0;
     if (this.search.trim().length > 0) {
       for (const user of this.users) {
-        if (user.id === session.user!.id) {
+        if (
+          user.id === session.user!.id ||
+          session.user!.blocks(user.username)
+        ) {
           continue;
         }
         if (user.matches(this.search.trim())) {
@@ -64,8 +67,11 @@ export default class Home extends Vue {
       method: "POST",
       headers: { Authorization: session.token! },
       body: JSON.stringify({ username: user.username }),
-    }).then((response: Response) => {
-      console.log(response.status);
+    }).then(() => {
+      this.search = "";
+      this.users = [];
+      this.filter();
+      session.refresh();
     });
   }
 }

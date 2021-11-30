@@ -72,7 +72,7 @@ public class UserTest {
         database.blocks.dao().create(block);
         Assert.assertNotEquals(0, block.getId());
         Assert.assertEquals(user.getId(), block.getCreator().getId());
-        List<String> blocked = user.getBlocked();
+        List<Block> blocked = user.getBlocked();
         Assert.assertEquals(1, blocked.size());
     }
 

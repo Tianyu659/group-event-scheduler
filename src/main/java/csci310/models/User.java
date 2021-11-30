@@ -10,7 +10,6 @@ import de.mkammerer.argon2.Argon2Factory;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Vector;
 
 @DatabaseTable(tableName = "users")
 public class User {
@@ -80,14 +79,9 @@ public class User {
         this.lastName = lastName;
     }
 
-    public List<String> getBlocked() throws SQLException {
-        Vector<String> blocked = new Vector<>();
+    public List<Block> getBlocked() throws SQLException {
         Dao<Block, Integer> dao = Database.load().blocks.dao();
-        List<Block> blocks = dao.queryForEq("creator_id", this.getId());
-        for (Block block : blocks) {
-            blocked.add(block.getBlocked().getUsername());
-        }
-        return blocked;
+        return dao.queryForEq("creator_id", this.getId());
     }
 
     public List<Blackout> getBlackouts() throws SQLException {
