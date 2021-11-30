@@ -1,8 +1,9 @@
 export class Blackout {
-  public constructor(public start: Date, public end: Date) {}
+  public constructor(public id: number, public start: Date, public end: Date) {}
 
   public static wrap(data: Record<string, any>): Blackout {
     return new Blackout(
+      data["id"],
       new Date(data["start"] * 1000),
       new Date(data["end"] * 1000)
     );

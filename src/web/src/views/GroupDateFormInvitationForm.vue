@@ -9,9 +9,15 @@
       <li
         v-for="user of filteredUsers"
         :key="user.id"
+        :class="{ disabled: user.blocks(session.user.username) }"
         @click="onClickUser(user)"
       >
-        {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
+        <span>
+          {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
+        </span>
+        <span v-show="user.blocks(session.user.username)" class="float-right">
+          unavailable
+        </span>
       </li>
     </ul>
   </div>
@@ -28,6 +34,7 @@ import { User } from "@/models/user";
 @Options({})
 export default class GroupDateFormInvitationForm extends Vue {
   @Prop() public groupDate!: GroupDate;
+  public readonly session = session;
   public search = "";
   public users: Array<User> = [];
   public filteredUsers: Array<User> = [];
@@ -59,7 +66,9 @@ export default class GroupDateFormInvitationForm extends Vue {
   }
 
   public onClickUser(user: User): void {
-    this.$emit("submit", new Invitation(0, this.groupDate, user));
+    if (!user.blocks(session.user!.username)) {
+      this.$emit("submit", new Invitation(0, this.groupDate, user));
+    }
   }
 }
 </script>

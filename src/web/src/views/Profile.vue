@@ -12,12 +12,33 @@
         <span>
           {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
         </span>
-        <span class="float-right cursor-pointer" @click="onClickDelete(user)">
+        <span
+          class="float-right cursor-pointer"
+          @click="onClickDeleteBlocked(user)"
+        >
           &#x2715;
         </span>
       </li>
     </ul>
     <profile-block-form />
+    <h2>Unavailable Dates</h2>
+    <p v-if="session.user.blackouts.length === 0">
+      You don't have any unavailable dates.
+    </p>
+    <ul v-else class="fancy">
+      <li v-for="blackout of session.user.blackouts" :key="blackout.id">
+        <span>
+          {{ formatDate(blackout.start) }} - {{ formatDate(blackout.end) }}
+        </span>
+        <span
+          class="float-right cursor-pointer"
+          @click="onClickDeleteBlackout(blackout)"
+        >
+          &#x2715;
+        </span>
+      </li>
+    </ul>
+    <profile-blackout-form />
   </div>
 </template>
 
@@ -25,20 +46,31 @@
 import { Options, Vue } from "vue-class-component";
 import { session } from "@/session";
 import ProfileBlockForm from "@/views/ProfileBlockForm.vue";
-import { BlockedUser } from "@/models/user";
+import { Blackout, BlockedUser } from "@/models/user";
 import { url } from "@/url";
+import ProfileBlackoutForm from "@/views/ProfileBlackoutForm.vue";
+import { formatDateTimeShort } from "@/common/date";
 
 @Options({
-  components: { ProfileBlockForm },
+  components: { ProfileBlackoutForm, ProfileBlockForm },
 })
 export default class Home extends Vue {
   public readonly session = session;
+  public readonly formatDate = formatDateTimeShort;
 
-  public onClickDelete(user: BlockedUser): void {
+  public onClickDeleteBlocked(user: BlockedUser): void {
     fetch(url(`/users/${this.session.user!.id}/blocks/${user.id}`), {
       method: "DELETE",
       headers: { Authorization: session.token! },
-      body: JSON.stringify({ username: user.username }),
+    }).then(() => {
+      session.refresh();
+    });
+  }
+
+  public onClickDeleteBlackout(blackout: Blackout): void {
+    fetch(url(`/users/${this.session.user!.id}/blackouts/${blackout.id}`), {
+      method: "DELETE",
+      headers: { Authorization: session.token! },
     }).then(() => {
       session.refresh();
     });

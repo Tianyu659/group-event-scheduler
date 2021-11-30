@@ -37,6 +37,7 @@
       <h3>Invitations</h3>
       <group-date-form-invitation
         v-for="invitation of groupDate.invitations"
+        :group-date="groupDate"
         :invitation="invitation"
         :key="invitation"
       />
