@@ -16,7 +16,6 @@ import csci310.models.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.List;
 
@@ -146,6 +145,21 @@ public class GroupDateServlet extends HttpServlet {
                 RequestException.wrap(
                         () -> dao.deleteById(id),
                         "cannot connect to database!");
+
+                Dao<GroupDateEvent, Integer> groupDateEventDao = RequestException.wrap(
+                        () -> Database.load().groupDateEvents.dao(),
+                        "cannot connect to database!");
+                RequestException.wrap(
+                        () -> groupDateEventDao.delete(groupDateEventDao.queryForEq("groupDate_id", id)),
+                        "cannot connect to database!");
+
+                Dao<Invitation, Integer> invitationDao = RequestException.wrap(
+                        () -> Database.load().invitations.dao(),
+                        "cannot connect to database!");
+                RequestException.wrap(
+                        () ->  invitationDao.delete(invitationDao.queryForEq("groupDate_id", id)),
+                        "cannot connect to database");
+
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 response.getWriter().println("{}");
