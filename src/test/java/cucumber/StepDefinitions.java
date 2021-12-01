@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
  */
 public class StepDefinitions {
     private static final String ROOT_URL = "http://localhost:8080/";
+    private static final long BTN_DELAY = 1000;
 
     private final WebDriver driver = new ChromeDriver();
     
@@ -43,17 +44,18 @@ public class StepDefinitions {
     @Then("I click on login in top right corner")
     public void i_click_on_login() {
         waitForElement(By.cssSelector("#navigation>a:last-of-type")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
 
     @Then("I click on register")
     public void i_click_on_register() {
         waitForElement(By.cssSelector("#content>div.form>div.buttons>a")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
 
     @Then("I enter registration info: {string}, {string}, {string}, {string}, {string}")
-    public void i_enter_my_registration_info(String username, String pwd, String pwd2, String fn, String ln) {
+    public void i_enter_my_registration_info(String username, String pwd,
+                                             String pwd2, String fn, String ln) {
         waitForElement(By.id("username")).sendKeys(username);
         waitForElement(By.id("password")).sendKeys(pwd);
         waitForElement(By.id("password2")).sendKeys(pwd2);
@@ -64,7 +66,7 @@ public class StepDefinitions {
     @Then("I click register")
     public void i_click_register() {
         waitForElement(By.tagName("button")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
 
     @Then("I log in with {string}, {string}")
@@ -73,7 +75,7 @@ public class StepDefinitions {
         waitForElement(By.id("username")).sendKeys(username);
         waitForElement(By.id("password")).sendKeys(password);
         waitForElement(By.tagName("button")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
 
     @Then("I should see login error")
@@ -93,13 +95,13 @@ public class StepDefinitions {
     @Then("I click login")
     public void i_click_login() {
         waitForElement(By.tagName("button")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
 
     @Then("I click logout")
     public void i_click_logout() {
         waitForElement(By.id("logout")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     
     @Then("The create user button should be disabled")
@@ -129,7 +131,7 @@ public class StepDefinitions {
     @Then("I click the create event button")
     public void i_click_the_create_event_button() {
         waitForElement(By.cssSelector("#content>div>h2>a")).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     @Then("I set the event name to {string}")
     public void i_set_the_event_name_to(final String s) {
@@ -202,7 +204,7 @@ public class StepDefinitions {
         waitForElement(
             By.cssSelector("#content>div.form>div:nth-of-type(3)>div.form>div.group:nth-of-type(5)>button")
         ).click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     @Then("I click search result {int}")
     public void i_click_search_result(final int i) {
@@ -227,7 +229,7 @@ public class StepDefinitions {
     public void i_click_the_finalize_button() {
         waitForElement(By.cssSelector("#content>div.form>div:nth-of-type(5)>button"))
             .click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     @Then("I should see the event name {string}")
     public void i_should_see_the_event_name(final String s) {
@@ -264,7 +266,7 @@ public class StepDefinitions {
         pause(100);
         waitForElement(By.cssSelector("#navigation>a:first-of-type"))
             .click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     @Then("I should see date with name {string}")
     public void i_should_see_date_with_name(final String s) {
@@ -292,7 +294,7 @@ public class StepDefinitions {
                 .findFirst();
         assertTrue(we.isPresent());
         we.get().click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     @Then("I should see information for the group date {string}")
     public void i_should_see_information_for_the_group_date(final String s) {
@@ -302,7 +304,7 @@ public class StepDefinitions {
     public void i_decline_the_group_date() {
         waitForElement(By.cssSelector("#content>div:first-of-type>button"))
             .click();
-        pause(1000);
+        pause(BTN_DELAY);
     }
     
     @Then("I should see {int} invites")
@@ -319,6 +321,33 @@ public class StepDefinitions {
                 waitForElements(By.cssSelector("#content>div:nth-of-type(2)>ul>li"))
                     .size()
             );
+    }
+    
+    @Then("The create event button should be disabled")
+    public void the_create_event_button_should_be_disabled() {
+        assertNotNull(
+            waitForElement(By.cssSelector("#content>div.form>div.buttons>button"))
+                .getAttribute("disabled")
+        );
+    }
+    @Then("I remove the event name")
+    public void i_remove_the_event_name() {
+        waitForElement(By.id("name")).sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+    }
+    @Then("I remove the event description")
+    public void i_remove_the_event_description() {
+        waitForElement(By.id("description")).sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+    }
+    @Then("I remove the invites")
+    public void i_remove_the_invites() {
+        waitForElements(
+            By.cssSelector(
+                "#content>div.form>" +
+                    "div:nth-of-type(4)>" +
+                    "div.invitation>" +
+                    "span.float-right.cursor-pointer"
+            )
+        ).forEach(WebElement::click);
     }
     
     

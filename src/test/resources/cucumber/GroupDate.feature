@@ -61,3 +61,25 @@ Feature: GroupDate
     Then I click the invitation to the group date "test event"
     Then I decline the group date
     Then I should see 0 invites
+  Scenario: Group date form validation
+    Given I am on the index page
+    Then I log in with "ttrojan", "asdfjkl1"
+    Then I click the create event button
+    Then I set the event name to "test event"
+    Then I set the event description to "test description"
+    Then I invite user "myself"
+    Then The create event button should be disabled
+    Then I remove the event name
+    Then I set the search name to "sports"
+    Then I set the search zipcode to 90012
+    Then I set the search genre to "Sports"
+    Then I set the search start date to "today"
+    Then I set the search end date to "next year"
+    Then I click the search button
+    Then I click search result 0
+    Then I remove the event description
+    Then I set the event name to "test event"
+    Then The create event button should be disabled
+    Then I remove the invites
+    Then I set the event description to "test description"
+    Then The create event button should be disabled
