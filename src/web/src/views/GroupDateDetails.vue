@@ -10,6 +10,7 @@
           :group-date="groupDate"
           :group-date-event="event"
           :key="event.id"
+          :class="{ best: event === groupDate.getBestEvent() }"
           @delete="onDeleteEvent(event)"
         />
       </div>
@@ -48,7 +49,7 @@ export default class Home extends Vue {
   public groupDate: GroupDate | null = null;
   public invitations: Array<Invitation> = [];
 
-  public created(): void {
+  public refresh(): void {
     const id = this.$route.params["id"];
     fetch(url(`/groupDates/${id}`), {
       method: "GET",
@@ -69,10 +70,16 @@ export default class Home extends Vue {
     });
   }
 
+  public created(): void {
+    this.refresh();
+  }
+
   public onDeleteEvent(event: GroupDateEvent): void {
     for (let i = 0; i < this.groupDate!.events.length; ++i) {
       if (this.groupDate!.events[i] === event) {
         this.groupDate!.events.splice(i, 1);
+        this.refresh();
+        return;
       }
     }
   }
@@ -81,10 +88,16 @@ export default class Home extends Vue {
     for (let i = 0; i < this.invitations.length; ++i) {
       if (this.invitations[i] === invitation) {
         this.invitations.splice(i, 1);
+        this.refresh();
+        return;
       }
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.event.best {
+  background-color: mix(lightgreen, white, 25%);
+}
+</style>

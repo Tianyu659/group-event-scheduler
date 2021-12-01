@@ -1,5 +1,5 @@
 <template>
-  <div class="event">
+  <div class="event" :class="{ best: best }">
     <h4>
       <span>{{ groupDateEvent.name }}</span>
       <span class="float-right cursor-pointer" @click="onClickDelete">
@@ -33,6 +33,7 @@ import router from "@/router";
 export default class GroupDateDetailsEvent extends Vue {
   @Prop() public groupDate!: GroupDate;
   @Prop() public groupDateEvent!: GroupDateEvent;
+  @Prop() public best!: boolean;
   public readonly formatDateTime = formatDateTime;
 
   public onClickDelete(): void {

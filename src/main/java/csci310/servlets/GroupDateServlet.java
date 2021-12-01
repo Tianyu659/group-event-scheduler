@@ -172,6 +172,24 @@ public class GroupDateServlet extends HttpServlet {
                     RequestException.wrap(
                             () -> dao.deleteById(id),
                             "cannot connect to database!");
+                    Dao<InvitationResponse, Integer> responseDao = RequestException.wrap(
+                            () -> Database.load().invitationResponses.dao(),
+                            "cannot connect to database!");
+                    Dao<InvitationEventResponse, Integer> eventResponseDao = RequestException.wrap(
+                            () -> Database.load().invitationEventResponses.dao(),
+                            "cannot connect to database!");
+                    List<InvitationResponse> responses = RequestException.wrap(
+                            () -> responseDao.queryForEq("invitation_id", id),
+                            "cannot connect to database");
+                    for (InvitationResponse invitationResponse : responses) {
+                        RequestException.wrap(
+                                () -> eventResponseDao.delete(eventResponseDao.queryForEq("invitationResponse_id", invitationResponse.getId())),
+                                "cannot connect do database!");
+                    }
+                    RequestException.wrap(
+                            () -> responseDao.delete(responses),
+                            "cannot connect to database!");
+
                     response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     response.getWriter().println("{}");
@@ -183,6 +201,17 @@ public class GroupDateServlet extends HttpServlet {
                     RequestException.wrap(
                             () -> dao.deleteById(id),
                             "cannot connect to database!");
+
+                    Dao<InvitationEventResponse, Integer> eventResponseDao = RequestException.wrap(
+                            () -> Database.load().invitationEventResponses.dao(),
+                            "cannot connect to database!");
+                    List<InvitationEventResponse> responses = RequestException.wrap(
+                            () -> eventResponseDao.queryForEq("event_id", id),
+                            "cannot connect to database");
+                    RequestException.wrap(
+                            () -> eventResponseDao.delete(responses),
+                            "cannot connect to database!");
+
                     response.setContentType("application/json");
                     response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     response.getWriter().println("{}");
