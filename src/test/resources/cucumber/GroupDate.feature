@@ -1,7 +1,7 @@
 Feature: GroupDate
   Scenario: Create a group date
     Given I am on the index page
-    Then I log in with "ttrojan", "asdfjkl;"
+    Then I log in with "ttrojan", "asdfjkl1"
     Then I click the create event button
     Then I set the event name to "test event"
     Then I set the event description to "test description"
@@ -23,7 +23,7 @@ Feature: GroupDate
     Then I should see date with name "test event"
   Scenario: See Invitation
     Given I am on the index page
-    Then I log in with "ttrojan", "asdfjkl;"
+    Then I log in with "ttrojan", "asdfjkl1"
     Then I click the create event button
     Then I set the event name to "test event"
     Then I set the event description to "test description"
@@ -43,7 +43,7 @@ Feature: GroupDate
     Then I should see information for the group date "test event"
   Scenario: Decline Invitation
     Given I am on the index page
-    Then I log in with "ttrojan", "asdfjkl;"
+    Then I log in with "ttrojan", "asdfjkl1"
     Then I click the create event button
     Then I set the event name to "test event"
     Then I set the event description to "test description"

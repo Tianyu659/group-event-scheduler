@@ -6,6 +6,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -41,13 +42,13 @@ public class StepDefinitions {
 
     @Then("I click on login in top right corner")
     public void i_click_on_login() {
-        waitForElement(By.linkText("Login")).click();
+        waitForElement(By.cssSelector("#navigation>a:last-of-type")).click();
         pause(1000);
     }
 
     @Then("I click on register")
     public void i_click_on_register() {
-        waitForElement(By.linkText("Register")).click();
+        waitForElement(By.cssSelector("#content>div.form>div.buttons>a")).click();
         pause(1000);
     }
 
@@ -56,8 +57,8 @@ public class StepDefinitions {
         waitForElement(By.id("username")).sendKeys(username);
         waitForElement(By.id("password")).sendKeys(pwd);
         waitForElement(By.id("password2")).sendKeys(pwd2);
-        waitForElement(By.id("first-name")).sendKeys(fn);
-        waitForElement(By.id("last-name")).sendKeys(ln);
+        waitForElement(By.id("firstName")).sendKeys(fn);
+        waitForElement(By.id("lastName")).sendKeys(ln);
     }
 
     @Then("I click register")
@@ -84,7 +85,7 @@ public class StepDefinitions {
     public void i_should_see_register_page_warning(final String warning) {
         assertEquals(
             warning,
-            waitForElement(By.className("error"))
+            waitForElement(By.cssSelector("#content>div.form>p.error"))
                 .getAttribute("innerHTML")
         );
     }
@@ -99,6 +100,20 @@ public class StepDefinitions {
     public void i_click_logout() {
         waitForElement(By.id("logout")).click();
         pause(1000);
+    }
+    
+    @Then("The create user button should be disabled")
+    public void the_create_user_button_should_be_disabled() {
+        assertNotNull(
+            waitForElement(By.cssSelector("#content>div.form>div.buttons>button"))
+                .getAttribute("disabled")
+        );
+    }
+    @Then("I reset the registration form")
+    public void i_reset_the_registration_form() {
+        waitForElements(By.tagName("input"))
+            .parallelStream()
+            .forEach(e -> e.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE)));
     }
     
     private static void pause(final long time) {
@@ -306,6 +321,7 @@ public class StepDefinitions {
             );
     }
     
+    
     @After()
     public void after() {
         driver.quit();
@@ -317,7 +333,7 @@ public class StepDefinitions {
               .dao()
               .create(UserTest.createUser(
                 "ttrojan",
-                "asdfjkl;",
+                "asdfjkl1",
                 "Tommy",
                 "Trojan"
               ));
