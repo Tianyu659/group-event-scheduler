@@ -31,5 +31,14 @@ ul.fancy {
     &:hover {
       background-color: lighten(theme.$color-primary, 40%);
     }
+
+    &.disabled {
+      background-color: lightgray;
+      cursor: initial;
+
+      &:hover {
+        background-color: lightgray;
+      }
+    }
   }
 }

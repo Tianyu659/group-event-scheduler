@@ -7,16 +7,21 @@
       <div>
         <group-date-details-event
           v-for="event of groupDate.events"
+          :group-date="groupDate"
           :group-date-event="event"
           :key="event.id"
+          @delete="onDeleteEvent(event)"
         />
       </div>
       <h2>Invitations</h2>
       <div>
         <group-date-details-invitation
           v-for="invitation of invitations"
+          :group-date="groupDate"
+          :invitations="invitations"
           :invitation="invitation"
           :key="invitation.id"
+          @delete="onDeleteInvitation(invitation)"
         />
       </div>
     </div>
@@ -28,7 +33,7 @@
 import { Options, Vue } from "vue-class-component";
 import { session } from "@/session";
 import { url } from "@/url";
-import { GroupDate, Invitation } from "@/models/groupDate";
+import { GroupDate, GroupDateEvent, Invitation } from "@/models/groupDate";
 import GroupDateDetailsInvitation from "@/views/GroupDateDetailsInvitation.vue";
 import GroupDateDetailsEvent from "@/views/GroupDateDetailsEvent.vue";
 
@@ -62,6 +67,22 @@ export default class Home extends Vue {
         this.invitations.push(...data.map(Invitation.wrap));
       });
     });
+  }
+
+  public onDeleteEvent(event: GroupDateEvent): void {
+    for (let i = 0; i < this.groupDate!.events.length; ++i) {
+      if (this.groupDate!.events[i] === event) {
+        this.groupDate!.events.splice(i, 1);
+      }
+    }
+  }
+
+  public onDeleteInvitation(invitation: Invitation): void {
+    for (let i = 0; i < this.invitations.length; ++i) {
+      if (this.invitations[i] === invitation) {
+        this.invitations.splice(i, 1);
+      }
+    }
   }
 }
 </script>

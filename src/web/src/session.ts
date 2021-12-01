@@ -59,6 +59,22 @@ export class Session {
     });
   }
 
+  public refresh(): Promise<User> {
+    return fetch(url("/session/"), {
+      headers: { Authorization: this.token! },
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((data: Record<string, never>) => {
+          this.user!.overwrite(data);
+          return this.user!;
+        });
+      } else {
+        console.error("failed to refresh");
+        return Promise.reject();
+      }
+    });
+  }
+
   public logout(): Promise<void> {
     this.user = null;
     this.token = null;
