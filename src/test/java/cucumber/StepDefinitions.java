@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -179,7 +178,7 @@ public class StepDefinitions {
             .get(4)
             .findElement(By.cssSelector("button"))
             .click();
-        pause(10000);
+        pause(3000);
     }
     @Then("I click search result {int}")
     public void i_click_search_result(final int i) {
@@ -246,16 +245,24 @@ public class StepDefinitions {
     }
     @Then("I click the logo in the top left")
     public void i_click_the_logo_in_the_top_left() {
+        pause(100);
         waitForElements(By.cssSelector("#navigation>a"))
-            .get(1)
+            .get(0)
             .click();
     }
     @Then("I should see date with name {string}")
     public void i_should_see_date_with_name(final String s) {
         assertTrue(
-            waitForElements(By.cssSelector("#content>div"))
-                .get(0)
-                .findElements(By.cssSelector("ul>li"))
+            waitForElements(By.cssSelector("#content>div:first-of-type>ul:first-of-type>li"))
+                .parallelStream()
+                .anyMatch(e -> e.getText().contentEquals(s))
+        );
+    }
+    
+    @Then("I should see an invitation to the date {string}")
+    public void i_should_see_an_invitation_to_the_date(final String s) {
+        assertTrue(
+            waitForElements(By.cssSelector("#content>div:nth-of-type(2)>ul:first-of-type>li"))
                 .parallelStream()
                 .anyMatch(e -> e.getText().contentEquals(s))
         );
