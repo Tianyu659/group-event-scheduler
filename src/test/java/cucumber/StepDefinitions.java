@@ -1,5 +1,7 @@
 package cucumber;
 
+import csci310.Database;
+import csci310.models.UserTest;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -12,6 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +25,7 @@ public class StepDefinitions {
     private static final String ROOT_URL = "http://localhost:8080/";
 
     private final WebDriver driver = new ChromeDriver();
-
+    
     @Given("I am on the index page")
     public void i_am_on_the_index_page() {
         driver.get(ROOT_URL);
@@ -30,66 +33,72 @@ public class StepDefinitions {
 
     @Then("I should see header {string}")
     public void i_should_see_header(String header) {
-        assertNotNull(driver.findElement(By.cssSelector("h1")));
+        assertEquals(
+            header,
+            waitForElement(By.tagName("h1")).getText()
+        );
     }
 
     @Then("I click on login in top right corner")
     public void i_click_on_login() {
-        driver.findElement(By.linkText("Login")).click();
+        waitForElement(By.linkText("Login")).click();
+        pause(1000);
     }
 
     @Then("I click on register")
     public void i_click_on_register() {
-        driver.findElement(By.linkText("Register")).click();
+        waitForElement(By.linkText("Register")).click();
+        pause(1000);
     }
 
     @Then("I enter registration info: {string}, {string}, {string}, {string}, {string}")
     public void i_enter_my_registration_info(String username, String pwd, String pwd2, String fn, String ln) {
-        driver.findElement(By.id("username")).sendKeys(username);
-        driver.findElement(By.id("password")).sendKeys(pwd);
-        driver.findElement(By.id("password2")).sendKeys(pwd2);
-        driver.findElement(By.id("first-name")).sendKeys(fn);
-        driver.findElement(By.id("last-name")).sendKeys(ln);
+        waitForElement(By.id("username")).sendKeys(username);
+        waitForElement(By.id("password")).sendKeys(pwd);
+        waitForElement(By.id("password2")).sendKeys(pwd2);
+        waitForElement(By.id("first-name")).sendKeys(fn);
+        waitForElement(By.id("last-name")).sendKeys(ln);
     }
 
     @Then("I click register")
     public void i_click_register() {
-        driver.findElement(By.tagName("button")).click();
+        waitForElement(By.tagName("button")).click();
+        pause(1000);
     }
 
     @Then("I log in with {string}, {string}")
     public void login(String username, String password) {
-        driver.findElement(By.linkText("Login")).click();
-        driver.findElement(By.id("username")).sendKeys(username);
-        driver.findElement(By.id("password")).sendKeys(password);
-        driver.findElement(By.tagName("button")).click();
+        waitForElement(By.linkText("Login")).click();
+        waitForElement(By.id("username")).sendKeys(username);
+        waitForElement(By.id("password")).sendKeys(password);
+        waitForElement(By.tagName("button")).click();
+        pause(1000);
     }
 
     @Then("I should see login error")
     public void i_should_see_login_error() {
-        assertNotNull(driver.findElement(By.className("error")));
+        waitForElement(By.className("error"));
     }
     
     @Then("I should see register page warning {string}")
-    public void i_should_see_register_page_warning(String warning) throws InterruptedException {
-        Thread.sleep(1000);
-        assertNotNull(driver.findElement(By.className("error")));
-        assertEquals(warning, driver.findElement(By.cssSelector(".error")).getAttribute("innerHTML"));
+    public void i_should_see_register_page_warning(final String warning) {
+        assertEquals(
+            warning,
+            waitForElement(By.className("error"))
+                .getAttribute("innerHTML")
+        );
     }
 
     @Then("I click login")
     public void i_click_login() {
-        driver.findElement(By.tagName("button")).click();
+        waitForElement(By.tagName("button")).click();
+        pause(1000);
     }
 
     @Then("I click logout")
-    public void i_click_logout() throws InterruptedException {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        driver.findElement(By.id("logout")).click();
+    public void i_click_logout() {
+        waitForElement(By.id("logout")).click();
+        pause(1000);
     }
     
     private static void pause(final long time) {
@@ -103,8 +112,9 @@ public class StepDefinitions {
         return new WebDriverWait(driver,10).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
     @Then("I click the create event button")
-    public void i_clock_the_create_event_button() {
+    public void i_click_the_create_event_button() {
         waitForElement(By.cssSelector("#content>div>h2>a")).click();
+        pause(1000);
     }
     @Then("I set the event name to {string}")
     public void i_set_the_event_name_to(final String s) {
@@ -116,30 +126,34 @@ public class StepDefinitions {
     }
     @Then("I set the search name to {string}")
     public void i_set_the_search_name_to(final String s) {
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>div.group"))
-            .get(0)
-            .findElement(By.cssSelector("input"))
-            .sendKeys(s);
+        waitForElement(
+            By.cssSelector(
+                "#content>div.form>div:nth-of-type(3)>" +
+                    "div.form>div.group:first-of-type>" +
+                    "input"
+            )
+        ).sendKeys(s);
     }
     @Then("I set the search zipcode to {word}")
     public void i_set_the_search_zipcode_to(final String s) {
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>div.group"))
-            .get(1)
-            .findElement(By.cssSelector("input"))
-            .sendKeys(s);
+        waitForElement(
+            By.cssSelector(
+                "#content>div.form>div:nth-of-type(3)>" +
+                    "div.form>div.group:nth-of-type(2)>" +
+                    "input"
+            )
+        ).sendKeys(s);
     }
     @Then("I set the search genre to {string}")
     public void i_set_the_search_genre_to(final String s) {
 		new Select(
-			waitForElements(By.cssSelector("#content>div.form>div"))
-			    .get(2)
-                .findElements(By.cssSelector("div.form>div.group"))
-				.get(2)
-				.findElement(By.cssSelector("select"))
+			waitForElement(
+                By.cssSelector(
+                    "#content>div.form>div:nth-of-type(3)>" +
+                        "div.form>div.group:nth-of-type(3)>" +
+                        "select"
+                )
+            )
 		).selectByVisibleText(s);
 	}
     @Then("I set the search start date to {string}")
@@ -147,108 +161,95 @@ public class StepDefinitions {
         if(s.contentEquals("today"))
             s = java.time.format.DateTimeFormatter.ofPattern("yyyy\tMMdd")
                                                   .format(java.time.LocalDate.now());
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>div.group"))
-            .get(3)
-            .findElements(By.cssSelector("div"))
-            .get(0)
-            .findElement(By.cssSelector("input"))
-            .sendKeys(s);
+        waitForElement(
+            By.cssSelector(
+                "#content>div.form>div:nth-of-type(3)>" +
+                    "div.form>div.group:nth-of-type(4)>" +
+                    "div:first-of-type>input"
+            )
+        ).sendKeys(s);
     }
     @Then("I set the search end date to {string}")
     public void i_set_the_search_end_date_to(String s) {
         if(s.contentEquals("next year"))
             s = java.time.format.DateTimeFormatter.ofPattern("yyyy\tMMdd")
                                                   .format(java.time.LocalDate.now().plusYears(1));
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>div.group"))
-            .get(3)
-            .findElements(By.cssSelector("div"))
-            .get(1)
-            .findElement(By.cssSelector("input"))
-            .sendKeys(s);
+        waitForElement(
+            By.cssSelector(
+                "#content>div.form>div:nth-of-type(3)>" +
+                    "div.form>div.group:nth-of-type(4)>" +
+                    "div:nth-of-type(2)>input"
+            )
+        ).sendKeys(s);
     }
     @Then("I click the search button")
     public void i_click_the_search_button() {
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>div.group"))
-            .get(4)
-            .findElement(By.cssSelector("button"))
-            .click();
-        pause(3000);
+        waitForElement(
+            By.cssSelector("#content>div.form>div:nth-of-type(3)>div.form>div.group:nth-of-type(5)>button")
+        ).click();
+        pause(1000);
     }
     @Then("I click search result {int}")
     public void i_click_search_result(final int i) {
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(2)
-            .findElements(By.cssSelector("div.form>ul>li"))
-            .get(i)
-            .click();
+        waitForElement(
+            By.cssSelector(
+                "#content>div.form>div:nth-of-type(3)>" +
+                    "div.form>ul>li:nth-of-type("+(i+1)+")"
+            )
+        ).click();
     }
     @Then("I invite user {string}")
     public void i_invite_user(String s) {
         if(s.contentEquals("myself"))
             s = "ttrojan";
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(3)
-            .findElement(By.cssSelector("div.form>div.form-group>input"))
-            .sendKeys(s);
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(3)
-            .findElements(By.cssSelector("div.form>ul>li"))
-            .get(0)
-            .click();
+        final WebElement e = waitForElement(
+            By.cssSelector("#content>div.form>div:nth-of-type(4)>div.form")
+        );
+        e.findElement(By.cssSelector("div.form-group>input")).sendKeys(s);
+        e.findElement(By.cssSelector("ul>li:first-of-type")).click();
     }
     @Then("I click the finalize button")
     public void i_click_the_finalize_button() {
-        waitForElements(By.cssSelector("#content>div.form>div"))
-            .get(4)
-            .findElement(By.cssSelector("button"))
+        waitForElement(By.cssSelector("#content>div.form>div:nth-of-type(5)>button"))
             .click();
+        pause(1000);
     }
     @Then("I should see the event name {string}")
     public void i_should_see_the_event_name(final String s) {
         assertEquals(
-            waitForElement(By.cssSelector("#content>div>h1")).getText(),
-            s
+            s,
+            waitForElement(By.cssSelector("#content>div>h1")).getText()
         );
     }
     @Then("I should see the event description {string}")
     public void i_should_see_the_event_description(final String s) {
         assertEquals(
-            waitForElement(By.cssSelector("#content>div>p")).getText(),
-            s
+            s,
+            waitForElement(By.cssSelector("#content>div>p")).getText()
         );
     }
     @Then("I should see {int} events")
     public void i_should_see_events(final int i) {
         assertEquals(
-            waitForElements(By.cssSelector("#content>div>div"))
-                .get(0)
-                .findElements(By.className("event"))
-                .size(),
-            i
+            i,
+            waitForElements(By.cssSelector("#content>div>div:first-of-type>.event"))
+                .size()
         );
     }
     @Then("I should see {int} invitees")
     public void i_should_see_invitees(final int i) {
         assertEquals(
-            waitForElements(By.cssSelector("#content>div>div"))
-                .get(1)
-                .findElements(By.className("invitation"))
-                .size(),
-            i
+            i,
+            waitForElements(By.cssSelector("#content>div>div:nth-of-type(2)>.invitation"))
+                .size()
         );
     }
     @Then("I click the logo in the top left")
     public void i_click_the_logo_in_the_top_left() {
         pause(100);
-        waitForElements(By.cssSelector("#navigation>a"))
-            .get(0)
+        waitForElement(By.cssSelector("#navigation>a:first-of-type"))
             .click();
+        pause(1000);
     }
     @Then("I should see date with name {string}")
     public void i_should_see_date_with_name(final String s) {
@@ -267,9 +268,59 @@ public class StepDefinitions {
                 .anyMatch(e -> e.getText().contentEquals(s))
         );
     }
+    @Then("I click the invitation to the group date {string}")
+    public void i_click_the_invitation_to_the_group_date(final String s) {
+        final Optional<WebElement> we =
+            waitForElements(By.cssSelector("#content>div:nth-of-type(2)>ul:first-of-type>li"))
+                .parallelStream()
+                .filter(e -> e.getText().contentEquals(s))
+                .findFirst();
+        assertTrue(we.isPresent());
+        we.get().click();
+        pause(1000);
+    }
+    @Then("I should see information for the group date {string}")
+    public void i_should_see_information_for_the_group_date(final String s) {
+        i_should_see_header("Invite: "+s);
+    }
+    @Then("I decline the group date")
+    public void i_decline_the_group_date() {
+        waitForElement(By.cssSelector("#content>div:first-of-type>button"))
+            .click();
+        pause(1000);
+    }
+    
+    @Then("I should see {int} invites")
+    public void i_should_see_invites(final int i) {
+        if(i == 0)
+            assertTrue(
+                waitForElement(By.cssSelector("#content>div:nth-of-type(2)>ul"))
+                    .findElements(By.tagName("li"))
+                    .isEmpty()
+            );
+        else
+            assertEquals(
+                i,
+                waitForElements(By.cssSelector("#content>div:nth-of-type(2)>ul>li"))
+                    .size()
+            );
+    }
     
     @After()
     public void after() {
         driver.quit();
+        try {
+            final Database db = Database.load();
+            db.drop();
+            db.create();
+            db.users
+              .dao()
+              .create(UserTest.createUser(
+                "ttrojan",
+                "asdfjkl;",
+                "Tommy",
+                "Trojan"
+              ));
+        } catch(final Exception ignored) {}
     }
 }
