@@ -24,9 +24,9 @@
         <label>Password</label>
       </div>
       <p class="error" v-show="error">{{ error }}</p>
-      <div class="group buttons">
-        <button @click="onClickSubmit">Submit</button>
-        <router-link to="/register" class="button">Register</router-link>
+      <div class="group buttons right">
+        <router-link to="/register" class="button">Create user</router-link>
+        <button @click="onClickSubmit" class="primary">Submit</button>
       </div>
     </div>
   </div>

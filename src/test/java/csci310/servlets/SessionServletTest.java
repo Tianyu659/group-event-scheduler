@@ -23,7 +23,7 @@ public class SessionServletTest {
     @BeforeClass
     public static void setupDatabase() throws SQLException {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
         token = Authentication.get().key(user);
