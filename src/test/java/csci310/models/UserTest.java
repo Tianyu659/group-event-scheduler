@@ -13,7 +13,7 @@ public class UserTest {
     @BeforeClass
     public static void setupTestDatabase() {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
     }
 
     public static User createUser(String username, String password, String firstName, String lastName) {
