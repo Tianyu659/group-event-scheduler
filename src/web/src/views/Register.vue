@@ -81,11 +81,15 @@
         </label>
       </div>
       <p class="error" v-show="error">{{ error }}</p>
-      <div class="group buttons">
-        <button @click="onClickSubmit" :disabled="!validator.valid">
+      <div class="group buttons right">
+        <router-link :to="{ name: 'login' }" class="button">Log in</router-link>
+        <button
+          @click="onClickSubmit"
+          class="primary"
+          :disabled="!validator.valid"
+        >
           Create user
         </button>
-        <router-link :to="{ name: 'login' }" class="button">Log in</router-link>
       </div>
     </div>
   </div>
@@ -144,7 +148,8 @@ export default class Login extends Vue {
     this.validator.element("password").with(validatePassword);
     this.validator
       .element("password2")
-      .with(makeSameAs("password", "password"));
+      .with(makeSameAs("password", "password"))
+      .listening("password");
     this.validator.element("firstName").with(makeNotEmpty("First name"));
     this.validator.element("lastName").with(makeNotEmpty("Last name"));
   }
