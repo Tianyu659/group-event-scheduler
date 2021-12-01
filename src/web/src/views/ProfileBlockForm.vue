@@ -2,10 +2,20 @@
   <div class="form">
     <h4>Block a User</h4>
     <div class="form-group">
-      <input type="text" placeholder="name" v-model="search" @input="filter" />
+      <input
+        id="search-users-block"
+        type="text"
+        placeholder="name"
+        v-model="search"
+        @input="filter"
+      />
       <label>Search for a user</label>
     </div>
-    <ul class="fancy click" v-show="filteredUsers.length > 0">
+    <ul
+      id="blocked-users"
+      class="fancy click"
+      v-show="filteredUsers.length > 0"
+    >
       <li
         v-for="user of filteredUsers"
         :key="user.id"
