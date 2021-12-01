@@ -5,7 +5,6 @@ import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.api.Path;
-import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
 import csci310.forms.BlackoutForm;
 import csci310.forms.BlockForm;

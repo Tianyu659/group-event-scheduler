@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="group">
-      <button class="primary" @click="onClickSearch">Search by keyword</button>
+      <button class="primary" @click="onClickSearch">Search events</button>
     </div>
     <ul class="fancy click">
       <li v-for="event of events" :key="event.eid" @click="onClickEvent(event)">

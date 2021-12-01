@@ -1,6 +1,6 @@
 <template>
   <div class="form">
-    <h4>Invite a User</h4>
+    <h4>Block a User</h4>
     <div class="form-group">
       <input type="text" placeholder="name" v-model="search" @input="filter" />
       <label>Search for a user</label>
@@ -9,15 +9,9 @@
       <li
         v-for="user of filteredUsers"
         :key="user.id"
-        :class="{ disabled: user.blocks(session.user.username) }"
         @click="onClickUser(user)"
       >
-        <span>
-          {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
-        </span>
-        <span v-show="user.blocks(session.user.username)" class="float-right">
-          unavailable
-        </span>
+        {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
       </li>
     </ul>
   </div>
@@ -25,15 +19,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GroupDate, Invitation } from "@/models/groupDate";
-import { Prop } from "vue-property-decorator";
-import { url } from "@/url";
 import { session } from "@/session";
+import { url } from "@/url";
 import { User } from "@/models/user";
 
 @Options({})
-export default class GroupDateFormInvitationForm extends Vue {
-  @Prop() public groupDate!: GroupDate;
+export default class Home extends Vue {
   public readonly session = session;
   public search = "";
   public users: Array<User> = [];
@@ -55,6 +46,12 @@ export default class GroupDateFormInvitationForm extends Vue {
     this.filteredUsers.length = 0;
     if (this.search.trim().length > 0) {
       for (const user of this.users) {
+        if (
+          user.id === session.user!.id ||
+          session.user!.blocks(user.username)
+        ) {
+          continue;
+        }
         if (user.matches(this.search.trim())) {
           this.filteredUsers.push(user);
         }
@@ -66,11 +63,16 @@ export default class GroupDateFormInvitationForm extends Vue {
   }
 
   public onClickUser(user: User): void {
-    if (!user.blocks(session.user!.username)) {
-      this.$emit("submit", new Invitation(0, this.groupDate, user));
-    }
+    fetch(url(`/users/${this.session.user!.id}/blocks/`), {
+      method: "POST",
+      headers: { Authorization: session.token! },
+      body: JSON.stringify({ username: user.username }),
+    }).then(() => {
+      this.search = "";
+      this.users = [];
+      this.filter();
+      session.refresh();
+    });
   }
 }
 </script>
-
-<style scoped></style>

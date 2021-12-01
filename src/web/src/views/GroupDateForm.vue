@@ -37,6 +37,7 @@
       <h3>Invitations</h3>
       <group-date-form-invitation
         v-for="invitation of groupDate.invitations"
+        :group-date="groupDate"
         :invitation="invitation"
         :key="invitation"
       />
@@ -77,6 +78,8 @@ import router from "@/router";
   },
 })
 export default class GroupDateForm extends Vue {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   public groupDate: GroupDate = GroupDate.empty(session.user!);
 
   public onCreateEvent(groupDateEvent: GroupDateEvent): void {

@@ -18,6 +18,19 @@ import java.util.Map;
 
 public class SessionServlet extends HttpServlet {
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            User user = Authentication.get().authenticate(request);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(), user);
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             SessionForm form = Form.read(request, SessionForm.class);
