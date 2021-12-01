@@ -20,7 +20,7 @@ public class EndpointTest {
     @BeforeClass
     public static void setupTestDatabase() {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
     }
 
     @Test

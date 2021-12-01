@@ -177,7 +177,11 @@ export class GroupDateEvent {
 
   public get averageInterest(): number {
     return (
-      sum(this.interest.filter((n: number) => n > -1)) / this.interest.length
+      Math.round(
+        (sum(this.interest.filter((n: number) => n > -1)) /
+          this.interest.length) *
+          10
+      ) / 10
     );
   }
 }
@@ -196,6 +200,27 @@ export class GroupDate {
 
   public static empty(creator: User): GroupDate {
     return new GroupDate(0, "", "", true, creator, [], []);
+  }
+
+  public getBestEvent(): GroupDateEvent {
+    const highestAttendanceValue = this.events
+      .map((event: GroupDateEvent) => event.availableCount)
+      .reduce(
+        (a: number, b: number) => Math.max(a, b),
+        this.events[0].availableCount
+      );
+    const highestAttendance = this.events.filter(
+      (event: GroupDateEvent) => event.availableCount === highestAttendanceValue
+    );
+    if (highestAttendance.length === 1) {
+      return highestAttendance[0];
+    } else {
+      highestAttendance.sort(
+        (a: GroupDateEvent, b: GroupDateEvent) =>
+          b.averageInterest - a.averageInterest
+      );
+      return highestAttendance[0];
+    }
   }
 
   public static wrap(data: Record<string, any>): GroupDate {

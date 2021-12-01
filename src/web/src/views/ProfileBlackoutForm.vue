@@ -12,7 +12,9 @@
       </div>
     </div>
     <div class="group">
-      <button class="primary" @click="onClickSubmit">Create</button>
+      <button class="primary" @click="onClickSubmit" :disabled="!valid()">
+        Create
+      </button>
     </div>
   </div>
 </template>
@@ -21,13 +23,20 @@
 import { Options, Vue } from "vue-class-component";
 import { session } from "@/session";
 import { url } from "@/url";
-import { User } from "@/models/user";
 
 @Options({})
 export default class Home extends Vue {
   public readonly session = session;
   public start = "";
   public end = "";
+
+  public valid(): boolean {
+    return (
+      this.start.length > 0 &&
+      this.end.length > 0 &&
+      new Date(this.start) < new Date(this.end)
+    );
+  }
 
   public onClickSubmit(): void {
     fetch(url(`/users/${this.session.user!.id}/blackouts/`), {

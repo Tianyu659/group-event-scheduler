@@ -16,7 +16,7 @@ public class InvitationTest {
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);

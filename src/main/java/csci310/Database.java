@@ -62,12 +62,18 @@ public class Database {
         this.blackouts = new Table<>(Blackout.class);
     }
 
-    public static Database load() {
+    public static Database load(boolean create) {
         if (Database.instance == null) {
             Database.instance = new Database(Configuration.load());
+            Database.instance.create();
+        } else if (create) {
+            Database.instance.create();
         }
-        Database.instance.create();
         return Database.instance;
+    }
+
+    public static Database load() {
+        return load(false);
     }
 
     public void create() {

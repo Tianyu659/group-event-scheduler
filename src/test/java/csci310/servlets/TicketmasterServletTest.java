@@ -27,17 +27,15 @@ public class TicketmasterServletTest {
     private static Database database;
 
     private static String userToken;
-    private static String eventKwd;
 
     @BeforeClass
     public static void setUp() throws SQLException {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
 
         userToken = Authentication.get().key(user);
-        eventKwd = "keyword,Football";
     }
 
     @AfterClass
