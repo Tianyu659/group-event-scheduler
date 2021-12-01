@@ -34,7 +34,7 @@ public class RunCucumberTests {
 
 			database.users.dao().create(UserTest.createUser(
 					"ttrojan",
-					"asdfjkl;",
+					"asdfjkl1",
 					"Tommy",
 					"Trojan"));
 		}
