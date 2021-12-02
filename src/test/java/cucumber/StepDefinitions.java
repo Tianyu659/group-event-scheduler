@@ -49,13 +49,13 @@ public class StepDefinitions {
     @Then("I click on logout in top right corner")
     public void i_click_on_logout() {
         waitForElement(By.id("logout")).click();
-        pause(BTN_DELAY);
+        pause();
     }
     
     @Then("I click on my name in the top right corner")
     public void i_click_on_name_top_right() {
         waitForElement(By.cssSelector("#profile-link")).click();
-        pause(BTN_DELAY);
+        pause();
     }
 
     @Then("I click on register")
@@ -228,11 +228,8 @@ public class StepDefinitions {
     public void i_invite_user(String s) {
         if(s.contentEquals("myself"))
             s = "ttrojan";
-        final WebElement e = waitForElement(
-            By.cssSelector("#content>div.form>div:nth-of-type(4)>div.form")
-        );
-        e.findElement(By.cssSelector("div.form-group>input")).sendKeys(Keys.chord(Keys.CONTROL,"a"),s);
-        e.findElement(By.cssSelector("ul>li:first-of-type")).click();
+        waitForElement(By.id("search-users-invite")).sendKeys(Keys.chord(Keys.CONTROL,"a"),s);
+        waitForElement(By.cssSelector("#invited-users>li:first-of-type")).click();
     }
     @Then("I click the finalize button")
     public void i_click_the_finalize_button() {
@@ -535,7 +532,7 @@ public class StepDefinitions {
     @Then("I enter {string} in search to block")
     public void i_enter_in_search_to_block(String user) {
     	waitForElement(By.id("search-users-block")).sendKeys(user);
-    	pause(1000);
+    	pause();
     }
     @Then("I should see {string} as a option to block")
     public void i_should_see_block_option(String user) {
@@ -574,7 +571,7 @@ public class StepDefinitions {
     }
     @Then("{string} should not be an option to block")
     public void user_should_not_be_block_option(String user) {
-    	pause(1000);
+    	pause();
     	List<WebElement> userList = driver.findElements(By.cssSelector("#blocked-users li"));
     	if(userList == null) {
     		assertTrue(true);
@@ -601,7 +598,7 @@ public class StepDefinitions {
     }
     @Then("{string} should not be on my list of blocked users anymore")
     public void user_shouldnt_be_blocked_anymore(String user) {
-    	pause(1000);
+    	pause();
     	List<WebElement> userList = driver.findElements(By.id("blocked-user-list"));
     	if(userList == null) {
     		assertTrue(true);
