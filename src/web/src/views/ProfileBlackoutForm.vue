@@ -34,7 +34,7 @@ export default class Home extends Vue {
     return (
       this.start.length > 0 &&
       this.end.length > 0 &&
-      new Date(this.start) < new Date(this.end)
+      new Date(this.start) <= new Date(this.end)
     );
   }
 

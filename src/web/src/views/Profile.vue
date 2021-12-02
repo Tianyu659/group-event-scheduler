@@ -7,7 +7,7 @@
     </p>
     <h2>Blocked Users</h2>
     <p v-if="session.user.blocked.length === 0">You haven't blocked anyone!</p>
-    <ul v-else class="fancy">
+    <ul id="blocked-user-list" v-else class="fancy">
       <li v-for="user of session.user.blocked" :key="user.id">
         <span>
           {{ user.firstName }} {{ user.lastName }} ({{ user.username }})

@@ -27,6 +27,9 @@ public class GroupDate {
     @DatabaseField()
     private String description;
 
+    @DatabaseField(defaultValue = "false")
+    private boolean finalized;
+
     public int getId() {
         return id;
     }
@@ -61,6 +64,14 @@ public class GroupDate {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setFinalized(boolean finalized) {
+        this.finalized = finalized;
+    }
+
+    public boolean getFinalized() {
+        return finalized;
     }
 
     @JsonProperty("events")

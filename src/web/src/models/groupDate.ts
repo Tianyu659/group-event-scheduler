@@ -192,6 +192,7 @@ export class GroupDate {
     public name: string,
     public description: string,
     public live: boolean,
+    public finalized: boolean,
     public creator: User,
     public events: Array<GroupDateEvent>,
     public invitations: Array<Invitation>,
@@ -199,7 +200,7 @@ export class GroupDate {
   ) {}
 
   public static empty(creator: User): GroupDate {
-    return new GroupDate(0, "", "", true, creator, [], []);
+    return new GroupDate(0, "", "", true, false, creator, [], []);
   }
 
   public getBestEvent(): GroupDateEvent {
@@ -229,6 +230,7 @@ export class GroupDate {
       data["name"],
       data["description"],
       data["live"],
+      data["finalized"],
       User.wrap(data["creator"]),
       data["events"].map(GroupDateEvent.wrap),
       [],
