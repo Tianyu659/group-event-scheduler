@@ -1,11 +1,14 @@
 export class Blackout {
-  public constructor(public id: number, public start: Date, public end: Date) {}
+  public constructor(public id: number, public start: Date, public end: Date) {
+    console.log(start, end);
+  }
 
   public static wrap(data: Record<string, any>): Blackout {
+    const offset = new Date().getTimezoneOffset() * 60 * 1000;
     return new Blackout(
       data["id"],
-      new Date(data["start"] * 1000),
-      new Date(data["end"] * 1000)
+      new Date(data["start"] * 1000 + offset),
+      new Date(data["end"] * 1000 + offset)
     );
   }
 }
@@ -85,7 +88,18 @@ export class User {
   }
 
   public blocks(username: string): boolean {
-    return this.blockedUsernames.has(username);
+    return this.blockedUsernames.has(username) || this.blackout();
+  }
+
+  public blackout(): boolean {
+    for (const blackout of this.blackouts) {
+      const actualEnd = new Date(blackout.end);
+      actualEnd.setDate(blackout.end.getDate() + 1);
+      if (blackout.start <= new Date() && new Date() <= actualEnd) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private updateBlockedUsernames(): void {
