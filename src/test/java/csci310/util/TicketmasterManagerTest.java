@@ -23,32 +23,6 @@ import org.junit.FixMethodOrder;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TicketmasterManagerTest extends TicketmasterManager{
 	
-	@Test
-	public void testSearchEventByKeyword() throws IOException, InterruptedException {
-		String keyword = "eventnotfound";
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.searchEventByKeyword(keyword), typeRef);
-
-		Assert.assertNotNull(map.get("_links"));
-		Assert.assertNotNull(map.get("page"));
-		
-	}
-	
-	@Test
-	public void testGetEventDetails() throws IOException, InterruptedException {
-		String eventID = "k7vGFpS8LxPSc";
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
-		Map<String, Object> map = objectMapper.readValue(TicketmasterManager.getEventDetails(eventID), typeRef);
-
-		Assert.assertEquals(map.get("name"), "Mozart & Mendelssohn");
-		Assert.assertEquals(map.get("type"), "event");
-		
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testSearchEventID() throws IOException, InterruptedException {
