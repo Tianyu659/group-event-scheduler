@@ -29,15 +29,15 @@ Feature: Blocklist
     Then I select "Tommy Trojan (ttrojan)" to block
     Then I click on the X besides "Tommy Trojan (ttrojan)" on my blocked list
     Then "Tommy Trojan (ttrojan)" should not be on my list of blocked users anymore
-#	Scenario: Inviting a user who has blocked you to a group date
-#		Given I am on the index page
-    #Then I log in with "htrojan", "asdfjkl1"
-    #Then I click on my name in the top right corner
-    #Then I enter "ttrojan" in search to block
-    #Then I should see "Tommy Trojan (ttrojan)" as a option to block
-    #Then I select "Tommy Trojan (ttrojan)" to block
-    #Then I click on logout in top right corner
-    #Then I log in with "ttrojan", "asdfjkl1"
-    #Then I click the create event button
-    #Then I attempt to invite "hecuba"
-    #Then "Hecuba Trojan (htrojan)" should be a disabled invite option
+	Scenario: Inviting a user who has blocked you to a group date
+		Given I am on the index page
+    Then I log in with "htrojan", "asdfjkl1"
+    Then I click on my name in the top right corner
+    Then I enter "ttrojan" in search to block
+    Then I should see "Tommy Trojan (ttrojan)" as a option to block
+    Then I select "Tommy Trojan (ttrojan)" to block
+    Then I click on logout in top right corner
+    Then I log in with "ttrojan", "asdfjkl1"
+    Then I click the create event button
+    Then I attempt to invite "hecuba"
+    Then "Hecuba Trojan (htrojan)" should be a disabled invite option

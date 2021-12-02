@@ -49,7 +49,7 @@ public class StepDefinitions {
     
     @Then("I click on logout in top right corner")
     public void i_click_on_logout() {
-        waitForElement(By.id("#logout")).click();
+        waitForElement(By.id("logout")).click();
         pause(BTN_DELAY);
     }
     
@@ -447,13 +447,20 @@ public class StepDefinitions {
     	}
     	assertTrue(true);
     }
-    @Then("Then I attempt to invite {string}")
+    @Then("I attempt to invite {string}")
     public void i_attempt_to_invite_user(String user) {
-    	
+        waitForElement(By.id("search-users-invite")).sendKeys(user);
     }
     @Then("{string} should be a disabled invite option")
     public void user_should_be_disabled_invite_option(String user) {
-    	
+    	List<WebElement> userList = waitForElements(By.id("invited-users"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
+    			assertEquals("unavailable", u.findElement(By.cssSelector("span.float-right")).getText().trim());
+    			return;
+    		}
+    	}
+    	assertTrue(false);
     }
     
     @After()
