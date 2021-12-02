@@ -3,7 +3,7 @@
     <router-link v-if="session.user === null" to="/login">Groupie</router-link>
     <router-link v-else :to="{ name: 'dashboard' }">Groupie</router-link>
     <div class="spacer" />
-    <router-link to="/profile" v-if="session.user !== null">
+    <router-link id="profile-link" to="/profile" v-if="session.user !== null">
       {{ session.user.firstName }}
     </router-link>
     <a
