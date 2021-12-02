@@ -7,7 +7,7 @@
         class="form"
         v-if="!groupDate.finalized && groupDate.creator.id === session.user.id"
       >
-        <button class="primary">Finalize</button>
+        <button class="primary" @click="finalize">Finalize</button>
       </div>
       <h2>Events</h2>
       <div>
@@ -78,6 +78,18 @@ export default class Home extends Vue {
 
   public created(): void {
     this.refresh();
+  }
+
+  public finalize(): void {
+    fetch(url(`/groupDates/${this.groupDate!.id}`), {
+      method: "PUT",
+      headers: { Authorization: session.token! },
+      body: JSON.stringify({ live: this.groupDate!.live, finalized: true }),
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        this.groupDate!.finalized = true;
+      }
+    });
   }
 
   public onDeleteEvent(event: GroupDateEvent): void {
