@@ -65,3 +65,15 @@ h2.bordered {
   padding-bottom: 4px;
   border-bottom: 1px solid gray;
 }
+
+.tag {
+  font-size: 0.75em;
+  padding: 0.25em 0.4em;
+  background-color: theme.$color-primary;
+  color: white;
+  border-radius: 0.25em;
+}
+
+.tag + .tag {
+  margin-right: 0.5em;
+}

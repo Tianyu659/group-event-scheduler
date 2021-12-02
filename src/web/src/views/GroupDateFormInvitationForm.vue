@@ -19,7 +19,9 @@
       <li
         v-for="user of filteredUsers"
         :key="user.id"
-        :class="{ disabled: user.blocks(session.user.username) }"
+        :class="{
+          disabled: user.blocks(session.user.username),
+        }"
         @click="onClickUser(user)"
       >
         <span>
