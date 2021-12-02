@@ -1,4 +1,4 @@
-Feature: Frontend
+Feature: User Login and Registration
   Scenario: Open hello page from index page
     Given I am on the index page
     Then I should see header "Login"

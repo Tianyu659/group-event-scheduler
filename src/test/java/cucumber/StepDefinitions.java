@@ -45,6 +45,18 @@ public class StepDefinitions {
     public void i_click_on_login() {
         waitForElement(By.cssSelector("#navigation>a:last-of-type")).click();
     }
+    
+    @Then("I click on logout in top right corner")
+    public void i_click_on_logout() {
+        waitForElement(By.id("logout")).click();
+        pause();
+    }
+    
+    @Then("I click on my name in the top right corner")
+    public void i_click_on_name_top_right() {
+        waitForElement(By.cssSelector("#profile-link")).click();
+        pause();
+    }
 
     @Then("I click on register")
     public void i_click_on_register() {
@@ -216,11 +228,8 @@ public class StepDefinitions {
     public void i_invite_user(String s) {
         if(s.contentEquals("myself"))
             s = "ttrojan";
-        final WebElement e = waitForElement(
-            By.cssSelector("#content>div.form>div:nth-of-type(4)>div.form")
-        );
-        e.findElement(By.cssSelector("div.form-group>input")).sendKeys(Keys.chord(Keys.CONTROL,"a"),s);
-        e.findElement(By.cssSelector("ul>li:first-of-type")).click();
+        waitForElement(By.id("search-users-invite")).sendKeys(Keys.chord(Keys.CONTROL,"a"),s);
+        waitForElement(By.cssSelector("#invited-users>li:first-of-type")).click();
     }
     @Then("I click the finalize button")
     public void i_click_the_finalize_button() {
@@ -519,6 +528,106 @@ public class StepDefinitions {
         clickDeleteInvite(i,true);
     }
     
+    // block
+    @Then("I enter {string} in search to block")
+    public void i_enter_in_search_to_block(String user) {
+    	waitForElement(By.id("search-users-block")).sendKeys(user);
+    	pause();
+    }
+    @Then("I should see {string} as a option to block")
+    public void i_should_see_block_option(String user) {
+    	List<WebElement> userList = waitForElements(By.cssSelector("#blocked-users li"));
+    	assertNotNull(userList);
+    	for(WebElement u : userList) {
+    		if(u.getText().trim().equals(user)) {
+    			assertTrue(true);
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    @Then("I select {string} to block")
+    public void i_select_user_to_block(String user) {
+    	List<WebElement> userList = waitForElements(By.cssSelector("#blocked-users li"));
+    	assertNotNull(userList);
+    	for(WebElement u : userList) {
+    		if(u.getText().trim().equals(user)) {
+    			u.click();
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    @Then("{string} should be on my list of blocked users")
+    public void user_should_be_on_my_block_list(String user) {
+    	List<WebElement> userList = waitForElements(By.id("blocked-user-list"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
+    			assertTrue(true);
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    @Then("{string} should not be an option to block")
+    public void user_should_not_be_block_option(String user) {
+    	pause();
+    	List<WebElement> userList = driver.findElements(By.cssSelector("#blocked-users li"));
+    	if(userList == null) {
+    		assertTrue(true);
+    		return;
+    	}
+    	for(WebElement u : userList) {
+    		if(u.getText().trim().equals(user)) {
+    			assertTrue(false);
+    			return;
+    		}
+    	}
+    	assertTrue(true);
+    }
+    @Then("I click on the X besides {string} on my blocked list")
+    public void i_click_x_on_blocked_list(String user) {
+    	List<WebElement> userList = waitForElements(By.id("blocked-user-list"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
+    			u.findElement(By.cssSelector("span:nth-child(2)")).click();
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    @Then("{string} should not be on my list of blocked users anymore")
+    public void user_shouldnt_be_blocked_anymore(String user) {
+    	pause();
+    	List<WebElement> userList = driver.findElements(By.id("blocked-user-list"));
+    	if(userList == null) {
+    		assertTrue(true);
+    		return;
+    	}
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
+    			assertTrue(false);
+    			return;
+    		}
+    	}
+    	assertTrue(true);
+    }
+    @Then("I attempt to invite {string}")
+    public void i_attempt_to_invite_user(String user) {
+        waitForElement(By.id("search-users-invite")).sendKeys(user);
+    }
+    @Then("{string} should be a disabled invite option")
+    public void user_should_be_disabled_invite_option(String user) {
+    	List<WebElement> userList = waitForElements(By.id("invited-users"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
+    			assertEquals("unavailable", u.findElement(By.cssSelector("span.float-right")).getText().trim());
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    
     @After()
     public void after() {
         driver.quit();
@@ -534,6 +643,14 @@ public class StepDefinitions {
                 "Tommy",
                 "Trojan"
               ));
+            db.users
+            .dao()
+            .create(UserTest.createUser(
+              "htrojan",
+              "asdfjkl1",
+              "Hecuba",
+              "Trojan"
+            ));
         } catch(final Exception ignored) {}
     }
 }

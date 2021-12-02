@@ -37,6 +37,11 @@ public class RunCucumberTests {
 					"asdfjkl1",
 					"Tommy",
 					"Trojan"));
+			database.users.dao().create(UserTest.createUser(
+					"htrojan",
+					"asdfjkl1",
+					"Hecuba",
+					"Trojan"));
 		}
 
 		WebDriverManager.chromedriver().setup();
