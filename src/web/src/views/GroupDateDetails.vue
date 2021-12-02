@@ -3,6 +3,12 @@
     <div v-if="groupDate !== null">
       <h1>{{ groupDate.name }}</h1>
       <p>{{ groupDate.description }}</p>
+      <div
+        class="form"
+        v-if="!groupDate.finalized && groupDate.creator.id === session.user.id"
+      >
+        <button class="primary">Finalize</button>
+      </div>
       <h2>Events</h2>
       <div>
         <group-date-details-event

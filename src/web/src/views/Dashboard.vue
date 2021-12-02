@@ -35,7 +35,10 @@
           :key="invitation.id"
           @click="onClickInvitation(invitation)"
         >
-          {{ invitation.groupDate.name }}
+          <span>{{ invitation.groupDate.name }}</span>
+          <span class="float-right" v-show="invitation.response !== null">
+            Accepted
+          </span>
         </li>
       </ul>
     </div>
@@ -61,6 +64,7 @@ export default class Home extends Vue {
       headers: { Authorization: session.token! },
     }).then((response: Response) => {
       response.json().then((data: Array<Record<string, never>>) => {
+        console.log(data);
         this.groupDates.length = 0;
         this.groupDates.push(...data.map(GroupDate.wrap));
       });
@@ -71,11 +75,7 @@ export default class Home extends Vue {
     }).then((response: Response) => {
       response.json().then((data: Array<Record<string, never>>) => {
         this.invitations.length = 0;
-        this.invitations.push(
-          ...data
-            .map(Invitation.wrap)
-            .filter((invitation: Invitation) => invitation.response === null)
-        );
+        this.invitations.push(...data.map(Invitation.wrap));
       });
     });
   }
@@ -85,7 +85,11 @@ export default class Home extends Vue {
   }
 
   public onClickInvitation(invitation: Invitation): void {
-    router.push({ name: "invitation", params: { id: invitation.id } });
+    if (invitation.response === null) {
+      router.push({ name: "invitation", params: { id: invitation.id } });
+    } else {
+      router.push({ name: "date", params: { id: invitation.groupDate.id } });
+    }
   }
 }
 </script>

@@ -21,6 +21,7 @@ public class GroupDateServletTest {
     private static Database database;
     private static String token;
     private static User user;
+    private static GroupDate groupDate;
 
     @BeforeClass
     public static void setupTestDatabase() throws SQLException {
@@ -30,7 +31,7 @@ public class GroupDateServletTest {
         User otherUser = UserTest.createUser("noahbkim", "secret", "Noah", "Kim");
         database.users.dao().create(user);
         database.users.dao().create(otherUser);
-        GroupDate groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Super fun event!");
+        groupDate = GroupDateTest.createGroupDate(user, "Test Group Date", "Super fun event!");
         GroupDate otherGroupDate = GroupDateTest.createGroupDate(otherUser, "Other Test Group Date", "Super fun event!");
         database.groupDates.dao().create(groupDate);
         database.groupDates.dao().create(otherGroupDate);
@@ -293,6 +294,23 @@ public class GroupDateServletTest {
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
         servlet.doDelete(request, response.bind(HttpServletResponse.SC_UNAUTHORIZED));
         Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testDoPut() throws IOException, SQLException {
+        GroupDateServlet servlet = new GroupDateServlet();
+        HttpServletRequest request = new MockHttpServletRequestBuilder()
+                .withHeader("Authorization", token)
+                .withPathInfo("/" + groupDate.getId())
+                .withBody("{\"finalized\": true}")
+                .build();
+
+        MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();
+        servlet.doPut(request, response.bind(HttpServletResponse.SC_OK));
+        Assert.assertNotNull(response);
+
+        GroupDate latest = Database.load().groupDates.dao().queryForId(groupDate.getId());
+        Assert.assertTrue(latest.getFinalized());
     }
 
     @AfterClass

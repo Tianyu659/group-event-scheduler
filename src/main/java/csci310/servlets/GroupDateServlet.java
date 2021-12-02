@@ -43,7 +43,7 @@ public class GroupDateServlet extends HttpServlet {
                 GroupDate groupDate = RequestException.wrap(
                         () -> dao.queryForId(id),
                         "cannot connect to database!");
-                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                if (groupDate == null) {
                     throw new RequestException(404, "group date does not exist!");
                 } else {
                     response.setContentType("application/json");
@@ -56,7 +56,7 @@ public class GroupDateServlet extends HttpServlet {
                 GroupDate groupDate = RequestException.wrap(
                         () -> dao.queryForId(id),
                         "cannot connect to database!");
-                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                if (groupDate == null) {
                     throw new RequestException(404, "group date does not exist!");
                 } else {
                     List<Invitation> invitations = RequestException.wrap(
@@ -128,6 +128,11 @@ public class GroupDateServlet extends HttpServlet {
         } catch (RequestException exception) {
             exception.apply(response);
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        throw new NotImplementedError();
     }
 
     @Override
