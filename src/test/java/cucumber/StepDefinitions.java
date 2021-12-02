@@ -246,7 +246,7 @@ public class StepDefinitions {
     public void i_should_see_events(final int i) {
         assertEquals(
             i,
-            waitForElements(By.cssSelector("#content>div>div:first-of-type>.event"))
+            waitForElements(By.cssSelector("#content>div>div:nth-of-type(2)>.event"))
                 .size()
         );
     }
@@ -254,7 +254,7 @@ public class StepDefinitions {
     public void i_should_see_invitees(final int i) {
         assertEquals(
             i,
-            waitForElements(By.cssSelector("#content>div>div:nth-of-type(2)>.invitation"))
+            waitForElements(By.cssSelector("#content>div>div:nth-of-type(3)>.invitation"))
                 .size()
         );
     }
@@ -302,19 +302,25 @@ public class StepDefinitions {
         pause();
     }
     
-    @Then("I should see {int} invites")
-    public void i_should_see_invites(final int i) {
+    @Then("I should see {int} open invites")
+    public void i_should_see_open_invites(final int i) {
         if(i == 0)
             assertTrue(
                 waitForElement(By.cssSelector("#content>div:nth-of-type(2)>ul"))
                     .findElements(By.tagName("li"))
+                    .parallelStream()
+                    .filter(e -> e.findElements(By.className("tag")).isEmpty())
+                    .findAny()
                     .isEmpty()
             );
         else
             assertEquals(
                 i,
-                waitForElements(By.cssSelector("#content>div:nth-of-type(2)>ul>li"))
-                    .size()
+                waitForElement(By.cssSelector("#content>div:nth-of-type(2)>ul"))
+                    .findElements(By.tagName("li"))
+                    .parallelStream()
+                    .filter(e -> e.findElements(By.className("tag")).isEmpty())
+                    .count()
             );
     }
     
@@ -472,7 +478,7 @@ public class StepDefinitions {
     }
     @Then("The minion should see {int} invites")
     public void the_minion_should_see_invites(final int i) {
-        i_should_see_invites(i);
+        i_should_see_open_invites(i);
     }
     
     private void clickDeleteInvite(final int i,final boolean accept) {

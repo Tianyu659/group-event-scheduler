@@ -60,7 +60,7 @@ Feature: GroupDate
     Then I click the logo in the top left
     Then I click the invitation to the group date "test event"
     Then I decline the group date
-    Then I should see 0 invites
+    Then I should see 0 open invites
   Scenario: Group date form validation
     Given I am on the index page
     Then I log in with "ttrojan", "asdfjkl1"

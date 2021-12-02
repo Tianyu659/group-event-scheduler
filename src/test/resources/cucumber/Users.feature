@@ -47,7 +47,7 @@ Feature: Frontend
     Then I enter registration info: "noahbkim", "asdfjkl1", "asdfjkl1", "", "Kim"
     Then The create user button should be disabled
     Then I reset the registration form
-    Then I enter registration info: "noahbkim", "asdfjkl;", "asdfjkl;", "Noah", "Kim"
+    Then I enter registration info: "noahbkim", "asdfjklm", "asdfjklm", "Noah", "Kim"
     Then The create user button should be disabled
     Then I reset the registration form
     Then I enter registration info: "noahbkim", "asdfjkl1", "asdfjkl2", "Noah", "Kim"
