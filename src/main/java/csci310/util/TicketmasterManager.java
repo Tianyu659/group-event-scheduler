@@ -25,7 +25,7 @@ public class TicketmasterManager {
 	
 	public static void checkRateLimit() {
 		long t = Duration.between(startInstant, Instant.now()).toMillis();
-		if (t < 200) {
+		if (t < 250) {
 			try {
 				waiter.await(200, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException ignored) {}
