@@ -33,10 +33,6 @@ Feature: Frontend
     Then I click on login in top right corner
     Then I log in with "ttrojan", "oops"
     Then I should see login error
-  Scenario: Example login with fixture user, delete this eventually
-    Given I am on the index page
-    Then I log in with "ttrojan", "asdfjkl1"
-    Then I should see header "Hi, Tommy"
   Scenario: Register invalid information
     Given I am on the index page
     Then I click on login in top right corner
