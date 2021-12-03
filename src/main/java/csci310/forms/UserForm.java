@@ -2,6 +2,7 @@ package csci310.forms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import csci310.exception.RequestException;
 import csci310.models.User;
 
 public class UserForm extends Form {
@@ -23,7 +24,7 @@ public class UserForm extends Form {
         this.lastName = lastName;
     }
 
-    public User validate() {
+    public User validate() throws RequestException {
         User user = new User();
         user.setUsername(this.username);
         user.setPassword(this.password);

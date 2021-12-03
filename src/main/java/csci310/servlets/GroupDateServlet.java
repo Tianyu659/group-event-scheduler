@@ -5,11 +5,9 @@ import com.j256.ormlite.dao.Dao;
 import csci310.Authentication;
 import csci310.Database;
 import csci310.api.Path;
+import csci310.exception.NotImplementedError;
 import csci310.exception.RequestException;
-import csci310.forms.Form;
-import csci310.forms.GroupDateEventForm;
-import csci310.forms.GroupDateForm;
-import csci310.forms.InvitationForm;
+import csci310.forms.*;
 import csci310.models.*;
 
 import javax.servlet.http.HttpServlet;
@@ -42,7 +40,7 @@ public class GroupDateServlet extends HttpServlet {
                 GroupDate groupDate = RequestException.wrap(
                         () -> dao.queryForId(id),
                         "cannot connect to database!");
-                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                if (groupDate == null) {
                     throw new RequestException(404, "group date does not exist!");
                 } else {
                     response.setContentType("application/json");
@@ -55,7 +53,7 @@ public class GroupDateServlet extends HttpServlet {
                 GroupDate groupDate = RequestException.wrap(
                         () -> dao.queryForId(id),
                         "cannot connect to database!");
-                if (groupDate == null || groupDate.getCreator().getId() != user.getId()) {
+                if (groupDate == null) {
                     throw new RequestException(404, "group date does not exist!");
                 } else {
                     List<Invitation> invitations = RequestException.wrap(
@@ -124,6 +122,138 @@ public class GroupDateServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CREATED);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(response.getWriter(), groupDate);
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Authentication.get().authenticate(request);
+            Path path = new Path(request.getPathInfo());
+
+            if (path.size() == 1) {
+                int id = path.id(0);
+                GroupDateUpdateForm form = Form.read(request, GroupDateUpdateForm.class);
+                Dao<GroupDate, Integer> dao = RequestException.wrap(
+                        () -> Database.load().groupDates.dao(),
+                        "cannot connect to database!");
+                GroupDate groupDate = RequestException.wrap(
+                        () -> dao.queryForId(id),
+                        "cannot connect to database!");
+
+                if (groupDate == null) {
+                    throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+                }
+
+                groupDate.setLive(form.getLive());
+                groupDate.setFinalized(form.getFinalized());
+                RequestException.wrap(
+                        () -> dao.update(groupDate),
+                        "cannot connect to database!");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().println("{}");
+            } else {
+                throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+            }
+        } catch (RequestException exception) {
+            exception.apply(response);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Authentication.get().authenticate(request);
+            Path path = new Path(request.getPathInfo());
+
+            if (path.size() == 1) {
+                // TODO: should actually check if the requesting user is the creator lmfao
+                Dao<GroupDate, Integer> dao = RequestException.wrap(
+                        () -> Database.load().groupDates.dao(),
+                        "cannot connect to database!");
+                int id = path.id(0);
+                RequestException.wrap(
+                        () -> dao.deleteById(id),
+                        "cannot connect to database!");
+
+                Dao<GroupDateEvent, Integer> groupDateEventDao = RequestException.wrap(
+                        () -> Database.load().groupDateEvents.dao(),
+                        "cannot connect to database!");
+                RequestException.wrap(
+                        () -> groupDateEventDao.delete(groupDateEventDao.queryForEq("groupDate_id", id)),
+                        "cannot connect to database!");
+
+                Dao<Invitation, Integer> invitationDao = RequestException.wrap(
+                        () -> Database.load().invitations.dao(),
+                        "cannot connect to database!");
+                RequestException.wrap(
+                        () ->  invitationDao.delete(invitationDao.queryForEq("groupDate_id", id)),
+                        "cannot connect to database");
+
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                response.getWriter().println("{}");
+            } else if (path.size() == 3) {
+                if (path.at(1).equals("invitations")) {
+                    Dao<Invitation, Integer> dao = RequestException.wrap(
+                            () -> Database.load().invitations.dao(),
+                            "cannot connect to database!");
+                    int id = path.id(2);
+                    RequestException.wrap(
+                            () -> dao.deleteById(id),
+                            "cannot connect to database!");
+                    Dao<InvitationResponse, Integer> responseDao = RequestException.wrap(
+                            () -> Database.load().invitationResponses.dao(),
+                            "cannot connect to database!");
+                    Dao<InvitationEventResponse, Integer> eventResponseDao = RequestException.wrap(
+                            () -> Database.load().invitationEventResponses.dao(),
+                            "cannot connect to database!");
+                    List<InvitationResponse> responses = RequestException.wrap(
+                            () -> responseDao.queryForEq("invitation_id", id),
+                            "cannot connect to database");
+                    for (InvitationResponse invitationResponse : responses) {
+                        RequestException.wrap(
+                                () -> eventResponseDao.delete(eventResponseDao.queryForEq("invitationResponse_id", invitationResponse.getId())),
+                                "cannot connect do database!");
+                    }
+                    RequestException.wrap(
+                            () -> responseDao.delete(responses),
+                            "cannot connect to database!");
+
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                    response.getWriter().println("{}");
+                } else if (path.at(1).equals("events")) {
+                    Dao<GroupDateEvent, Integer> dao = RequestException.wrap(
+                            () -> Database.load().groupDateEvents.dao(),
+                            "cannot connect to database!");
+                    int id = path.id(2);
+                    RequestException.wrap(
+                            () -> dao.deleteById(id),
+                            "cannot connect to database!");
+
+                    Dao<InvitationEventResponse, Integer> eventResponseDao = RequestException.wrap(
+                            () -> Database.load().invitationEventResponses.dao(),
+                            "cannot connect to database!");
+                    List<InvitationEventResponse> responses = RequestException.wrap(
+                            () -> eventResponseDao.queryForEq("event_id", id),
+                            "cannot connect to database");
+                    RequestException.wrap(
+                            () -> eventResponseDao.delete(responses),
+                            "cannot connect to database!");
+
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                    response.getWriter().println("{}");
+                } else {
+                    throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+                }
+            } else {
+                throw new RequestException(HttpServletResponse.SC_NOT_FOUND, "not found!");
+            }
         } catch (RequestException exception) {
             exception.apply(response);
         }

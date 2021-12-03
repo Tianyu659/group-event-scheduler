@@ -5,6 +5,7 @@ import csci310.Database;
 import org.junit.*;
 
 import java.sql.*;
+import java.util.List;
 
 public class UserTest {
     private static Database database;
@@ -12,7 +13,7 @@ public class UserTest {
     @BeforeClass
     public static void setupTestDatabase() {
         Configuration.load("test");
-        database = Database.load();
+        database = Database.load(true);
     }
 
     public static User createUser(String username, String password, String firstName, String lastName) {
@@ -28,7 +29,7 @@ public class UserTest {
     public void testCreateUser() throws SQLException {
         User user = UserTest.createUser("ttrojan", "secret", "Tommy", "Trojan");
         database.users.dao().create(user);
-        Assert.assertEquals(1, user.getId());
+        Assert.assertNotEquals(0, user.getId());
     }
 
     @Test
@@ -58,6 +59,34 @@ public class UserTest {
         User user = new User();
         user.setPassword("asdfjkl;");
         Assert.assertTrue(user.comparePassword("asdfjkl;"));
+    }
+
+    @Test
+    public void testGetBlocked() throws SQLException {
+        User user = new User();
+        database.users.dao().create(user);
+        Assert.assertEquals(0, user.getBlocked().size());
+        Block block = new Block();
+        block.setCreator(user);
+        block.setBlocked(user);
+        database.blocks.dao().create(block);
+        Assert.assertNotEquals(0, block.getId());
+        Assert.assertEquals(user.getId(), block.getCreator().getId());
+        List<Block> blocked = user.getBlocked();
+        Assert.assertEquals(1, blocked.size());
+    }
+
+    @Test
+    public void testGetBlackouts() throws SQLException {
+        User user = new User();
+        database.users.dao().create(user);
+        Assert.assertEquals(0, user.getBlackouts().size());
+        Blackout blackout = new Blackout();
+        blackout.setCreator(user);
+        database.blackouts.dao().create(blackout);
+        List<Blackout> blackouts = user.getBlackouts();
+        Assert.assertEquals(1, blackouts.size());
+        Assert.assertEquals(user.getId(), blackouts.get(0).getCreator().getId());
     }
 
     @AfterClass

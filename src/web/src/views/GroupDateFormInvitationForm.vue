@@ -2,16 +2,34 @@
   <div class="form">
     <h4>Invite a User</h4>
     <div class="form-group">
-      <input type="text" placeholder="name" v-model="search" @input="filter" />
+      <input
+        id="search-users-invite"
+        type="text"
+        placeholder="name"
+        v-model="search"
+        @input="filter"
+      />
       <label>Search for a user</label>
     </div>
-    <ul class="fancy click" v-show="filteredUsers.length > 0">
+    <ul
+      id="invited-users"
+      class="fancy click"
+      v-show="filteredUsers.length > 0"
+    >
       <li
         v-for="user of filteredUsers"
         :key="user.id"
+        :class="{
+          disabled: user.blocks(session.user.username),
+        }"
         @click="onClickUser(user)"
       >
-        {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
+        <span>
+          {{ user.firstName }} {{ user.lastName }} ({{ user.username }})
+        </span>
+        <span v-show="user.blocks(session.user.username)" class="float-right">
+          unavailable
+        </span>
       </li>
     </ul>
   </div>
@@ -28,6 +46,7 @@ import { User } from "@/models/user";
 @Options({})
 export default class GroupDateFormInvitationForm extends Vue {
   @Prop() public groupDate!: GroupDate;
+  public readonly session = session;
   public search = "";
   public users: Array<User> = [];
   public filteredUsers: Array<User> = [];
@@ -59,7 +78,9 @@ export default class GroupDateFormInvitationForm extends Vue {
   }
 
   public onClickUser(user: User): void {
-    this.$emit("submit", new Invitation(0, this.groupDate, user));
+    if (!user.blocks(session.user!.username)) {
+      this.$emit("submit", new Invitation(0, this.groupDate, user));
+    }
   }
 }
 </script>

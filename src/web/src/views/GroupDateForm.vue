@@ -37,6 +37,7 @@
       <h3>Invitations</h3>
       <group-date-form-invitation
         v-for="invitation of groupDate.invitations"
+        :group-date="groupDate"
         :invitation="invitation"
         :key="invitation"
       />
@@ -48,9 +49,22 @@
         @submit="onCreateInvitation"
       />
     </div>
-    <div>
-      <h3>Finalize</h3>
-      <button @click="onClickSubmit">Create my Group Date</button>
+    <h3>Finalize</h3>
+    <ul class="error">
+      <li v-if="groupDate.events.length === 0">
+        You must have at least one event
+      </li>
+      <li v-if="groupDate.invitations.length === 0">
+        You must invite at least one person
+      </li>
+    </ul>
+    <div class="group buttons">
+      <button @click="onClickSubmit" class="primary" :disabled="!valid()">
+        Create my Group Date
+      </button>
+      <router-link :to="{ name: 'dashboard' }" class="button">
+        Go back
+      </router-link>
     </div>
   </div>
 </template>
@@ -77,7 +91,18 @@ import router from "@/router";
   },
 })
 export default class GroupDateForm extends Vue {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   public groupDate: GroupDate = GroupDate.empty(session.user!);
+
+  public valid(): boolean {
+    return (
+      this.groupDate.name.length > 0 &&
+      this.groupDate.description.length > 0 &&
+      this.groupDate.invitations.length > 0 &&
+      this.groupDate.events.length > 0
+    );
+  }
 
   public onCreateEvent(groupDateEvent: GroupDateEvent): void {
     this.groupDate.events.push(groupDateEvent);
@@ -108,4 +133,4 @@ export default class GroupDateForm extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped></style>
