@@ -1,4 +1,4 @@
-Feature: User Login and Registration
+Feature: Login and Registration
   Scenario: Open hello page from index page
     Given I am on the index page
     Then I should see header "Login"
@@ -51,3 +51,5 @@ Feature: User Login and Registration
     Then I reset the registration form
     Then I enter registration info: "", "asdfjkl1", "asdfjkl1", "Noah", "Kim"
     Then The create user button should be disabled
+    Then I log in with "ttrojan", ""
+    Then I should see header "Hi, Tommy"
