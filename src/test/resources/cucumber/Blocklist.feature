@@ -28,7 +28,7 @@ Feature: Blocklist
     Then I enter "ttrojan" in search to block
     Then I select "Tommy Trojan (ttrojan)" to block
     Then I click on the X besides "Tommy Trojan (ttrojan)" on my blocked list
-    Then "Tommy Trojan (ttrojan)" should not be on my list of blocked users anymore
+    Then "Tommy Trojan (ttrojan)" should not be on my list of blocked users
 	Scenario: Inviting a user who has blocked you to a group date
 		Given I am on the index page
     Then I log in with "htrojan", "asdfjkl1"

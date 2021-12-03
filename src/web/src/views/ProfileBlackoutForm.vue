@@ -3,16 +3,16 @@
     <h4>Add Dates</h4>
     <div class="group flex">
       <div>
-        <input type="date" v-model="start" />
+        <input id="input-unavailable-start" type="date" v-model="start" />
         <label>Start date</label>
       </div>
       <div>
-        <input type="date" v-model="end" />
+        <input id="input-unavailable-end" type="date" v-model="end" />
         <label>End date</label>
       </div>
     </div>
     <div class="group">
-      <button class="primary" @click="onClickSubmit" :disabled="!valid()">
+      <button id="create-unavailable-submit" class="primary" @click="onClickSubmit" :disabled="!valid()">
         Create
       </button>
     </div>

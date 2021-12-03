@@ -200,6 +200,9 @@ public class StepDefinitions {
         if(s.contentEquals("next year"))
             s = java.time.format.DateTimeFormatter.ofPattern("yyyy\tMMdd")
                                                   .format(java.time.LocalDate.now().plusYears(1));
+        if(s.contentEquals("tomorrow"))
+            s = java.time.format.DateTimeFormatter.ofPattern("yyyy\tMMdd")
+                                                  .format(java.time.LocalDate.now().plusDays(1));
         waitForElement(
             By.cssSelector(
                 "#content>div.form>div:nth-of-type(3)>" +
@@ -534,6 +537,7 @@ public class StepDefinitions {
     	waitForElement(By.id("search-users-block")).sendKeys(user);
     	pause();
     }
+    
     @Then("I should see {string} as a option to block")
     public void i_should_see_block_option(String user) {
     	List<WebElement> userList = waitForElements(By.cssSelector("#blocked-users li"));
@@ -546,6 +550,7 @@ public class StepDefinitions {
     	}
     	assertTrue(false);
     }
+    
     @Then("I select {string} to block")
     public void i_select_user_to_block(String user) {
     	List<WebElement> userList = waitForElements(By.cssSelector("#blocked-users li"));
@@ -558,6 +563,7 @@ public class StepDefinitions {
     	}
     	assertTrue(false);
     }
+    
     @Then("{string} should be on my list of blocked users")
     public void user_should_be_on_my_block_list(String user) {
     	List<WebElement> userList = waitForElements(By.id("blocked-user-list"));
@@ -569,6 +575,7 @@ public class StepDefinitions {
     	}
     	assertTrue(false);
     }
+    
     @Then("{string} should not be an option to block")
     public void user_should_not_be_block_option(String user) {
     	pause();
@@ -585,6 +592,7 @@ public class StepDefinitions {
     	}
     	assertTrue(true);
     }
+    
     @Then("I click on the X besides {string} on my blocked list")
     public void i_click_x_on_blocked_list(String user) {
     	List<WebElement> userList = waitForElements(By.id("blocked-user-list"));
@@ -596,7 +604,8 @@ public class StepDefinitions {
     	}
     	assertTrue(false);
     }
-    @Then("{string} should not be on my list of blocked users anymore")
+    
+    @Then("{string} should not be on my list of blocked users")
     public void user_shouldnt_be_blocked_anymore(String user) {
     	pause();
     	List<WebElement> userList = driver.findElements(By.id("blocked-user-list"));
@@ -612,13 +621,16 @@ public class StepDefinitions {
     	}
     	assertTrue(true);
     }
+    
     @Then("I attempt to invite {string}")
     public void i_attempt_to_invite_user(String user) {
         waitForElement(By.id("search-users-invite")).sendKeys(user);
+        pause();
     }
+    
     @Then("{string} should be a disabled invite option")
     public void user_should_be_disabled_invite_option(String user) {
-    	List<WebElement> userList = waitForElements(By.id("invited-users"));
+    	List<WebElement> userList = waitForElements(By.cssSelector("#invited-users>li"));
     	for(WebElement u : userList) {
     		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
     			assertEquals("unavailable", u.findElement(By.cssSelector("span.float-right")).getText().trim().toString());
@@ -626,6 +638,65 @@ public class StepDefinitions {
     		}
     	}
     	assertTrue(false);
+    }
+    
+    
+    //feature: unavailable dates
+    @Then("I select {string} to {string} as unavailable")
+    public void i_select_unavailable_range(String start, String end) {
+    	waitForElement(By.id("input-unavailable-start")).sendKeys(start);
+    	waitForElement(By.id("input-unavailable-end")).sendKeys(end);
+    }
+    
+    @Then("I click Create \\(unavailable date)")
+    public void i_click_create_unavailable() {
+    	waitForElement(By.id("create-unavailable-submit")).click();
+    }
+    
+    @Then("the Create \\(unavailable date) button should be disabled")
+    public void create_unavailable_disabled() {
+    	assertNotNull(waitForElement(By.id("create-unavailable-submit")).getAttribute("disabled"));
+    }
+    
+    @Then("I delete {string} from my list of unavailable dates")
+    public void i_delete_from_unavailable(String date) {
+    	List<WebElement> userList = waitForElements(By.id("list-unavailable-date"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(date)) {
+    			u.findElement(By.cssSelector("span:nth-child(2)")).click();
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    
+    @Then("{string} should be on my list of unavailable dates")
+    public void date_should_be_on_unavailable_list(String date) {
+    	List<WebElement> userList = waitForElements(By.id("list-unavailable-date"));
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(date)) {
+    			assertTrue(true);
+    			return;
+    		}
+    	}
+    	assertTrue(false);
+    }
+    
+    @Then("{string} should not be on my list of unavailable dates")
+    public void date_should_not_be_on_unavailable_list(String date) {
+    	pause();
+    	List<WebElement> userList = driver.findElements(By.id("list-unavailable-date"));
+    	if(userList == null) {
+    		assertTrue(true);
+    		return;
+    	}
+    	for(WebElement u : userList) {
+    		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(date)) {
+    			assertTrue(false);
+    			return;
+    		}
+    	}
+    	assertTrue(true);
     }
     
     @After()

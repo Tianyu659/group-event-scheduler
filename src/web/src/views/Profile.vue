@@ -25,7 +25,7 @@
     <p v-if="session.user.blackouts.length === 0">
       You don't have any unavailable dates.
     </p>
-    <ul v-else class="fancy">
+    <ul id="list-unavailable-date" v-else class="fancy">
       <li v-for="blackout of session.user.blackouts" :key="blackout.id">
         <span>
           {{ formatDate(blackout.start) }} - {{ formatDate(blackout.end) }}
