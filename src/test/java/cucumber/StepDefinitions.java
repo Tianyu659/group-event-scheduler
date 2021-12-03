@@ -37,7 +37,7 @@ public class StepDefinitions {
     public void i_should_see_header(String header) {
         assertEquals(
             header,
-            waitForElement(By.tagName("h1")).getText()
+            waitForElement(By.tagName("h1")).getText().toString()
         );
     }
 
@@ -98,7 +98,7 @@ public class StepDefinitions {
         assertEquals(
             warning,
             waitForElement(By.cssSelector("#content>div.form>p.error"))
-                .getAttribute("innerHTML")
+                .getAttribute("innerHTML").toString()
         );
     }
 
@@ -248,7 +248,7 @@ public class StepDefinitions {
     public void i_should_see_the_event_description(final String s) {
         assertEquals(
             s,
-            waitForElement(By.cssSelector("#content>div>p")).getText()
+            waitForElement(By.cssSelector("#content>div>p")).getText().toString()
         );
     }
     @Then("I should see {int} events")
@@ -621,7 +621,7 @@ public class StepDefinitions {
     	List<WebElement> userList = waitForElements(By.id("invited-users"));
     	for(WebElement u : userList) {
     		if(u.findElement(By.cssSelector("span:first-child")).getText().trim().equals(user)) {
-    			assertEquals("unavailable", u.findElement(By.cssSelector("span.float-right")).getText().trim());
+    			assertEquals("unavailable", u.findElement(By.cssSelector("span.float-right")).getText().trim().toString());
     			return;
     		}
     	}
