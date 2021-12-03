@@ -8,7 +8,6 @@ import csci310.models.User;
 public class UserForm extends Form {
     private final String username;
     private final String password;
-    private final String password2;
     private final String firstName;
     private final String lastName;
 
@@ -16,23 +15,16 @@ public class UserForm extends Form {
     public UserForm(
             @JsonProperty(value = "username", required = true) String username,
             @JsonProperty(value = "password", required = true) String password,
-            @JsonProperty(value = "password2", required = true) String password2,
             @JsonProperty(value = "firstName", required = true) String firstName,
             @JsonProperty(value = "lastName", required = true) String lastName
     ) {
         this.username = username;
         this.password = password;
-        this.password2 = password2;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
     public User validate() throws RequestException {
-
-        if(!password.equals(password2))
-        {
-            throw new RequestException(403, "Confirm Password must match entered Password");
-        }
         User user = new User();
         user.setUsername(this.username);
         user.setPassword(this.password);
