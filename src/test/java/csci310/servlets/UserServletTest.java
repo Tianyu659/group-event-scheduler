@@ -94,7 +94,7 @@ public class UserServletTest {
     public void testDoPost() throws IOException {
         UserServlet servlet = new UserServlet();
         HttpServletRequest request = new MockHttpServletRequestBuilder()
-                .withBody("{\"username\": \"nkim\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
+                .withBody("{\"username\": \"nkim2\", \"password\": \"secret\", \"firstName\": \"Noah\", \"lastName\": \"Kim\"}")
                 .withPathInfo("/")
                 .build();
         MockHttpServletResponseTarget response = new MockHttpServletResponseTarget();

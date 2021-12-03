@@ -8,7 +8,7 @@ import org.junit.Test;
 public class UserFormTest {
     @Test
     public void testValidate() throws RequestException {
-        UserForm form = new UserForm("noahbkim", "asdfjkl;","asdfjkl;", "Noah", "Kim");
+        UserForm form = new UserForm("noahbkim", "asdfjkl;", "Noah", "Kim");
         User user = form.validate();
         Assert.assertEquals(user.getUsername(), "noahbkim");
         Assert.assertTrue(user.comparePassword("asdfjkl;"));
