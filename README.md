@@ -1,3 +1,8 @@
+# Notes:
+
+- The API key is no longer available and thus running the app will require updating the API_KEY in util/TicketmasterManager.java
+- This project was coded in team of 4 in Fall 2021 for USC CSCI 310, I do not own the entirety of this code, this repository is merely for display and receipt 
+
 # Project Repo Information
 
 Import this repository into your IDE. This project provides everything needed to:
